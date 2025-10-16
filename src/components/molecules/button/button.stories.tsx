@@ -8,70 +8,29 @@ const meta: Meta<typeof Button> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Button component extends Frame with click interactions. Inherits ALL Frame properties for complete layout control.',
+        component: 'Interactive button with self-contained animation states. Supports hover, click, and combined interactions with smooth transitions.',
       },
     },
   },
   argTypes: {
-    // Button-specific controls
-    onClick: { action: 'clicked' },
-    disabled: { 
-      control: 'boolean',
-      description: 'Disable the button'
+    variant: {
+      control: 'select',
+      options: ['variantDefault', 'variantActive', 'variantHover', 'variantActiveHover'],
+      description: 'Button visual state - each variant has self-contained animation logic',
     },
-    
-    // Frame Fill Controls - Prove we can change fill
-    fill: {
-      control: 'object',
-      description: 'Fill properties (solid, gradients) - Frame capability',
-      table: { category: 'Frame: Visual' }
+    children: {
+      control: 'text',
+      description: 'Button content',
     },
-    
-    // Frame Stroke Controls
-    stroke: {
-      control: 'object', 
-      description: 'Stroke properties - Frame capability',
-      table: { category: 'Frame: Visual' }
-    },
-    
-    // Frame Appearance Controls
-    appearance: {
-      control: 'object',
-      description: 'Appearance (radius, opacity) - Frame capability',
-      table: { category: 'Frame: Visual' }
-    },
-    
-    // Frame Typography Controls
-    typography: {
-      control: 'object',
-      description: 'Typography (fontSize, color, align) - Frame capability',
-      table: { category: 'Frame: Typography' }
-    },
-    
-    // Frame Auto Layout Controls - PROVE LAYOUT WORKS!
-    autoLayout: {
-      control: 'object',
-      description: 'Auto Layout (flow, alignment, padding, gap) - Frame capability',
-      table: { category: 'Frame: Layout' }
-    },
-    
-    // Frame Position Controls - Show positioning works
-    position: {
-      control: 'object',
-      description: 'Position (x, y, rotation) - Frame capability', 
-      table: { category: 'Frame: Layout' }
-    },
-    
-    // Hide less important props
-    constraints: { control: false },
+    // Allow customization of visual properties
+    fill: { control: 'object' },
+    appearance: { control: 'object' },
+    typography: { control: 'object' },
+    autoLayout: { control: 'object' },
+    // Hide internal props
+    onClick: { control: false },
     className: { control: false },
     style: { control: false },
-    cursor: { control: false },
-    'aria-label': { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false },
-    onFocus: { control: false },
-    onBlur: { control: false },
   },
 };
 
@@ -79,34 +38,38 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 /**
- * Interactive Button demonstrating ALL Frame capabilities
- * This proves that Button inherits complete layout control from Frame
+ * Interactive Button - Try hovering and clicking to see all 4 animation states
  */
 export const Interactive: Story = {
   args: {
-    children: 'Frame-Powered Button',
-    fill: { type: 'solid', color: 'primary6' },
-    appearance: { radius: 8, opacity: 1 },
-    typography: { 
-      fontSize: 16, 
-      fontWeight: 500, 
-      textAlign: 'center',
-      color: 'white'
-    },
-    autoLayout: {
-      width: 200,
-      height: 60,
-      flow: 'horizontal',
-      alignment: 'center',
-      gap: 8,
-      padding: { top: 12, right: 20, bottom: 12, left: 20 }
-    },
-    disabled: false,
+    children: 'Interactive Button',
+    variant: 'variantDefault',
   },
   parameters: {
     docs: {
       description: {
-        story: 'This button demonstrates that it has ALL Frame capabilities: fill, stroke, sizing, typography, auto layout, and positioning. Use the controls to modify any Frame property!',
+        story: 'Interactive button demonstrating all 4 animation states: Default → Hover → Active → ActiveHover. Each state transition is animated with dissolve effects.',
+      },
+    },
+  },
+};
+
+/**
+ * Custom Styled Button
+ */
+export const CustomStyled: Story = {
+  args: {
+    children: 'Custom Button',
+    variant: 'variantDefault',
+    fill: { type: 'solid', color: 'secondary6' },
+    appearance: { radius: 12 },
+    typography: { fontSize: 18, fontWeight: 600 },
+    autoLayout: { width: 180, height: 50 },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Button with custom styling while maintaining all interactive behavior. The variant system still works with custom visual properties.',
       },
     },
   },

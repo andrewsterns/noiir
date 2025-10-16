@@ -17,7 +17,6 @@ export const BasicExample = () => (
       textAlign: 'center',
       color: 'white'
     }}
-    onClick={() => alert('Basic button clicked!')}
   >
     Click me
   </Button>
@@ -43,7 +42,6 @@ export const GradientExample = () => (
       textAlign: 'center',
       color: 'white'
     }}
-    onClick={() => alert('Gradient button clicked!')}
   >
     🌈 Gradient Button
   </Button>
@@ -63,7 +61,6 @@ export const PositionedExample = () => (
         color: 'white'
       }}
       position={{ x: 50, y: 50 }}
-      onClick={() => alert('Positioned button clicked!')}
     >
       Positioned
     </Button>
@@ -79,7 +76,6 @@ export const PositionedExample = () => (
         color: 'white'
       }}
       position={{ x: 200, y: 100 }}
-      onClick={() => alert('Another positioned button clicked!')}
     >
       Also Positioned
     </Button>
@@ -103,7 +99,6 @@ export const AutoLayoutExample = () => (
       textAlign: 'center',
       color: 'white'
     }}
-    onClick={() => alert('Auto layout button clicked!')}
   >
     <span>🔥</span>
     <span>Auto Layout Button</span>
@@ -123,28 +118,26 @@ export const OutlineExample = () => (
       textAlign: 'center',
       color: 'primary6'
     }}
-    onClick={() => alert('Outline button clicked!')}
   >
     Outline Button
   </Button>
 );
 
-// Disabled button
-export const DisabledExample = () => (
+// Hover variant button (demonstrates variant switching)
+export const HoverVariantExample = () => (
   <Button
-    fill={{ type: 'solid', color: 'neutral5' }}
+    variant="variantHover"
+    fill={{ type: 'solid', color: 'primary7' }}
     appearance={{ radius: 8 }}
     autoLayout={{ width: 150, height: 40 }}
     typography={{ 
       fontSize: 16, 
-      fontWeight: 500, 
+      fontWeight: 600, 
       textAlign: 'center',
       color: 'white'
     }}
-    disabled={true}
-    onClick={() => alert('This should not fire!')}
   >
-    Disabled
+    Hover Variant
   </Button>
 );
 
@@ -166,7 +159,6 @@ export const RadialGradientExample = () => (
       textAlign: 'center',
       color: 'white'
     }}
-    onClick={() => alert('Radial gradient button clicked!')}
   >
     Radial
   </Button>
@@ -180,7 +172,7 @@ export const ButtonGallery = () => (
     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
       <BasicExample />
       <OutlineExample />
-      <DisabledExample />
+      <HoverVariantExample />
     </div>
     
     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>

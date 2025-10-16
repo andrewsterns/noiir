@@ -1,149 +1,139 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../atoms/frame/Frame';
+import { FrameVariantProps } from '../../atoms/frame/variants/variants';
 
 /**
- * Button-specific props that extend Frame functionality
+ * Available button variants with their visual characteristics
+ */
+export type ButtonVariant = 
+  | 'variantDefault'      // Primary blue, normal weight
+  | 'variantActive'       // Success green, normal weight  
+  | 'variantHover'        // Primary blue, bold weight
+  | 'variantActiveHover'; // Success green, bold weight
+
+/**
+ * Button-specific props that define button behavior
  */
 export interface ButtonSpecificProps {
-  /** Click handler */
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  /** Hover handlers */
-  onMouseEnter?: (event: React.MouseEvent<HTMLElement>) => void;
-  onMouseLeave?: (event: React.MouseEvent<HTMLElement>) => void;
-  /** Focus handlers */
-  onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
-  /** Disabled state */
-  disabled?: boolean;
+  /** The visual variant of the button */
+  variant?: ButtonVariant;
   /** Button content */
   children?: React.ReactNode;
-  /** Tab index for keyboard navigation */
-  tabIndex?: number;
-  /** ARIA label for accessibility */
-  'aria-label'?: string;
-  /** Role override (defaults to 'button') */
-  role?: string;
 }
 
 /**
- * Button props = All Frame props + Button-specific props
- * This gives us EVERY Frame capability: fill, stroke, position, layout, typography, etc.
+ * Button props = Button-specific props + Frame customization props
+ * Excludes variant/variants from FrameProps since Button controls those internally
  */
-export interface ButtonProps extends FrameProps, ButtonSpecificProps {}
+export interface ButtonProps extends Omit<FrameProps, 'variant' | 'variants'>, ButtonSpecificProps {}
+export const buttonVariants: { [key: string]: FrameVariantProps } = {
+  variantDefault: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 5, right: 5 } },
+    appearance: { radius: 6 },
+    fill: { type: 'solid' as const, color: 'primary6' },
+    typography: { color: 'primary2', fontWeight: 500 },
+    animation: [
+      {
+        trigger: 'onClick',
+        action: 'changeTo',
+        destination: 'variantActive',
+        animation: 'dissolve',
+        duration: 300,
+      },
+      {
+        trigger: 'onHover',
+        action: 'changeTo',
+        destination: 'variantHover',
+        animation: 'dissolve',
+        duration: 200,
+      }
+    ]
+  },
+  variantActive: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 5, right: 5 } },
+    appearance: { radius: 6 },
+    fill: { type: 'solid' as const, color: 'success6' },
+    typography: { color: 'success2', fontWeight: 500 },
+    animation: [
+      {
+        trigger: 'onClick',
+        action: 'changeTo',
+        destination: 'variantDefault',
+        animation: 'dissolve',
+        duration: 300,
+      },
+      {
+        trigger: 'onHover',
+        action: 'changeTo',
+        destination: 'variantActiveHover',
+        animation: 'dissolve',
+        duration: 200,
+      }
+    ]
+  },
+  variantHover: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 6, right: 6 } },
+    appearance: { radius: 6 },
+    fill: { type: 'solid' as const, color: 'primary7' },
+    typography: { color: 'primary2', fontWeight: 600 },
+    animation: [
+      {
+        trigger: 'onClick',
+        action: 'changeTo',
+        destination: 'variantActive',
+        animation: 'dissolve',
+        duration: 300,
+      },
+      {
+        trigger: 'onMouseLeave',
+        action: 'changeTo',
+        destination: 'variantDefault',
+        animation: 'dissolve',
+        duration: 200,
+      }
+    ]
+  },
+  variantActiveHover: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 6, right: 6 } },
+    appearance: { radius: 6 },
+    fill: { type: 'solid' as const, color: 'success6' },
+    typography: { color: 'success2', fontWeight: 600 },
+    animation: [
+      {
+        trigger: 'onClick',
+        action: 'changeTo',
+        destination: 'variantDefault',
+        animation: 'dissolve',
+        duration: 300,
+      },
+      {
+        trigger: 'onMouseLeave',
+        action: 'changeTo',
+        destination: 'variantActive',
+        animation: 'dissolve',
+        duration: 200,
+      }
+    ]
+  }
+};
 
 /**
- * Button component - Frame with click interactions
- * Inherits ALL Frame properties: fill, stroke, position, layout, typography, etc.
- * 
- * @example
- * ```tsx
- * <Button 
- *   fill={{ type: 'solid', color: 'primary6' }}
- *   appearance={{ radius: 8 }}
- *   size={{ width: 200, height: 60 }}
- *   onClick={() => console.log('clicked!')}
- * >
- *   Click me
- * </Button>
- * 
- * // With gradient and all Frame powers
- * <Button
- *   fill={{
- *     type: 'linear-gradient',
- *     angle: 45,
- *     stops: [
- *       { color: 'primary4', position: 0 },
- *       { color: 'primary8', position: 1 }
- *     ]
- *   }}
- *   stroke={{ color: 'white', weight: 2 }}
- *   appearance={{ radius: 12 }}
- *   typography={{ fontSize: 18, fontWeight: 600, textAlign: 'center' }}
- *   onClick={handleClick}
- * >
- *   Gradient Button
- * </Button>
- * ```
+ * Button component - pure Frame wrapper with button-specific variants
+ * All interactions (click, hover, focus) are handled by Frame's animate system
  */
 export const Button: React.FC<ButtonProps> = ({
-  onClick,
-  onMouseEnter,
-  onMouseLeave,
-  onFocus,
-  onBlur,
-  disabled = false,
-  cursor = 'pointer',
-  tabIndex = 0,
-  'aria-label': ariaLabel,
-  role = 'button',
+  variant = 'variantDefault',
   children,
-  style,
-  ...frameProps // This spreads ALL Frame props automatically!
+  ...frameProps
 }) => {
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (disabled) return;
-    onClick?.(event);
-  };
-
-  const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
-    if (disabled) return;
-    onMouseEnter?.(event);
-  };
-
-  const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
-    if (disabled) return;
-    onMouseLeave?.(event);
-  };
-
-  const handleFocus = (event: React.FocusEvent<HTMLElement>) => {
-    if (disabled) return;
-    onFocus?.(event);
-  };
-
-  const handleBlur = (event: React.FocusEvent<HTMLElement>) => {
-    if (disabled) return;
-    onBlur?.(event);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (disabled) return;
-    // Handle Enter and Space as clicks for accessibility
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      onClick?.(event as any);
-    }
-  };
-
   return (
-    <div
-      tabIndex={disabled ? -1 : tabIndex}
-      aria-label={ariaLabel}
-      role={role}
-      aria-disabled={disabled}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
-      style={{
-        cursor: disabled ? 'not-allowed' : cursor,
-        opacity: disabled ? 0.5 : 1,
-        userSelect: 'none',
-        outline: 'none', // We'll handle focus with Frame's appearance
-        transition: 'opacity 0.2s ease-in-out, transform 0.1s ease-in-out',
-        display: 'inline-block', // Prevent full-width by default
-      }}
+    <Frame
+      {...frameProps}
+      variant={variant}
+      variants={buttonVariants}
     >
-      <Frame
-        {...frameProps} // Spreads ALL Frame props: fill, stroke, position, layout, etc.
-        onClick={handleClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          ...style,
-        }}
-      >
-        {children}
-      </Frame>
-    </div>
+      {children}
+    </Frame>
   );
 };
 

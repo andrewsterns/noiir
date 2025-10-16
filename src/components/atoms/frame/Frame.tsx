@@ -10,16 +10,18 @@ import { convertPositionProps } from './frame-properties/position/position.props
 import { convertAutoLayoutProps } from './frame-properties/layout/layout.props';
 import { convertAppearanceProps } from './frame-properties/appearance/appearance.props';
 import { resolveColor, colorUtils } from '../../../theme/colors';
-import type { AnimateProps } from './frame-animation/types';
+import type { AnimationConfig } from './frame-animation/types';
 import { useFrameAnimation } from './frame-animation/core';
+import type { FrameVariantProps } from './variants/variants';
 
 interface FrameProps {
   id?: string;
   variant?: string;
+  variants?: { [key: string]: FrameVariantProps };
   as?: keyof JSX.IntrinsicElements;
   
   // Animation Properties - handled by animation system
-  animate?: AnimateProps;
+  animation?: AnimationConfig | AnimationConfig[];
   
   // Core Figma properties
   position?: PositionProps;
@@ -52,7 +54,9 @@ interface FrameProps {
 export const Frame = (props: FrameProps) => {
   const {
     as = 'div',
-    animate,
+    variant,
+    variants,
+    animation,
     position,
     constraints,
     autoLayout,
@@ -64,17 +68,37 @@ export const Frame = (props: FrameProps) => {
     children,
     className,
     style: overrideStyle,
-  onClick,
-  onMouseEnter,
-  onMouseLeave,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
   } = props;
+
+  // Get variant props if variant is specified
+  const variantProps = variant && variants?.[variant] ? variants[variant] : {};
+  
+  // Extract styling props from variant (excluding animation since animation system handles it)
+  const { animation: _, ...variantStylingProps } = variantProps;
+  
+  // Merge all props: explicit props override variant props
+  const mergedProps = {
+    ...variantStylingProps,
+    position: position ?? variantStylingProps.position,
+    constraints: constraints ?? variantStylingProps.constraints,
+    autoLayout: autoLayout ?? variantStylingProps.autoLayout,
+    appearance: appearance ?? variantStylingProps.appearance,
+    typography: typography ?? variantStylingProps.typography,
+    fill: fill ?? variantStylingProps.fill,
+    stroke: stroke ?? variantStylingProps.stroke,
+    effects: effects ?? variantStylingProps.effects,
+    cursor: props.cursor ?? variantStylingProps.cursor,
+  };
 
   // Use animation hook - this handles all animation logic
   const {
     currentProps,
     animationStyles,
     eventHandlers
-  } = useFrameAnimation(props, animate);
+  } = useFrameAnimation({ ...mergedProps, variant, variants: props.variants });
 
   console.log(`[Frame] Rendering with currentProps.fill:`, currentProps.fill);
 

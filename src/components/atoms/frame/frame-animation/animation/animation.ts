@@ -2,7 +2,7 @@
 
 export type AnimationType = 'instant' | 'dissolve' | 'smart' | 'push' | 'slide' | 'move' | 'bounce' | 'rotate' | 'scale';
 
-export interface AnimationConfig {
+export interface CSSAnimationConfig {
   type: AnimationType;
   direction?: string;
   curve?: string;
@@ -115,7 +115,7 @@ function getTransformForDirection(direction: string, animation: AnimationType): 
 // Apply animation to element
 export function applyAnimation(
   element: HTMLElement,
-  config: AnimationConfig,
+  config: CSSAnimationConfig,
   isEntering: boolean = true
 ): void {
   const styles = getAnimationStyles(

@@ -1,12 +1,16 @@
 // Variant types and logic for Frame components
 
 import type { FrameProps } from '../Frame';
+import type { AnimationConfig } from '../frame-animation/types';
 
 export type FrameVariantName = string;
 
 // FrameVariantProps allows all Frame visual/structural properties (appearance, layout, effects, position, etc.)
-// Excludes non-visual props like animate, children, event handlers, etc.
-export interface FrameVariantProps extends Omit<FrameProps, 'id' | 'variant' | 'animate' | 'children' | 'className' | 'style' | 'onClick' | 'onMouseEnter' | 'onMouseLeave'> {
+// Includes animation for variant-specific animations
+export interface FrameVariantProps extends Omit<FrameProps, 'id' | 'variant' | 'variants' | 'children' | 'className' | 'style' | 'onClick' | 'onMouseEnter' | 'onMouseLeave'> {
+  // Animation properties for this variant
+  animation?: AnimationConfig | AnimationConfig[];
+  
   // This includes:
   // - position (x/y, z-index, constraints)
   // - autoLayout (flow, alignment, spacing)

@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback } from 'react';
-import type { AnimateProps, FrameAnimationResult, AnimationContext, AnimationResult } from './types';
+import type { AnimationConfig, FrameAnimationResult, AnimationContext, AnimationResult } from './types';
 import type { FrameProps } from '../Frame';
 import { handleTrigger, TriggerProps, AnimationInteraction } from './trigger/trigger';
 import { handleAction } from './action/action';
@@ -12,29 +12,15 @@ import { getDuration } from './duration/duration';
 
 // Core animation hook abstraction
 export function useFrameAnimation(
-	frameProps: FrameProps,
-	animate?: AnimateProps
+	frameProps: FrameProps
 ): FrameAnimationResult {
-	const {
-		trigger,
-		action,
-		destination,
-		animation,
-		direction,
-		curve,
-		duration,
-		animations,
-		variants,
-		customData,
-		cursor: manualCursor,
-		...legacy
-	} = animate || {};
+	const { variant: initialVariant, variants, animation: explicitAnimation } = frameProps;
 
 	// State for current variant - use Frame's variant prop as initial
-	const [currentVariant, setCurrentVariant] = useState<FrameVariantName>(frameProps.variant || 'default');
+	const [currentVariant, setCurrentVariant] = useState<FrameVariantName>(initialVariant || 'default');
 
 	// State for custom data that actions can modify
-	const [actionData, setActionData] = useState<any>(customData);
+	const [actionData, setActionData] = useState<any>();
 
 	// Helper to switch variant
 	const changeVariant = useCallback((variant: FrameVariantName) => {
@@ -46,18 +32,14 @@ export function useFrameAnimation(
 		setActionData(data);
 	}, []);
 
-	// Handle animations (both single and multiple)
-	const allAnimations = animations || (trigger ? [{
-		trigger,
-		action,
-		destination,
-		animation,
-		direction,
-		curve,
-		duration
-	}] : []);
-
-	// Determine automatic cursor based on all triggers in animations
+	// Get animate config from current variant, fall back to explicit animate
+	const currentVariantAnimate = variants?.[currentVariant]?.animation as (AnimationConfig | AnimationConfig[]) | undefined;
+	const animateToUse = currentVariantAnimate || explicitAnimation;
+	
+	// Normalize to array of animations
+	const allAnimations = Array.isArray(animateToUse) 
+		? animateToUse 
+		: animateToUse ? [animateToUse] : [];	// Determine automatic cursor based on all triggers in animations
 	const getAutomaticCursor = (triggers: string[]): 'default' | 'pointer' | 'text' | 'move' | 'not-allowed' | 'grab' | 'grabbing' => {
 		const pointerTriggers = [
 			'onClick', 'onDrag', 'onHover', 'whileHovering', 'whilePressing',
@@ -69,6 +51,7 @@ export function useFrameAnimation(
 	// Get final cursor (manual override takes precedence)
 	const allTriggers = allAnimations.map(anim => anim.trigger).filter(Boolean) as string[];
 	const automaticCursor = getAutomaticCursor(allTriggers);
+	const manualCursor = frameProps.cursor;
 	const finalCursor = manualCursor || automaticCursor;
 
 	// Wire up triggers to eventHandlers and connect actions
@@ -128,7 +111,8 @@ export function useFrameAnimation(
 				eventHandlers.onClick = createEventHandler;
 				break;
 			case 'onHover':
-				// Special handling for hover - create separate handlers for enter and leave
+				// Special handling for hover - create handler for enter only
+				// Mouse leave is handled by separate onMouseLeave animations
 				eventHandlers.onMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
 					handleTrigger(animTrigger as any, event);
 					if (animAction) {
@@ -153,31 +137,6 @@ export function useFrameAnimation(
 						}
 					}
 				};
-				eventHandlers.onMouseLeave = (event: React.MouseEvent<HTMLDivElement>) => {
-					handleTrigger(animTrigger as any, event);
-					if (animAction) {
-						const context: AnimationContext = {
-							currentVariant,
-							variants: variants || {},
-							currentProps: frameProps,
-							event,
-							customData: actionData
-						};
-						// For hover leave, change back to default variant
-						const result = handleAction(animAction, 'default', context);
-						if (result && result.variant) {
-							console.log(`[Animation] ${animTrigger} (leave) action: changing to variant "${result.variant}"`);
-							changeVariant(result.variant);
-						}
-						if (result && result.props) {
-							console.log(`[Animation] ${animTrigger} (leave) action: updating props`, result.props);
-						}
-						if (result && result.data !== undefined) {
-							console.log(`[Animation] ${animTrigger} (leave) action: updating data`, result.data);
-							updateActionData(result.data);
-						}
-					}
-				};
 				break;
 			case 'onMouseEnter':
 				eventHandlers.onMouseEnter = createEventHandler;
@@ -193,17 +152,8 @@ export function useFrameAnimation(
 	const mergedProps = { ...frameProps, ...variantProps };
 
 	// Generate animation styles based on animation properties
-	if (animation && animation !== 'instant') {
-		const durationMs = getDuration(duration || 300);
-		const easing = getCurve((curve || 'ease') as import('./curve/curve').AnimationCurve);
-		const animationStylesFromConfig = getAnimationStyles(
-			animation as any,
-			direction,
-			curve,
-			durationMs
-		);
-		Object.assign(animationStyles, animationStylesFromConfig);
-	}
+	// TODO: In new API, animations are event-triggered, so global styles might not be needed
+	// For now, return empty styles
 
 	return {
 		currentProps: { ...mergedProps, cursor: finalCursor },

@@ -47,14 +47,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'linear',
-              duration: 1000,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'linear', duration: 1000 }]}
           >
              Linear
           </Frame>
@@ -68,14 +62,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'ease',
-              duration: 1000,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease', duration: 1000 }]}
           >
              Ease
           </Frame>
@@ -89,14 +77,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'ease-in',
-              duration: 1000,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-in', duration: 1000 }]}
           >
              Ease In
           </Frame>
@@ -110,14 +92,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'ease-out',
-              duration: 1000,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-out', duration: 1000 }]}
           >
              Ease Out
           </Frame>
@@ -131,14 +107,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'ease-in-out',
-              duration: 1000,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-in-out', duration: 1000 }]}
           >
              Ease In Out
           </Frame>
@@ -152,14 +122,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'bounce',
-              duration: 1500,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'bounce', duration: 1500 }]}
           >
              Bounce
           </Frame>
@@ -173,14 +137,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'elastic',
-              duration: 1500,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'elastic', duration: 1500 }]}
           >
              Elastic
           </Frame>
@@ -194,14 +152,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'spring',
-              duration: 1200,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'spring', duration: 1200 }]}
           >
              Spring
           </Frame>
@@ -215,14 +167,8 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             variant='start'
-            animate={{
-              variants: positionVariants,
-              trigger: 'onClick',
-              action: togglePosition,
-              animation: 'move',
-              curve: 'custom',
-              duration: 1000,
-            }}
+            variants={positionVariants}
+            animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'custom', duration: 1000 }]}
           >
              Custom
           </Frame>

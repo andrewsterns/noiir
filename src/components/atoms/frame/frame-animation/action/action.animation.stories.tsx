@@ -48,16 +48,18 @@ export const ChangeToAction = () => (
     <p>Click to change to the 'active' variant</p>
 
     <Frame
+      variants={actionVariants}
       autoLayout={{ flow: 'horizontal', alignment: 'center', width: 160, height: 40 }}
       appearance={{ radius: 6 }}
-      animate={{
-        variants: actionVariants,
-        trigger: 'onClick',
-        action: 'changeTo',
-        destination: 'active',
-        animation: 'dissolve',
-        duration: 300,
-      }}
+      animation={[
+        {
+          trigger: 'onClick',
+          action: 'changeTo',
+          destination: 'active',
+          animation: 'dissolve',
+          duration: 300,
+        }
+      ]}
     >
       Change to Active
     </Frame>
@@ -70,15 +72,17 @@ export const CycleVariantsAction = () => (
     <p>Click to cycle through: default → active → success → warning → danger → default...</p>
 
     <Frame
+      variants={actionVariants}
       autoLayout={{ flow: 'horizontal', alignment: 'center', width: 180, height: 40 }}
       appearance={{ radius: 6 }}
-      animate={{
-        variants: actionVariants,
-        trigger: 'onClick',
-        action: 'cycleVariants',
-        animation: 'dissolve',
-        duration: 300,
-      }}
+      animation={[
+        {
+          trigger: 'onClick',
+          action: 'cycleVariants',
+          animation: 'dissolve',
+          duration: 300,
+        }
+      ]}
     >
       Cycle States
     </Frame>
@@ -109,15 +113,17 @@ export const CustomFunctionAction = () => {
       <p>Current count: <strong>{clickCount}</strong></p>
 
       <Frame
+        variants={actionVariants}
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 160, height: 40 }}
         appearance={{ radius: 6 }}
-        animate={{
-          variants: actionVariants,
-          trigger: 'onClick',
-          action: counterAction,
-          animation: 'dissolve',
-          duration: 200,
-        }}
+        animation={[
+          {
+            trigger: 'onClick',
+            action: counterAction,
+            animation: 'dissolve',
+            duration: 200,
+          }
+        ]}
       >
         Click to Count!
       </Frame>
@@ -131,10 +137,10 @@ export const OpenLinkAction = () => (
     <p>Click to open Google in a new tab</p>
 
     <Frame
+      variants={actionVariants}
       autoLayout={{ flow: 'horizontal', alignment: 'center', width: 160, height: 40 }}
       appearance={{ radius: 6 }}
-      animate={{
-        variants: actionVariants,
+      animation={{
         trigger: 'onClick',
         action: 'openLink',
         destination: 'https://www.google.com',
@@ -175,10 +181,10 @@ export const ConditionalAction = () => {
       </div>
 
       <Frame
+        variants={actionVariants}
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 160, height: 40 }}
         appearance={{ radius: 6 }}
-        animate={{
-          variants: actionVariants,
+        animation={{
           trigger: 'onClick',
           action: conditionalAction,
           animation: 'dissolve',
@@ -213,10 +219,10 @@ export const MultipleActionsDemo = () => {
       <p>Custom action that logs events and changes appearance</p>
 
       <Frame
+        variants={actionVariants}
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 180, height: 40 }}
         appearance={{ radius: 6 }}
-        animate={{
-          variants: actionVariants,
+        animation={{
           trigger: 'onClick',
           action: loggingAction,
           animation: 'dissolve',
@@ -260,10 +266,10 @@ export const ActionComparison = () => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <label>changeTo Action</label>
         <Frame
+          variants={actionVariants}
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
           appearance={{ radius: 4 }}
-          animate={{
-            variants: actionVariants,
+          animation={{
             trigger: 'onClick',
             action: 'changeTo',
             destination: 'active',
@@ -278,10 +284,10 @@ export const ActionComparison = () => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <label>cycleVariants Action</label>
         <Frame
+          variants={actionVariants}
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
           appearance={{ radius: 4 }}
-          animate={{
-            variants: actionVariants,
+          animation={{
             trigger: 'onClick',
             action: 'cycleVariants',
             animation: 'dissolve',
@@ -295,10 +301,10 @@ export const ActionComparison = () => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <label>Custom Function</label>
         <Frame
+          variants={actionVariants}
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
           appearance={{ radius: 4 }}
-          animate={{
-            variants: actionVariants,
+          animation={{
             trigger: 'onClick',
             action: () => ({ variant: 'success' }),
             animation: 'dissolve',
@@ -311,3 +317,5 @@ export const ActionComparison = () => (
     </div>
   </div>
 );
+
+
