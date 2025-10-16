@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../Frame';
+import { Frame, FrameProps } from '../../Frame';
 
 interface TypographyArgs extends Partial<FrameProps> {
   fontFamily: string;

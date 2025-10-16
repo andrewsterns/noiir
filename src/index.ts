@@ -21,7 +21,7 @@ export type {
 } from './components/atoms/frame/frame-properties/appearance/appearance.props';
 export type {
   TypographyProps
-} from './components/atoms/frame/frame-properties/typography.props';
+} from './components/atoms/frame/frame-properties/typography/typography.props';
 
 export type {
   FillProps

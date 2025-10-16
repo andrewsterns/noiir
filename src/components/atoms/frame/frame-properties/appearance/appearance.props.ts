@@ -28,7 +28,26 @@ export const convertAppearanceProps = (props: AppearanceProps): React.CSSPropert
     styles.visibility = 'hidden';
   }
   
-  if (props.radius !== undefined) {
+  // Handle border radius - individual corners take precedence over uniform radius
+  const hasIndividualCorners = (props.radiusTopLeft && props.radiusTopLeft !== 0) || 
+                              (props.radiusTopRight && props.radiusTopRight !== 0) || 
+                              (props.radiusBottomRight && props.radiusBottomRight !== 0) || 
+                              (props.radiusBottomLeft && props.radiusBottomLeft !== 0);
+  
+  if (hasIndividualCorners) {
+    // Use individual corner values, defaulting to 0 if not specified
+    const topLeft = props.radiusTopLeft !== undefined ? 
+      (typeof props.radiusTopLeft === 'number' ? `${props.radiusTopLeft}px` : props.radiusTopLeft) : '0px';
+    const topRight = props.radiusTopRight !== undefined ? 
+      (typeof props.radiusTopRight === 'number' ? `${props.radiusTopRight}px` : props.radiusTopRight) : '0px';
+    const bottomRight = props.radiusBottomRight !== undefined ? 
+      (typeof props.radiusBottomRight === 'number' ? `${props.radiusBottomRight}px` : props.radiusBottomRight) : '0px';
+    const bottomLeft = props.radiusBottomLeft !== undefined ? 
+      (typeof props.radiusBottomLeft === 'number' ? `${props.radiusBottomLeft}px` : props.radiusBottomLeft) : '0px';
+    
+    styles.borderRadius = `${topLeft} ${topRight} ${bottomRight} ${bottomLeft}`;
+  } else if (props.radius !== undefined) {
+    // Use uniform radius
     const radiusValue = typeof props.radius === 'number' ? `${props.radius}px` : props.radius;
     styles.borderRadius = radiusValue;
   }

@@ -42,33 +42,9 @@ export const convertStrokeProps = (props: StrokeProps): React.CSSProperties => {
   if (strokeType === 'solid') {
     strokeColor = props.color ? resolveColor(props.color) : '#000000';
   } else if (strokeType === 'gradient' && props.stops && props.stops.length > 0) {
-    // For gradients, create a border-image gradient
-    const gradientStops = props.stops.map(stop => {
-      const color = resolveColor(stop.color);
-      const opacity = stop.opacity !== undefined ? stop.opacity : 1;
-      const rgbaColor = opacity < 1 ? colorUtils.hexToRgba(color, opacity) : color;
-      return `${rgbaColor} ${stop.position * 100}%`;
-    }).join(', ');
-    
-    const angle = props.angle || 0;
-    const gradientValue = `linear-gradient(${angle}deg, ${gradientStops})`;
-    
-    // Use border-image for gradient strokes
-    styles.borderImageSource = gradientValue;
-    styles.borderImageSlice = '1';
-    styles.borderImageWidth = `${strokeWeight}px`;
-    styles.borderImageOutset = '0';
-    styles.borderImageRepeat = 'stretch';
-    
-    // Set border to create the stroke area
-    styles.border = `${strokeWeight}px solid transparent`;
-    
-    // Apply overall opacity if specified
-    if (props.opacity !== undefined && props.opacity < 1) {
-      styles.opacity = props.opacity;
-    }
-    
-    return styles; // Return early for gradients
+    // Gradient strokes are handled specially in the Frame component with a wrapper element
+    // Return empty styles here since the Frame component handles the gradient border
+    return {};
   }
   
   // Apply opacity to stroke color if specified (for solid strokes)

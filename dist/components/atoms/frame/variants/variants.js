@@ -14,9 +14,9 @@ export const semanticVariants = {
         appearance: { radius: 8 }
     },
     surface: {
-        fill: { type: 'solid', color: 'primary6' },
-        stroke: { type: 'solid', color: 'neutral4', weight: 1, opacity: 0.5 },
-        typography: { color: 'neutral9', fontSize: 16, fontWeight: 500 },
+        fill: { type: 'solid', color: 'success' },
+        stroke: { type: 'solid', color: 'primary4', weight: 1, opacity: 0.5 },
+        typography: { color: 'success9', fontSize: 16, fontWeight: 500 },
         appearance: { radius: 8 }
     },
     outline: {

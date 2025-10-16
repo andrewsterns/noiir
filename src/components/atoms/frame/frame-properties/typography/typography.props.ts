@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { resolveColor } from '../../../../theme/colors';
+import { resolveColor } from '../../../../../theme/colors';
 
 /**
  * Typography Properties

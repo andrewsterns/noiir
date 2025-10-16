@@ -2,13 +2,14 @@ import React from 'react';
 import { PositionProps, ConstraintProps } from './frame-properties/position/position.props';
 import { AutoLayoutProps } from './frame-properties/layout/layout.props';
 import { AppearanceProps } from './frame-properties/appearance/appearance.props';
-import { TypographyProps, convertTypographyProps } from './frame-properties/typography.props';
+import { TypographyProps, convertTypographyProps } from './frame-properties/typography/typography.props';
 import { FillProps, convertFillProps } from './frame-properties/appearance/fill.props';
 import { StrokeProps, convertStrokeProps } from './frame-properties/appearance/stroke.props';
 import { EffectProps, convertEffectProps } from './frame-properties/effects/effects.props';
 import { convertPositionProps } from './frame-properties/position/position.props';
 import { convertAutoLayoutProps } from './frame-properties/layout/layout.props';
 import { convertAppearanceProps } from './frame-properties/appearance/appearance.props';
+import { resolveColor, colorUtils } from '../../../theme/colors';
 import type { AnimateProps } from './frame-animation/types';
 import { useFrameAnimation } from './frame-animation/core';
 
@@ -93,6 +94,9 @@ export const Frame = (props: FrameProps) => {
   const strokeStyles = convertStrokeProps(currentProps.stroke || {});
   const effectStyles = convertEffectProps(currentProps.effects || {});
 
+  // Check if we have a gradient stroke that needs special handling
+  const hasGradientStroke = currentProps.stroke?.type === 'gradient' && currentProps.stroke.stops && currentProps.stroke.stops.length > 0;
+
   // Base styles for frames
   const baseStyles: React.CSSProperties = {
     boxSizing: 'border-box',
@@ -100,20 +104,77 @@ export const Frame = (props: FrameProps) => {
     ...((!position?.x && !position?.y && !constraints) && { position: 'relative' })
   };
 
-  // Merge all styles
-  const finalStyles: React.CSSProperties = {
-    ...baseStyles,
-    ...positionStyles,
-    ...autoLayoutStyles,
-    ...appearanceStyles,
-    ...typographyStyles,
-    ...fillStyles,
-    ...strokeStyles,
-    ...effectStyles,
-    ...animationStyles, // Animation system provides these
-    ...(currentProps.cursor && { cursor: currentProps.cursor }), // Apply cursor if set
-    ...overrideStyle
-  };
+  // For gradient strokes, combine fill and stroke backgrounds using CSS background-clip technique
+  let finalStyles: React.CSSProperties;
+  if (hasGradientStroke) {
+    const stroke = currentProps.stroke!;
+    const strokeWeight = stroke.weight || 1;
+    
+    // Create gradient stops
+    const gradientStops = stroke.stops!.map(stop => {
+      const color = resolveColor(stop.color);
+      const opacity = stop.opacity !== undefined ? stop.opacity : 1;
+      const rgbaColor = opacity < 1 ? colorUtils.hexToRgba(color, opacity) : color;
+      return `${rgbaColor} ${stop.position * 100}%`;
+    }).join(', ');
+    
+    const angle = stroke.angle || 0;
+    const gradientValue = `linear-gradient(${angle}deg, ${gradientStops})`;
+    
+    // Get the fill background - handle both background and backgroundColor
+    let fillBackgroundValue = 'transparent';
+    if (fillStyles.background && typeof fillStyles.background === 'string') {
+      fillBackgroundValue = fillStyles.background;
+    } else if (fillStyles.backgroundColor && typeof fillStyles.backgroundColor === 'string') {
+      // Convert backgroundColor to a solid background
+      fillBackgroundValue = `linear-gradient(${fillStyles.backgroundColor}, ${fillStyles.backgroundColor})`;
+    }
+    
+    // Combine backgrounds: fill in padding-box, gradient in border-box
+    const combinedBackground = fillBackgroundValue === 'transparent' 
+      ? gradientValue 
+      : `${fillBackgroundValue} padding-box, ${gradientValue} border-box`;
+    
+    const combinedBackgroundClip = fillBackgroundValue === 'transparent' 
+      ? 'border-box' 
+      : 'padding-box, border-box';
+    
+    finalStyles = {
+      ...baseStyles,
+      ...positionStyles,
+      ...autoLayoutStyles,
+      ...appearanceStyles,
+      ...typographyStyles,
+      ...effectStyles,
+      ...animationStyles,
+      ...(currentProps.cursor && { cursor: currentProps.cursor }),
+      ...overrideStyle,
+      // Gradient stroke styles
+      border: `${strokeWeight}px solid transparent`,
+      background: combinedBackground,
+      backgroundClip: combinedBackgroundClip,
+    };
+    
+    // Remove backgroundColor since we're using background
+    if (finalStyles.backgroundColor) {
+      delete (finalStyles as any).backgroundColor;
+    }
+  } else {
+    // Normal case - merge all styles
+    finalStyles = {
+      ...baseStyles,
+      ...positionStyles,
+      ...autoLayoutStyles,
+      ...appearanceStyles,
+      ...typographyStyles,
+      ...fillStyles,
+      ...strokeStyles,
+      ...effectStyles,
+      ...animationStyles,
+      ...(currentProps.cursor && { cursor: currentProps.cursor }),
+      ...overrideStyle
+    };
+  }
 
   return React.createElement(
     as,

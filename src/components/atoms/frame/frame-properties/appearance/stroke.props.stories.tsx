@@ -273,12 +273,12 @@ export const Stroke: StrokeStory = {
             {
               color: resolveColor(args.gradientStop1ColorType, args.gradientStop1ColorHex, args.gradientStop1ColorTheme, args.gradientStop1ColorShade),
               position: 0,
-              ...(args.gradientStop1Opacity < 1 && { opacity: args.gradientStop1Opacity })
+              opacity: args.gradientStop1Opacity
             },
             {
               color: resolveColor(args.gradientStop2ColorType, args.gradientStop2ColorHex, args.gradientStop2ColorTheme, args.gradientStop2ColorShade),
               position: 1,
-              ...(args.gradientStop2Opacity < 1 && { opacity: args.gradientStop2Opacity })
+              opacity: args.gradientStop2Opacity
             }
           ],
           gradientType: 'linear',
