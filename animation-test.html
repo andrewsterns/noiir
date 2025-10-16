@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Frame Animation Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            gap: 20px;
+            padding: 50px;
+            background: #f5f5f5;
+        }
+        
+        .test-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            user-select: none;
+        }
+        
+        .interactive {
+            width: 200px;
+            height: 100px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .interactive:hover {
+            width: 210px;
+            height: 105px;
+            background: #2563eb;
+            opacity: 0.9;
+        }
+        
+        .interactive.clicked {
+            width: 190px !important;
+            height: 95px !important;
+        }
+        
+        .button {
+            width: 160px;
+            height: 60px;
+            background: #10b981;
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .button:hover {
+            width: 165px;
+            height: 62px;
+            background: #059669;
+        }
+        
+        .button.clicked {
+            width: 154px !important;
+            height: 58px !important;
+        }
+        
+        .debug {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-frame interactive" id="interactive">Interactive Frame</div>
+    <div class="test-frame button" id="button">Click Me</div>
+    
+    <div class="debug" id="debug">
+        Hover and click the frames to test animations.<br>
+        Watch for size changes and color shifts.
+    </div>
+
+    <script>
+        // Test click animations
+        document.querySelectorAll('.test-frame').forEach(frame => {
+            frame.addEventListener('click', function() {
+                const debug = document.getElementById('debug');
+                debug.innerHTML = `Clicked: ${this.id}<br>Time: ${new Date().toLocaleTimeString()}`;
+                
+                // Add clicked class
+                this.classList.add('clicked');
+                
+                // Remove after 200ms
+                setTimeout(() => {
+                    this.classList.remove('clicked');
+                }, 200);
+            });
+            
+            frame.addEventListener('mouseenter', function() {
+                const debug = document.getElementById('debug');
+                debug.innerHTML = `Hovering: ${this.id}`;
+            });
+            
+            frame.addEventListener('mouseleave', function() {
+                const debug = document.getElementById('debug');
+                debug.innerHTML = 'Ready for interaction';
+            });
+        });
+    </script>
+</body>
+</html>
