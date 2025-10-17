@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import type { FrameProps } from '../Frame';
 import { createAnimationEventHandlers } from './trigger/trigger';
 import { handleAction } from './action/action';
@@ -70,15 +70,26 @@ export interface FrameAnimationResult {
 
 // Core animation hook abstraction
 export function useFrameAnimation(
-	frameProps: FrameProps & { onVariantChange?: (variant: FrameVariantName) => void }
+	frameProps: FrameProps & { onVariantChange?: (variant: FrameVariantName) => void; initialVariant?: string }
 ): FrameAnimationResult {
-	const { variant = 'default', variants, animation: explicitAnimation, onVariantChange } = frameProps;
+	const { variant = 'default', initialVariant = 'default', variants, animation: explicitAnimation, onVariantChange } = frameProps;
 
 	// State for custom data that actions can modify
 	const [actionData, setActionData] = useState<any>();
 
 	// State for animation-applied props (from inline property changes)
 	const [animationProps, setAnimationProps] = useState<Partial<FrameProps>>({});
+
+	// Add ref to track current variant for dynamic access in handlers
+	const currentVariantRef = useRef(variant);
+	useEffect(() => {
+		currentVariantRef.current = variant;
+	}, [variant]);
+
+	// Clear animation props when variant changes to prevent persistence across variants
+	useEffect(() => {
+		setAnimationProps({});
+	}, [variant]);
 
 	// Helper to switch variant - use callback if provided
 	const changeVariant = useCallback((variant: FrameVariantName) => {
@@ -97,27 +108,29 @@ export function useFrameAnimation(
 		setAnimationProps(props);
 	}, []);
 
-	// Get animate config from current variant, fall back to explicit animate
-	const currentVariantAnimate = variants?.[variant]?.animation as (AnimationConfig | AnimationConfig[]) | undefined;
-	const animateToUse = currentVariantAnimate || explicitAnimation;
+	// Separate prop and variant animations
+	// Only use prop animations if we're on the initial variant
+	const propAnims = (variant === initialVariant) && explicitAnimation ? (Array.isArray(explicitAnimation) ? explicitAnimation : [explicitAnimation]) : [];
 	
-	// Normalize to array of animations
-	const allAnimations = Array.isArray(animateToUse) 
-		? animateToUse 
-		: animateToUse ? [animateToUse] : [];
+	// Always use current variant's animations
+	const variantAnims = variants?.[variant]?.animation ? (Array.isArray(variants[variant].animation) ? variants[variant].animation : [variants[variant].animation]) : [];
+	
+	const allAnimations = [...propAnims, ...variantAnims];
 	
 	console.log('[Animation] Processing animations:', allAnimations);
 
 	// Wire up triggers to eventHandlers and connect actions
 	const eventHandlers = createAnimationEventHandlers(allAnimations, {
 		currentVariant: variant,
+		currentVariantRef,
 		variants: variants || {},
 		currentProps: frameProps,
 		customData: actionData,
 		changeVariant,
 		updateAnimationProps,
 		updateActionData,
-		handleAction
+		handleAction,
+		initialVariant: initialVariant
 	});
 
 	console.log('[Animation] Created event handlers:', Object.keys(eventHandlers));

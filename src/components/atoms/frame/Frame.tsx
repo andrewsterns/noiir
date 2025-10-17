@@ -103,6 +103,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
   } = useFrameAnimation({ 
     ...props, // Pass all frame props
     variant: internalVariant,
+    initialVariant: props.variant || 'default',
     animation: animationToUse,
     onVariantChange: setInternalVariant
   });

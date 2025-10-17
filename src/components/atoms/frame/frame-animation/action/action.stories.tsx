@@ -27,14 +27,57 @@ const actionVariants = {
     fill: { type: 'solid' as const, color: 'primary3' },
     stroke: { type: 'solid' as const, color: 'primary6', width: 2 },
     appearance: { radius: 8 },
-    typography: { fontSize: 14, fontWeight: 600, color: 'primary8' }
+    typography: { fontSize: 14, fontWeight: 600, color: 'primary8' },
+    animation: [
+      {
+        trigger: 'mouseLeave',
+        action: 'changeTo',
+        destination: 'default',
+        animation: 'dissolve',
+        duration: 200
+      },
+      {
+        trigger: 'click',
+        action: 'changeTo',
+        destination: 'success',
+        animation: 'dissolve',
+        duration: 300
+      }
+    ]
   },
   success: {
     autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, padding: 16, width: 150, height: 50 },
     fill: { type: 'solid' as const, color: 'success3' },
     stroke: { type: 'solid' as const, color: 'success6', width: 2 },
     appearance: { radius: 8 },
-    typography: { fontSize: 14, fontWeight: 600, color: 'success8' }
+    typography: { fontSize: 14, fontWeight: 600, color: 'success8' },
+    animation: [
+        {
+            trigger: 'mouseEnter',
+            action: 'changeTo',
+            destination: {
+                fill: { type: 'solid' as const, color: 'success1' },
+                cursor: 'pointer' as const
+            }
+        },
+        {
+            trigger: 'mouseLeave',
+            action: 'changeTo',
+           destination: {
+                fill: { type: 'solid' as const, color: 'success3' },
+                cursor: 'pointer' as const
+            },
+            animation: 'dissolve',
+            duration: 200
+        },
+        {
+            trigger: 'click',
+            action: 'changeTo',
+            destination: 'danger',
+            animation: 'dissolve',
+            duration: 300
+        }
+    ]
   },
   warning: {
     autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, padding: 16, width: 150, height: 50 },
@@ -60,9 +103,10 @@ export const ChangeToAction = () => (
       variant="default"
       variants={actionVariants}
       animation={{
-        trigger: 'onClick',
+        trigger: 'mouseEnter',
         action: 'changeTo',
         destination: 'primary',
+        cursor: 'pointer',
         animation: 'dissolve',
         duration: 300
       }}
@@ -81,7 +125,7 @@ export const ChangeToDifferentDestinations = () => (
       variant="default"
       variants={actionVariants}
       animation={{
-        trigger: 'onClick',
+        trigger: 'click',
         action: 'changeTo',
         destination: 'success',
         animation: 'dissolve',
@@ -95,7 +139,7 @@ export const ChangeToDifferentDestinations = () => (
       variant="default"
       variants={actionVariants}
       animation={{
-        trigger: 'onClick',
+        trigger: 'click',
         action: 'changeTo',
         destination: 'warning',
         animation: 'dissolve',
@@ -109,7 +153,7 @@ export const ChangeToDifferentDestinations = () => (
       variant="default"
       variants={actionVariants}
       animation={{
-        trigger: 'onClick',
+        trigger: 'click',
         action: 'changeTo',
         destination: 'danger',
         animation: 'dissolve',
@@ -130,14 +174,14 @@ export const MultipleActions = () => (
       variants={actionVariants}
       animation={[
         {
-          trigger: 'onHover',
+          trigger: 'mouseEnter',
           action: 'changeTo',
           destination: 'primary',
           animation: 'dissolve',
           duration: 200
         },
         {
-          trigger: 'onClick',
+          trigger: 'click',
           action: 'changeTo',
           destination: 'success',
           animation: 'dissolve',
@@ -158,7 +202,7 @@ export const ActionWithCursor = () => (
       variant="default"
       variants={actionVariants}
       animation={{
-        trigger: 'onHover',
+        trigger: 'mouseEnter',
         action: 'changeTo',
         destination: 'primary',
         animation: 'dissolve',

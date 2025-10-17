@@ -1,9 +1,9 @@
 // Trigger types and logic for frame animation
 
 export type AnimationTrigger =
-  | 'onClick'
-  | 'onHover'
-  | 'onDrag'
+  | 'click'
+  | 'hover'
+  | 'drag'
   | 'whilePressing'
   | 'key'
   | 'mouseEnter'
@@ -29,6 +29,7 @@ export function createAnimationEventHandler(
   animation: any, // AnimationConfig
   context: {
     currentVariant: string;
+    currentVariantRef: React.MutableRefObject<string>;
     variants: any;
     currentProps: any;
     customData?: any;
@@ -36,6 +37,7 @@ export function createAnimationEventHandler(
     updateAnimationProps: (props: any) => void;
     updateActionData: (data: any) => void;
     handleAction: (action: any, destination: any, context: any) => any;
+    initialVariant?: string;
   }
 ): AnimationEventHandler {
   const {
@@ -89,9 +91,9 @@ export function createAnimationEventHandler(
 // Map trigger to event handler property
 export function getEventHandlerKey(trigger: AnimationTrigger): keyof AnimationEventHandlers | null {
   switch (trigger) {
-    case 'onClick':
+    case 'click':
       return 'onClick';
-    case 'onHover':
+    case 'hover':
     case 'mouseEnter':
       return 'onMouseEnter';
     case 'mouseLeave':
@@ -100,7 +102,7 @@ export function getEventHandlerKey(trigger: AnimationTrigger): keyof AnimationEv
       return 'onMouseDown';
     case 'mouseUp':
       return 'onMouseUp';
-    case 'onDrag':
+    case 'drag':
     case 'whilePressing':
     case 'key':
     case 'afterDelay':
@@ -117,11 +119,28 @@ export function createAnimationEventHandlers(
   const eventHandlers: AnimationEventHandlers = {};
 
   animations.forEach((animation) => {
-    const eventHandler = createAnimationEventHandler(animation, context);
     const handlerKey = getEventHandlerKey(animation.trigger as AnimationTrigger);
     
-    if (handlerKey && eventHandler) {
-      eventHandlers[handlerKey] = eventHandler;
+    if (animation.trigger === 'hover') {
+      // Special handling for hover: mouseEnter does action, mouseLeave reverts to initial if currently at destination
+      const enterHandler = createAnimationEventHandler(animation, context);
+      const leaveHandler = (event: React.MouseEvent<HTMLDivElement>) => {
+        // Only revert if we're currently at the hover destination
+        if (context.currentVariant === animation.destination) {
+          console.log(`[AnimationEvent] Hover leave: reverting to initial variant "${context.initialVariant}"`);
+          context.changeVariant(context.initialVariant || 'default');
+        }
+      };
+      
+      if (enterHandler) {
+        eventHandlers.onMouseEnter = enterHandler;
+      }
+      eventHandlers.onMouseLeave = leaveHandler;
+    } else if (handlerKey) {
+      const eventHandler = createAnimationEventHandler(animation, context);
+      if (eventHandler) {
+        eventHandlers[handlerKey] = eventHandler;
+      }
     }
   });
 
@@ -134,11 +153,11 @@ export function handleTrigger(trigger: AnimationTrigger, event: any): boolean {
   
   // Check if the trigger matches the event type
   switch (trigger) {
-    case 'onClick':
+    case 'click':
       const clickResult = event.type === 'click';
       console.log(`[Trigger] onClick check: ${clickResult}`);
       return clickResult;
-    case 'onHover':
+    case 'hover':
     case 'mouseEnter':
       const mouseEnterResult = event.type === 'mouseenter';
       console.log(`[Trigger] mouseEnter check: ${mouseEnterResult}`);
@@ -155,7 +174,7 @@ export function handleTrigger(trigger: AnimationTrigger, event: any): boolean {
       const mouseUpResult = event.type === 'mouseup';
       console.log(`[Trigger] mouseUp check: ${mouseUpResult}`);
       return mouseUpResult;
-    case 'onDrag':
+    case 'drag':
       const dragResult = event.type === 'drag';
       console.log(`[Trigger] onDrag check: ${dragResult}`);
       return dragResult;

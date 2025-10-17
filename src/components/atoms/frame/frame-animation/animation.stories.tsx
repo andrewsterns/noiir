@@ -92,7 +92,7 @@ export const BasicClickAnimation = () => (
       appearance={{ radius: 6 }}
       animation={[
         {
-          trigger: 'onClick',
+          trigger: 'click',
           action: 'changeTo',
           destination: 'active',
           animation: 'dissolve',
@@ -115,7 +115,7 @@ export const HoverAnimation = () => (
       stroke={{ color: '#d1d5db', weight: 1 }}
       appearance={{ radius: 6 }}
       typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
-      animation={{ trigger: 'onHover', action: 'changeTo', destination: 'hover', animation: 'dissolve', duration: 150 }}
+      animation={{ trigger: 'hover', action: 'changeTo', destination: 'hover', animation: 'dissolve', duration: 150 }}
     >
       Hover Me
     </Frame>
@@ -133,7 +133,7 @@ export const CardHoverEffect = () => (
       appearance={{ radius: 8 }}
       effects={{ dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.1)' }] }}
       position={{ x: 0, y: 0 }}
-      animation={{ trigger: 'onHover', action: 'changeTo', destination: 'hover', animation: 'smart', duration: 300 }}
+      animation={{ trigger: 'hover', action: 'changeTo', destination: 'hover', animation: 'smart', duration: 300 }}
     >
       <Frame
         autoLayout={{ flow: 'vertical', alignment: 'center', gap: 8, width: '100%', height: 'auto' }}
@@ -153,10 +153,9 @@ export const CardHoverEffect = () => (
   </div>
 );
 
-export const ButtonStateCycle = () => {
-  // Custom action that cycles through states without external state management
-  const cycleAction = (context: import('./core').AnimationContext) => {
-    const variantNames = Object.keys(context.variants);
+export const StateCycleButton = () => {
+  const cycleAction = (context: any) => {
+    const variantNames = Object.keys(buttonVariants);
     const currentIndex = variantNames.indexOf(context.currentVariant);
     const nextIndex = (currentIndex + 1) % variantNames.length;
     return { variant: variantNames[nextIndex] };
@@ -171,7 +170,7 @@ export const ButtonStateCycle = () => {
         variants={buttonVariants}
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 140, height: 40 }}
         appearance={{ radius: 6 }}
-        animation={{ trigger: 'onClick', action: cycleAction, animation: 'dissolve', duration: 250 }}
+        animation={{ trigger: 'click', action: cycleAction, animation: 'dissolve', duration: 250 }}
       >
         Cycle States
       </Frame>
@@ -194,7 +193,7 @@ export const DifferentAnimationTypes = () => (
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
           variant="default"
-          animation={{ trigger: 'onClick', action: 'changeTo', destination: 'active', animation: 'dissolve', duration: 300 }}
+          animation={{ trigger: 'click', action: 'changeTo', destination: 'active', animation: 'dissolve', duration: 300 }}
         >
           Dissolve
         </Frame>
@@ -209,7 +208,7 @@ export const DifferentAnimationTypes = () => (
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
           variant="default"
-          animation={{ trigger: 'onClick', action: 'changeTo', destination: 'success', animation: 'smart', duration: 400 }}
+          animation={{ trigger: 'click', action: 'changeTo', destination: 'success', animation: 'smart', duration: 400 }}
         >
           Smart
         </Frame>
@@ -224,7 +223,7 @@ export const DifferentAnimationTypes = () => (
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
           variant="default"
-          animation={{ trigger: 'onClick', action: 'changeTo', destination: 'danger', animation: 'instant' }}
+          animation={{ trigger: 'click', action: 'changeTo', destination: 'danger', animation: 'instant' }}
         >
           Instant
         </Frame>
@@ -269,7 +268,7 @@ export const InteractiveDemo = () => {
             autoLayout={{ flow: 'horizontal', alignment: 'center', padding: { left: 16, right: 16, top: 8, bottom: 8 }, width: 'auto', height: 36 }}
             appearance={{ radius: 6 }}
             variant={selectedButton === button.id ? 'selected' : 'idle'}
-            animation={{ trigger: 'onClick', action: 'changeTo', destination: selectedButton === button.id ? 'idle' : 'selected', animation: 'dissolve', duration: 200 }}
+            animation={{ trigger: 'click', action: 'changeTo', destination: selectedButton === button.id ? 'idle' : 'selected', animation: 'dissolve', duration: 200 }}
             onClick={() => setSelectedButton(selectedButton === button.id ? null : button.id)}
           >
             {button.label}
@@ -328,7 +327,7 @@ export const ClickCounter = () => {
       <Frame
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 160, height: 40 }}
         appearance={{ radius: 6 }}
-        animation={{ trigger: 'onClick', action: counterAction, animation: 'dissolve', duration: 200 }}
+        animation={{ trigger: 'click', action: counterAction, animation: 'dissolve', duration: 200 }}
       >
         Click to Count!
       </Frame>
@@ -350,7 +349,7 @@ export const CursorDemo = () => (
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{
-            trigger: 'onClick',
+            trigger: 'click',
             action: 'changeTo',
             destination: 'active',
             animation: 'dissolve',
@@ -369,7 +368,7 @@ export const CursorDemo = () => (
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{
-            trigger: 'onHover',
+            trigger: 'hover',
             action: 'changeTo',
             destination: 'hover',
             animation: 'dissolve',
@@ -388,7 +387,7 @@ export const CursorDemo = () => (
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{
-            trigger: 'onClick',
+            trigger: 'click',
             action: 'changeTo',
             destination: 'active',
             animation: 'dissolve',
@@ -429,7 +428,7 @@ export const PolymorphicFrame = () => (
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           animation={{
-            trigger: 'onClick',
+            trigger: 'click',
             action: 'changeTo',
             destination: 'active',
             animation: 'dissolve',
@@ -449,7 +448,7 @@ export const PolymorphicFrame = () => (
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           animation={{
-            trigger: 'onClick',
+            trigger: 'click',
             action: 'changeTo',
             destination: 'active',
             animation: 'dissolve',
@@ -469,7 +468,7 @@ export const PolymorphicFrame = () => (
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           animation={{
-            trigger: 'onClick',
+            trigger: 'click',
             action: 'changeTo',
             destination: 'active',
             animation: 'dissolve',
@@ -490,7 +489,7 @@ export const PolymorphicFrame = () => (
           stroke={{ color: '#0ea5e9', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{
-            trigger: 'onClick',
+            trigger: 'click',
             action: 'changeTo',
             destination: 'active',
             animation: 'dissolve',
