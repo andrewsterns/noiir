@@ -1,45 +1,133 @@
 
 import React, { useState, useCallback } from 'react';
-import type { AnimationConfig, FrameAnimationResult, AnimationContext, AnimationResult } from './types';
 import type { FrameProps } from '../Frame';
-import { handleTrigger, TriggerProps, AnimationInteraction } from './trigger/trigger';
+import { createAnimationEventHandlers } from './trigger/trigger';
 import { handleAction } from './action/action';
-import { getVariantProps, FrameVariants, FrameVariantName } from '../variants/variants';
-import { getAnimationStyles } from './animation/animation';
-import { getCurve } from './curve/curve';
-import { getDirectionTransform } from './direction/direction';
-import { getDuration } from './duration/duration';
+import { getVariantProps } from '../variants/variants';
+
+// ===== ANIMATION TYPES =====
+
+export type FrameVariantName = string;
+
+export type FrameVariants = Record<FrameVariantName, FrameVariantProps>;
+
+export interface FrameVariantProps extends Omit<FrameProps, "children" | "variants" | "initialVariant"> {}
+
+// Custom action function type
+export type AnimationAction =
+  | string  // Predefined actions like 'changeTo', 'cycleVariants'
+  | ((context: AnimationContext) => AnimationResult | void);  // Custom functions
+
+// Context passed to custom actions
+export interface AnimationContext {
+  currentVariant: string;
+  variants: FrameVariants;
+  currentProps: FrameProps;
+  event?: React.MouseEvent<HTMLDivElement>;
+  customData?: any;  // For passing additional data
+}
+
+// Result of a custom action
+export interface AnimationResult {
+  variant?: string;  // New variant to switch to
+  props?: Partial<FrameProps>;  // Direct prop changes
+  data?: any;  // Data to store/update
+}
+
+// Flexible destination type
+export type AnimationDestination =
+  | string  // Variant name or predefined destination
+  | Partial<FrameVariantProps>  // Inline properties
+  | ((context: AnimationContext) => string | AnimationResult);  // Custom destination function
+
+// Single animation configuration
+export interface AnimationConfig {
+  trigger: string;
+  action?: AnimationAction;
+  destination?: AnimationDestination;
+  animation?: string;
+  direction?: string;
+  curve?: string;
+  duration?: number;
+  cursor?: 'default' | 'pointer' | 'text' | 'move' | 'not-allowed' | 'grab' | 'grabbing';
+}
+
+export interface AnimateProps {
+  // Single animation or array of animations
+  animation?: AnimationConfig | AnimationConfig[];
+
+  variants?: FrameVariants;
+
+  // Custom data that can be passed to actions
+  customData?: any;
+}
+
+export interface FrameAnimationResult {
+  currentProps: FrameProps;
+  animationStyles?: React.CSSProperties; // Optional for future use
+  eventHandlers: import('./trigger/trigger').AnimationEventHandlers;
+}
 
 // Core animation hook abstraction
 export function useFrameAnimation(
-	frameProps: FrameProps
+	frameProps: FrameProps & { onVariantChange?: (variant: FrameVariantName) => void }
 ): FrameAnimationResult {
-	const { variant: initialVariant, variants, animation: explicitAnimation } = frameProps;
-
-	// State for current variant - use Frame's variant prop as initial
-	const [currentVariant, setCurrentVariant] = useState<FrameVariantName>(initialVariant || 'default');
+	const { variant = 'default', variants, animation: explicitAnimation, onVariantChange } = frameProps;
 
 	// State for custom data that actions can modify
 	const [actionData, setActionData] = useState<any>();
 
-	// Helper to switch variant
+	// State for animation-applied props (from inline property changes)
+	const [animationProps, setAnimationProps] = useState<Partial<FrameProps>>({});
+
+	// Helper to switch variant - use callback if provided
 	const changeVariant = useCallback((variant: FrameVariantName) => {
-		setCurrentVariant(variant);
-	}, []);
+		if (onVariantChange) {
+			onVariantChange(variant);
+		}
+	}, [onVariantChange]);
 
 	// Helper to update action data
 	const updateActionData = useCallback((data: any) => {
 		setActionData(data);
 	}, []);
 
+	// Helper to update animation props
+	const updateAnimationProps = useCallback((props: Partial<FrameProps>) => {
+		setAnimationProps(props);
+	}, []);
+
 	// Get animate config from current variant, fall back to explicit animate
-	const currentVariantAnimate = variants?.[currentVariant]?.animation as (AnimationConfig | AnimationConfig[]) | undefined;
+	const currentVariantAnimate = variants?.[variant]?.animation as (AnimationConfig | AnimationConfig[]) | undefined;
 	const animateToUse = currentVariantAnimate || explicitAnimation;
 	
 	// Normalize to array of animations
 	const allAnimations = Array.isArray(animateToUse) 
 		? animateToUse 
-		: animateToUse ? [animateToUse] : [];	// Determine automatic cursor based on all triggers in animations
+		: animateToUse ? [animateToUse] : [];
+	
+	console.log('[Animation] Processing animations:', allAnimations);
+
+	// Wire up triggers to eventHandlers and connect actions
+	const eventHandlers = createAnimationEventHandlers(allAnimations, {
+		currentVariant: variant,
+		variants: variants || {},
+		currentProps: frameProps,
+		customData: actionData,
+		changeVariant,
+		updateAnimationProps,
+		updateActionData,
+		handleAction
+	});
+
+	console.log('[Animation] Created event handlers:', Object.keys(eventHandlers));
+	console.log('[Animation] Animations processed:', allAnimations.length);
+
+	// Get props for current variant
+	const variantProps = variants ? getVariantProps(variants, variant) : {};
+	const mergedProps = { ...frameProps, ...variantProps, ...animationProps };
+
+	// Determine automatic cursor based on all triggers in animations
 	const getAutomaticCursor = (triggers: string[]): 'default' | 'pointer' | 'text' | 'move' | 'not-allowed' | 'grab' | 'grabbing' => {
 		const pointerTriggers = [
 			'onClick', 'onDrag', 'onHover', 'whileHovering', 'whilePressing',
@@ -48,116 +136,16 @@ export function useFrameAnimation(
 		return triggers.some(trigger => pointerTriggers.includes(trigger || '')) ? 'pointer' : 'default';
 	};
 
-	// Get final cursor (manual override takes precedence)
+	// Determine final cursor: animation cursor > manual cursor > automatic cursor
 	const allTriggers = allAnimations.map(anim => anim.trigger).filter(Boolean) as string[];
-	const automaticCursor = getAutomaticCursor(allTriggers);
+	const animationCursor = animationProps.cursor;
 	const manualCursor = frameProps.cursor;
-	const finalCursor = manualCursor || automaticCursor;
-
-	// Wire up triggers to eventHandlers and connect actions
-	const eventHandlers: FrameAnimationResult['eventHandlers'] = {};
-	const animationStyles: React.CSSProperties = {};
-
-	// Process each animation
-	allAnimations.forEach((anim) => {
-		const {
-			trigger: animTrigger,
-			action: animAction,
-			destination: animDestination,
-			animation: animAnimation,
-			direction: animDirection,
-			curve: animCurve,
-			duration: animDuration
-		} = anim;
-
-		// Create event handler for this trigger
-		const createEventHandler = (event: React.MouseEvent<HTMLDivElement>) => {
-			// Handle trigger
-			handleTrigger(animTrigger as any, event);
-
-			// Handle action if provided
-			if (animAction) {
-				const context: AnimationContext = {
-					currentVariant,
-					variants: variants || {},
-					currentProps: frameProps,
-					event,
-					customData: actionData
-				};
-
-				const result = handleAction(animAction, animDestination, context);
-
-				// Apply the result
-				if (result) {
-					if (result.variant) {
-						console.log(`[Animation] ${animTrigger} action: changing to variant "${result.variant}"`);
-						changeVariant(result.variant);
-					}
-					if (result.props) {
-						console.log(`[Animation] ${animTrigger} action: updating props`, result.props);
-						// Note: Direct prop changes would need to be handled by parent component
-					}
-					if (result.data !== undefined) {
-						console.log(`[Animation] ${animTrigger} action: updating data`, result.data);
-						updateActionData(result.data);
-					}
-				}
-			}
-		};
-
-		// Assign to appropriate event handler
-		switch (animTrigger) {
-			case 'onClick':
-				eventHandlers.onClick = createEventHandler;
-				break;
-			case 'onHover':
-				// Special handling for hover - create handler for enter only
-				// Mouse leave is handled by separate onMouseLeave animations
-				eventHandlers.onMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
-					handleTrigger(animTrigger as any, event);
-					if (animAction) {
-						const context: AnimationContext = {
-							currentVariant,
-							variants: variants || {},
-							currentProps: frameProps,
-							event,
-							customData: actionData
-						};
-						const result = handleAction(animAction, animDestination, context);
-						if (result && result.variant) {
-							console.log(`[Animation] ${animTrigger} (enter) action: changing to variant "${result.variant}"`);
-							changeVariant(result.variant);
-						}
-						if (result && result.props) {
-							console.log(`[Animation] ${animTrigger} (enter) action: updating props`, result.props);
-						}
-						if (result && result.data !== undefined) {
-							console.log(`[Animation] ${animTrigger} (enter) action: updating data`, result.data);
-							updateActionData(result.data);
-						}
-					}
-				};
-				break;
-			case 'onMouseEnter':
-				eventHandlers.onMouseEnter = createEventHandler;
-				break;
-			case 'onMouseLeave':
-				eventHandlers.onMouseLeave = createEventHandler;
-				break;
-		}
-	});
-
-	// Get props for current variant
-	const variantProps = variants ? getVariantProps(variants, currentVariant) : {};
-	const mergedProps = { ...frameProps, ...variantProps };
-
-	// Generate animation styles based on animation properties
-	// TODO: In new API, animations are event-triggered, so global styles might not be needed
-	// For now, return empty styles
+	const automaticCursor = getAutomaticCursor(allTriggers);
+	const finalCursor = animationCursor || manualCursor || automaticCursor;
 
 	return {
 		currentProps: { ...mergedProps, cursor: finalCursor },
-		animationStyles,
+		animationStyles: {}, // Event-triggered animations don't need global styles
 		eventHandlers
 	};
 }

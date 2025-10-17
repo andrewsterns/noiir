@@ -1,5 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Dropdown, DropdownMenuItem } from './dropdown';
+import { Dropdown } from './dropdown';
+
+// Sample data for dropdown items
+const sampleItems = [
+  { id: 'item-1', label: 'First Option', value: 'first' },
+  { id: 'item-2', label: 'Second Option', value: 'second' },
+  { id: 'item-3', label: 'Third Option', value: 'third' },
+  { id: 'item-4', label: 'Fourth Option', value: 'fourth' },
+  { id: 'item-5', label: 'Disabled Option', value: 'disabled', disabled: true },
+];
 
 const meta: Meta<typeof Dropdown> = {
   title: 'Molecules/Dropdown',
@@ -8,157 +17,90 @@ const meta: Meta<typeof Dropdown> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'A reusable dropdown menu component built with two Frame components featuring cross-frame animations and interactions.'
-      }
-    }
-  },
-  tags: ['autodocs'],
-  argTypes: {
-    position: {
-      control: { type: 'select' },
-      options: ['bottom-left', 'bottom-right', 'top-left', 'top-right']
+        component: 'Interactive dropdown component with selectable items, smooth animations, and keyboard navigation.',
+      },
     },
-    closeOnItemClick: {
-      control: 'boolean'
-    }
-  }
+  },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['default', 'open', 'closed', 'disabled'],
+      description: 'Dropdown visual state',
+    },
+    items: {
+      control: 'object',
+      description: 'Array of dropdown items',
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
+/**
+ * Basic Dropdown - Click to open/close and select items
+ */
 export const Basic: Story = {
   args: {
-    trigger: 'Select Option',
-    position: 'bottom-left',
-    closeOnItemClick: true,
-    children: (
-      <>
-        <DropdownMenuItem onClick={() => console.log('Option 1 clicked')}>
-          Option 1
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => console.log('Option 2 clicked')}>
-          Option 2
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => console.log('Option 3 clicked')} disabled>
-          Disabled Option
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => console.log('Option 4 clicked')} selected>
-          Selected Option
-        </DropdownMenuItem>
-      </>
-    )
-  }
-};
-
-export const WithIcons: Story = {
-  args: {
-    trigger: (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span>⚙️</span>
-        <span>Settings</span>
-      </div>
-    ),
-    position: 'bottom-right',
-    children: (
-      <>
-        <DropdownMenuItem onClick={() => console.log('Profile clicked')}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>👤</span>
-            <span>Profile</span>
-          </div>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => console.log('Settings clicked')}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>⚙️</span>
-            <span>Settings</span>
-          </div>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => console.log('Help clicked')}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>❓</span>
-            <span>Help</span>
-          </div>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => console.log('Logout clicked')}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>🚪</span>
-            <span>Logout</span>
-          </div>
-        </DropdownMenuItem>
-      </>
-    )
-  }
-};
-
-export const Positions: Story = {
-  args: {
-    trigger: 'Position Test',
-    position: 'bottom-left',
-    children: (
-      <>
-        <DropdownMenuItem>Bottom Left</DropdownMenuItem>
-        <DropdownMenuItem>Position</DropdownMenuItem>
-        <DropdownMenuItem>Test</DropdownMenuItem>
-      </>
-    )
+    items: sampleItems,
+    variant: 'default',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Test different dropdown positions. Use the controls to change position.'
-      }
-    }
-  }
+        story: 'Basic dropdown with selectable items. Click the trigger to open/close the menu.',
+      },
+    },
+  },
 };
 
-export const CustomStyling: Story = {
+/**
+ * Dropdown with Pre-selected Item
+ */
+export const WithSelection: Story = {
   args: {
-    trigger: 'Custom Styled',
-    position: 'bottom-left',
-    triggerProps: {
-      fill: { type: 'solid', color: 'primary6' },
-      stroke: { type: 'solid', color: 'primary8', weight: 2 },
-      appearance: { radius: 12 }
+    items: sampleItems,
+    variant: 'default',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Dropdown with a pre-selected item highlighted.',
+      },
     },
-    menuProps: {
-      fill: { type: 'solid', color: 'neutral1' },
-      stroke: { type: 'solid', color: 'primary5', weight: 2 },
-      appearance: { radius: 12 },
-      effects: {
-        dropShadow: [{
-          x: 0,
-          y: 8,
-          blur: 16,
-          color: 'rgba(0, 0, 0, 0.15)'
-        }]
-      }
+  },
+};
+
+/**
+ * Disabled Dropdown
+ */
+export const Disabled: Story = {
+  args: {
+    items: sampleItems,
+    variant: 'disabled',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Disabled dropdown that cannot be interacted with.',
+      },
     },
-    children: (
-      <>
-        <DropdownMenuItem
-          frameProps={{
-            fill: { type: 'solid', color: 'primary2' }
-          }}
-          onClick={() => console.log('Custom item clicked')}
-        >
-          Custom Item 1
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          frameProps={{
-            fill: { type: 'solid', color: 'secondary2' }
-          }}
-        >
-          Custom Item 2
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          frameProps={{
-            fill: { type: 'solid', color: 'accent2' }
-          }}
-        >
-          Custom Item 3
-        </DropdownMenuItem>
-      </>
-    )
-  }
+  },
+};
+
+/**
+ * Controlled Dropdown - External state management
+ */
+export const Controlled: Story = {
+  args: {
+    items: sampleItems,
+    variant: 'default',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Dropdown with externally controlled open state. Use the controls to toggle open/closed.',
+      },
+    },
+  },
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Frame } from '../Frame';
-import type { AnimateProps } from './types';
+import type { AnimateProps } from './core';
 import { AlignmentTest } from './alignment-test';
 
 export default {
@@ -155,7 +155,7 @@ export const CardHoverEffect = () => (
 
 export const ButtonStateCycle = () => {
   // Custom action that cycles through states without external state management
-  const cycleAction = (context: import('./types').AnimationContext) => {
+  const cycleAction = (context: import('./core').AnimationContext) => {
     const variantNames = Object.keys(context.variants);
     const currentIndex = variantNames.indexOf(context.currentVariant);
     const nextIndex = (currentIndex + 1) % variantNames.length;
@@ -284,7 +284,7 @@ export const ClickCounter = () => {
   const [clickCount, setClickCount] = useState(0);
 
   // Custom action that counts clicks and changes appearance based on count
-  const counterAction = (context: import('./types').AnimationContext) => {
+  const counterAction = (context: import('./core').AnimationContext) => {
     const newCount = clickCount + 1;
     setClickCount(newCount);
 

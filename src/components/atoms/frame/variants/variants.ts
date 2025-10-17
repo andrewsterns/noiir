@@ -1,7 +1,7 @@
 // Variant types and logic for Frame components
 
 import type { FrameProps } from '../Frame';
-import type { AnimationConfig } from '../frame-animation/types';
+import type { AnimationConfig } from '../frame-animation/core';
 
 export type FrameVariantName = string;
 
@@ -10,6 +10,9 @@ export type FrameVariantName = string;
 export interface FrameVariantProps extends Omit<FrameProps, 'id' | 'variant' | 'variants' | 'children' | 'className' | 'style' | 'onClick' | 'onMouseEnter' | 'onMouseLeave'> {
   // Animation properties for this variant
   animation?: AnimationConfig | AnimationConfig[];
+  
+  // Child variants - defines variants for child components by ID
+  childVariants?: { [childId: string]: string };
   
   // This includes:
   // - position (x/y, z-index, constraints)

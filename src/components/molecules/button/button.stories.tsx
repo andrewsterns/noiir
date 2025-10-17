@@ -43,7 +43,7 @@ type Story = StoryObj<typeof Button>;
 export const Interactive: Story = {
   args: {
     children: 'Interactive Button',
-    variant: 'variantDefault',
+    variant: 'default',
   },
   parameters: {
     docs: {
@@ -60,7 +60,7 @@ export const Interactive: Story = {
 export const CustomStyled: Story = {
   args: {
     children: 'Custom Button',
-    variant: 'variantDefault',
+    variant: 'default',
     fill: { type: 'solid', color: 'secondary6' },
     appearance: { radius: 12 },
     typography: { fontSize: 18, fontWeight: 600 },

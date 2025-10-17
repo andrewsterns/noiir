@@ -6,29 +6,19 @@ import { FrameVariantProps } from '../../atoms/frame/variants/variants';
  * Available button variants with their visual characteristics
  */
 export type ButtonVariant = 
-  | 'variantDefault'      // Primary blue, normal weight
-  | 'variantActive'       // Success green, normal weight  
-  | 'variantHover'        // Primary blue, bold weight
-  | 'variantActiveHover'; // Success green, bold weight
+  | 'default'      // Default state
+  | 'hover'        // Hover state
+  | 'active'       // Active/pressed state
+  | 'disabled';    // Disabled state
 
-/**
- * Button-specific props that define button behavior
- */
-export interface ButtonSpecificProps {
-  /** The visual variant of the button */
-  variant?: ButtonVariant;
-  /** Button content */
+export interface ButtonProps extends Omit<FrameProps, 'variant' | 'variants'> {
   children?: React.ReactNode;
+  variant?: ButtonVariant;
 }
 
-/**
- * Button props = Button-specific props + Frame customization props
- * Excludes variant/variants from FrameProps since Button controls those internally
- */
-export interface ButtonProps extends Omit<FrameProps, 'variant' | 'variants'>, ButtonSpecificProps {}
 export const buttonVariants: { [key: string]: FrameVariantProps } = {
-  variantDefault: {
-    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 5, right: 5 } },
+  default: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 16, right: 16 } },
     appearance: { radius: 6 },
     fill: { type: 'solid' as const, color: 'primary6' },
     typography: { color: 'primary2', fontWeight: 500 },
@@ -36,96 +26,81 @@ export const buttonVariants: { [key: string]: FrameVariantProps } = {
       {
         trigger: 'onClick',
         action: 'changeTo',
-        destination: 'variantActive',
+        destination: 'active',
         animation: 'dissolve',
-        duration: 300,
+        duration: 150,
       },
       {
         trigger: 'onHover',
         action: 'changeTo',
-        destination: 'variantHover',
+        destination: 'hover',
         animation: 'dissolve',
         duration: 200,
       }
     ]
   },
-  variantActive: {
-    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 5, right: 5 } },
+  hover: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 16, right: 16 } },
     appearance: { radius: 6 },
-    fill: { type: 'solid' as const, color: 'success6' },
-    typography: { color: 'success2', fontWeight: 500 },
-    animation: [
-      {
-        trigger: 'onClick',
-        action: 'changeTo',
-        destination: 'variantDefault',
-        animation: 'dissolve',
-        duration: 300,
-      },
-      {
-        trigger: 'onHover',
-        action: 'changeTo',
-        destination: 'variantActiveHover',
-        animation: 'dissolve',
-        duration: 200,
-      }
-    ]
-  },
-  variantHover: {
-    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 6, right: 6 } },
-    appearance: { radius: 6 },
-    fill: { type: 'solid' as const, color: 'primary7' },
+    fill: { type: 'solid' as const, color: 'primary9' },
     typography: { color: 'primary2', fontWeight: 600 },
     animation: [
       {
         trigger: 'onClick',
         action: 'changeTo',
-        destination: 'variantActive',
+        destination: 'active',
         animation: 'dissolve',
-        duration: 300,
+        duration: 150,
       },
       {
-        trigger: 'onMouseLeave',
+        trigger: 'mouseLeave',
         action: 'changeTo',
-        destination: 'variantDefault',
+        destination: 'default',
+        animation: 'dissolve',
+        duration: 200,
+      }   ]
+  },
+  active: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 16, right: 16 } },
+    appearance: { radius: 6 },
+    fill: { type: 'solid' as const, color: 'primary8' },
+    typography: { color: 'primary1', fontWeight: 700 },
+    animation: [
+      {
+        trigger: 'mouseEnter',
+        action: 'changeTo',
+        destination: 'hover',
+        animation: 'dissolve',
+        duration: 150,
+      },
+      {
+        trigger: 'mouseLeave',
+        action: 'changeTo',
+        destination: 'default',
         animation: 'dissolve',
         duration: 200,
       }
     ]
   },
-  variantActiveHover: {
-    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 6, right: 6 } },
-    appearance: { radius: 6 },
-    fill: { type: 'solid' as const, color: 'success6' },
-    typography: { color: 'success2', fontWeight: 600 },
-    animation: [
-      {
-        trigger: 'onClick',
-        action: 'changeTo',
-        destination: 'variantDefault',
-        animation: 'dissolve',
-        duration: 300,
-      },
-      {
-        trigger: 'onMouseLeave',
-        action: 'changeTo',
-        destination: 'variantActive',
-        animation: 'dissolve',
-        duration: 200,
-      }
-    ]
+  disabled: {
+    autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 16, right: 16 } },
+    appearance: { radius: 6, opacity: 0.5 },
+    fill: { type: 'solid' as const, color: 'neutral4' },
+    typography: { color: 'neutral6', fontWeight: 500 }
   }
 };
 
 /**
  * Button component - pure Frame wrapper with button-specific variants
- * All interactions (click, hover, focus) are handled by Frame's animate system
+ * Animates between default, hover, and active variants on interactions
  */
-export const Button: React.FC<ButtonProps> = ({
-  variant = 'variantDefault',
-  children,
-  ...frameProps
-}) => {
+export const Button = (props: ButtonProps) => {
+  const {
+    variant = 'default',
+    children,
+    ...frameProps
+  } = props;
+
   return (
     <Frame
       {...frameProps}

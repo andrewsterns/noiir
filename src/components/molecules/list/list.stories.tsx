@@ -50,7 +50,7 @@ const meta: Meta<typeof List> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['variantDefault', 'variantCompact', 'variantSpaced'],
+      options: ['default'],
       description: 'Visual style variant for the list container',
     },
     items: {
@@ -81,7 +81,7 @@ type Story = StoryObj<typeof List>;
  */
 export const Interactive: Story = {
   args: {
-    variant: 'variantDefault',
+    variant: 'default',
     items: createSampleItems(5), // 4 regular items + 1 disabled
     selectedItemId: 'item-2',
   },
@@ -99,7 +99,7 @@ export const Interactive: Story = {
  */
 export const Compact: Story = {
   args: {
-    variant: 'variantCompact',
+    variant: 'default',
     items: createSampleItems(4), // 4 regular items (no disabled)
   },
   parameters: {
@@ -116,7 +116,7 @@ export const Compact: Story = {
  */
 export const Spaced: Story = {
   args: {
-    variant: 'variantSpaced',
+    variant: 'default',
     items: createSampleItems(4), // 4 regular items (no disabled)
   },
   parameters: {
@@ -133,7 +133,7 @@ export const Spaced: Story = {
  */
 export const CustomStyled: Story = {
   args: {
-    variant: 'variantDefault',
+    variant: 'default',
     items: createSampleItems(5), // 4 regular items + 1 disabled
     fill: { type: 'solid', color: 'secondary1' },
     appearance: { radius: 12 },
@@ -153,7 +153,7 @@ export const CustomStyled: Story = {
  */
 export const FourIdentical: Story = {
   args: {
-    variant: 'variantDefault',
+    variant: 'default',
     items: createIdenticalItems(4), // 4 identical items
     // No pre-selected item so all appear identical
   },
@@ -171,7 +171,7 @@ export const FourIdentical: Story = {
  */
 export const ManyItems: Story = {
   args: {
-    variant: 'variantCompact',
+    variant: 'default',
     items: createNumberedItems(8, true), // 8 numbered items + 1 disabled
     autoLayout: { width: 250, height: 300 },
   },

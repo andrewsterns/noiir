@@ -1,5 +1,5 @@
 // Action types and logic for frame animation
-import type { AnimationAction, AnimationContext, AnimationResult, AnimationDestination } from '../types';
+import type { AnimationAction, AnimationContext, AnimationResult, AnimationDestination } from '../core';
 
 // Figma-like action types for frame animation (predefined)
 export type PredefinedAnimationAction =
@@ -35,14 +35,23 @@ function handlePredefinedAction(
   destination: AnimationDestination,
   context: AnimationContext
 ): AnimationResult | void {
+  console.log(`[PredefinedAction] Executing "${action}" with destination:`, destination);
+  
   switch (action) {
     case 'changeTo':
+      console.log(`[PredefinedAction] changeTo: destination type is ${typeof destination}`);
       if (typeof destination === 'string') {
+        console.log(`[PredefinedAction] changeTo: changing to variant "${destination}"`);
         return { variant: destination };
+      } else if (typeof destination === 'object' && destination !== null) {
+        console.log(`[PredefinedAction] changeTo: applying inline properties`, destination);
+        return { props: destination };
       } else if (typeof destination === 'function') {
         const result = destination(context);
+        console.log(`[PredefinedAction] changeTo: function destination returned:`, result);
         return typeof result === 'string' ? { variant: result } : result;
       }
+      console.log(`[PredefinedAction] changeTo: invalid destination type`);
       break;
 
     case 'cycleVariants':
@@ -111,13 +120,20 @@ export function handleAction(
   destination: AnimationDestination | undefined,
   context: AnimationContext
 ): AnimationResult | void {
+  console.log(`[Action] Handling action "${action}" with destination:`, destination);
+  console.log(`[Action] Context: currentVariant="${context.currentVariant}", available variants:`, Object.keys(context.variants));
+  
   // Handle custom function actions
   if (typeof action === 'function') {
+    console.log(`[Action] Executing custom function action`);
     return action(context);
   }
 
   // Handle predefined actions
   if (typeof action === 'string') {
+    console.log(`[Action] Executing predefined action: ${action}`);
     return handlePredefinedAction(action as PredefinedAnimationAction, destination!, context);
   }
+  
+  console.log(`[Action] No action executed - action type not recognized`);
 }

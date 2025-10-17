@@ -6,73 +6,34 @@ import { FrameVariantProps } from '../../atoms/frame/variants/variants';
  * Available list variants with their visual characteristics
  */
 export type ListVariant =
-  | 'variantDefault'    // Standard list with padding
-  | 'variantCompact'    // Minimal spacing
-  | 'variantSpaced';    // Extra spacing between items
+  | 'default';    // Default list
 
-/**
- * Individual list item structure
- */
+export interface ListProps extends Omit<FrameProps, 'variant' | 'variants'> {
+  variant?: ListVariant;
+  items?: ListItem[];
+  selectedItemId?: string;
+  onItemClick?: (item: ListItem) => void;
+  onSelectionChange?: (item: ListItem | null) => void;
+}
+
+
+
 export interface ListItem {
   id: string;
-  label: string;
+  label: React.ReactNode;
   value?: any;
   disabled?: boolean;
 }
 
-/**
- * List-specific props that define list behavior
- */
-export interface ListSpecificProps {
-  /** The visual variant of the list */
-  variant?: ListVariant;
-  /** Array of items to display */
-  items?: ListItem[];
-  /** Currently selected item ID */
-  selectedItemId?: string;
-  /** Callback when an item is clicked */
-  onItemClick?: (item: ListItem) => void;
-  /** Callback when selection changes */
-  onSelectionChange?: (item: ListItem | null) => void;
-}
 
-/**
- * List props = List-specific props + Frame customization props
- * Excludes variant/variants from FrameProps since List controls those internally
- */
-export interface ListProps extends ListSpecificProps, Omit<FrameProps, 'variant' | 'variants'> {}
-
-/**
- * List variants with self-contained styling
- */
 export const listVariants: { [key: string]: FrameVariantProps } = {
-  variantDefault: {
+  default: {
     autoLayout: {
       flow: 'vertical' as const,
       gap: 4,
       padding: { top: 8, right: 8, bottom: 8, left: 8 }
     },
     appearance: { radius: 6 },
-    fill: { type: 'solid' as const, color: 'neutral1' },
-    stroke: { type: 'solid' as const, color: 'neutral3', weight: 1 },
-  },
-  variantCompact: {
-    autoLayout: {
-      flow: 'vertical' as const,
-      gap: 2,
-      padding: { top: 4, right: 4, bottom: 4, left: 4 }
-    },
-    appearance: { radius: 4 },
-    fill: { type: 'solid' as const, color: 'neutral1' },
-    stroke: { type: 'solid' as const, color: 'neutral3', weight: 1 },
-  },
-  variantSpaced: {
-    autoLayout: {
-      flow: 'vertical' as const,
-      gap: 12,
-      padding: { top: 16, right: 16, bottom: 16, left: 16 }
-    },
-    appearance: { radius: 8 },
     fill: { type: 'solid' as const, color: 'neutral1' },
     stroke: { type: 'solid' as const, color: 'neutral3', weight: 1 },
   }
@@ -205,7 +166,7 @@ export const listItemVariants: { [key: string]: FrameVariantProps } = {
  * Built on Frame with self-contained styling and interaction logic
  */
 export const List: React.FC<ListProps> = ({
-  variant = 'variantDefault',
+  variant = 'default',
   items = [],
   selectedItemId,
   onItemClick,

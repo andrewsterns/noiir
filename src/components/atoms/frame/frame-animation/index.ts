@@ -6,7 +6,7 @@
  */
 
 // Core types and interfaces
-export * from './types';
+export * from './core';
 
 // Utility functions and presets
 export * from './core';

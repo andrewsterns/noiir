@@ -1,6 +1,6 @@
 // Destination logic for frame animation
 
-import type { FrameVariantName, AnimationDestination } from '../types';
+import type { FrameVariantName, AnimationDestination } from '../core';
 
 // Resolve destination for different action types
 export function resolveDestination(destination: AnimationDestination, action: string): FrameVariantName | null {

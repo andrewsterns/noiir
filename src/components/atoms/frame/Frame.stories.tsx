@@ -30,11 +30,18 @@ export const Default: Story = {
   }
 };
 
-export const UnifiedFillAPI: Story = {
+export const CursorAnimation: Story = {
   args: {
-    children: 'API Demo',
-    autoLayout: { flow: 'horizontal', alignment: 'center', width: 200, height: 150 },
-    fill: { type: 'solid', color: 'primary6' },
-    appearance: { radius: 8 }
+    children: 'Hover me!',
+    autoLayout: { flow: 'horizontal', alignment: 'center', width: 200, height: 120 },
+    fill: { type: 'solid', color: 'neutral1' },
+    appearance: { radius: 8 },
+    typography: { color: 'neutral9', fontSize: 16, fontWeight: 400, textAlign: 'center' },
+    stroke: { type: 'solid', color: 'neutral5' },
+    animation: {
+      trigger: 'onHover',
+      action: 'changeTo',
+      destination: { cursor: 'pointer', fill: { type: 'solid', color: 'primary6' } }
+    }
   }
 };

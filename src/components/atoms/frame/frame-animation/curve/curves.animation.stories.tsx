@@ -30,7 +30,7 @@ const positionVariants = {
 };
 
 // Custom action that toggles between start and end positions
-const togglePosition = (context: import('../types').AnimationContext) => {
+const togglePosition = (context: import('../core').AnimationContext) => {
   return { variant: context.currentVariant === 'start' ? 'end' : 'start' };
 };
 
