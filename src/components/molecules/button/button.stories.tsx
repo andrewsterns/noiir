@@ -8,15 +8,15 @@ const meta: Meta<typeof Button> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Interactive button with self-contained animation states. Supports hover, click, and combined interactions with smooth transitions.',
+        component: 'Interactive button with automatic hover and click animations. States transition smoothly between default, hover, and multiple click states based on user interaction.',
       },
     },
   },
   argTypes: {
     state: {
       control: 'select',
-      options: ['default', 'active', 'hover', 'activeHover'],
-      description: 'Button visual state - each state has self-contained animation logic',
+      options: ['default', 'hover', 'click1', 'click2', 'click3', 'disabled'],
+      description: 'Button visual state - animations are handled automatically on interaction',
     },
     children: {
       control: 'text',
@@ -46,9 +46,10 @@ export const Interactive: Story = {
     state: 'default',
   },
   parameters: {
+    layout: 'padded',
     docs: {
       description: {
-        story: 'Interactive button demonstrating all 4 animation states: Default → Hover → Active → ActiveHover. Each state transition is animated with dissolve effects.',
+        story: 'Interactive button with automatic state transitions: Default → Hover (on mouse enter) → back to Default (on mouse leave). Click to cycle through Click1 → Click2 → Click3, then hover on Click3 to return to Default. No hover animations on click states.',
       },
     },
   },
@@ -61,7 +62,7 @@ export const CustomStyled: Story = {
   args: {
     children: 'Custom Button',
     state: 'default',
-    fill: { type: 'solid', color: 'secondary6' },
+    variant: 'secondary',
     appearance: { radius: 12 },
     typography: { fontSize: 18, fontWeight: 600 },
     autoLayout: { width: 180, height: 50 },

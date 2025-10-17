@@ -260,11 +260,11 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
       id: props.id,
       className,
       style: finalStyles,
-      onClick: onClick || eventHandlers.onClick,
-      onMouseEnter: onMouseEnter || eventHandlers.onMouseEnter,
-      onMouseLeave: onMouseLeave || eventHandlers.onMouseLeave,
-      onMouseDown: onMouseDown || eventHandlers.onMouseDown,
-      onMouseUp: onMouseUp || eventHandlers.onMouseUp,
+      onClick: onClick ? (e: React.MouseEvent<HTMLElement>) => { console.log('Frame onClick called, event.type:', e.type, 'eventHandlers.onClick:', eventHandlers.onClick, 'eventHandlers:', eventHandlers); eventHandlers.onClick?.(e as any); onClick(e); } : eventHandlers.onClick,
+      onMouseEnter: onMouseEnter ? (e: React.MouseEvent<HTMLElement>) => { onMouseEnter(e); eventHandlers.onMouseEnter?.(e as any); } : eventHandlers.onMouseEnter,
+      onMouseLeave: onMouseLeave ? (e: React.MouseEvent<HTMLElement>) => { onMouseLeave(e); eventHandlers.onMouseLeave?.(e as any); } : eventHandlers.onMouseLeave,
+      onMouseDown: onMouseDown ? (e: React.MouseEvent<HTMLElement>) => { onMouseDown(e); eventHandlers.onMouseDown?.(e as any); } : eventHandlers.onMouseDown,
+      onMouseUp: onMouseUp ? (e: React.MouseEvent<HTMLElement>) => { onMouseUp(e); eventHandlers.onMouseUp?.(e as any); } : eventHandlers.onMouseUp,
     },
     finalChildren
   );

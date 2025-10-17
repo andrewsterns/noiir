@@ -7,7 +7,7 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: 'Action demonstrations - testing different animation actions like changeTo, cycleVariants, etc.',
+        component: 'Action demonstrations - testing different animation actions like changeTo, cycleStates, etc.',
       },
     },
   },
@@ -98,7 +98,7 @@ const actionStates = {
 export const ChangeToAction = () => (
   <div style={{ padding: 20 }}>
     <h3>Change To Action</h3>
-    <p>Click to change to the 'primary' variant</p>
+    <p>Click to change to the 'primary' state</p>
     <Frame
       state="default"
       states={actionStates}
@@ -119,7 +119,7 @@ export const ChangeToAction = () => (
 export const ChangeToDifferentDestinations = () => (
   <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
     <h3>Change To - Different Destinations</h3>
-    <p>Each button changes to a different variant on click</p>
+    <p>Each button changes to a different state on click</p>
 
     <Frame
       state="default"
@@ -197,7 +197,7 @@ export const MultipleActions = () => (
 export const ActionWithCursor = () => (
   <div style={{ padding: 20 }}>
     <h3>Action with Cursor Change</h3>
-    <p>Hover changes cursor and variant</p>
+    <p>Hover changes cursor and state</p>
     <Frame
       state="default"
       states={actionStates}

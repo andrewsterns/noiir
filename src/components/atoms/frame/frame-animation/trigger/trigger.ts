@@ -47,6 +47,7 @@ export function createAnimationEventHandler(
   } = animation;
 
   return (event: React.MouseEvent<HTMLDivElement>) => {
+    console.log(`[AnimationEvent] Handler called for trigger: ${animTrigger}, event.type: ${event.type}`);
     console.log(`[AnimationEvent] Event fired: ${event.type} for trigger: ${animTrigger}`);
     
     // Handle trigger using the trigger system

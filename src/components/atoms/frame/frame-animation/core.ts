@@ -93,6 +93,7 @@ export function useFrameAnimation(
 
 	// Helper to switch state - use callback if provided
 	const changeState = useCallback((state: FrameStateName) => {
+		console.log('Animation attempting to change to state:', state);
 		if (onStateChange) {
 			onStateChange(state);
 		}

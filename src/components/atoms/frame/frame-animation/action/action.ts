@@ -6,7 +6,7 @@ export type PredefinedAnimationAction =
   | 'none'
   | 'navigateTo'
   | 'changeTo'
-  | 'cycleVariants'
+  | 'cycleStates'
   | 'back'
   | 'scrollTo'
   | 'openLink'
@@ -41,7 +41,7 @@ function handlePredefinedAction(
     case 'changeTo':
       console.log(`[PredefinedAction] changeTo: destination type is ${typeof destination}`);
       if (typeof destination === 'string') {
-        console.log(`[PredefinedAction] changeTo: changing to variant "${destination}"`);
+        console.log(`[PredefinedAction] changeTo: changing to state "${destination}"`);
         return { state: destination };
       } else if (typeof destination === 'object' && destination !== null) {
         console.log(`[PredefinedAction] changeTo: applying inline properties`, destination);
@@ -54,7 +54,7 @@ function handlePredefinedAction(
       console.log(`[PredefinedAction] changeTo: invalid destination type`);
       break;
 
-    case 'cycleVariants':
+    case 'cycleStates':
       const stateNames = Object.keys(context.states);
       const currentIndex = stateNames.indexOf(context.currentState);
       const nextIndex = (currentIndex + 1) % stateNames.length;

@@ -13,8 +13,8 @@ export default {
   },
 };
 
-// Variants that move the frame horizontally to demonstrate easing curves
-const positionVariants = {
+// States that move the frame horizontally to demonstrate easing curves
+const positionStates = {
   start: {
     position: { x: 0, y: 0 },
     fill: { type: 'solid' as const, color: 'neutral2' },
@@ -47,7 +47,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'linear', duration: 1000 }]}
           >
              Linear
@@ -62,7 +62,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease', duration: 1000 }]}
           >
              Ease
@@ -77,7 +77,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-in', duration: 1000 }]}
           >
              Ease In
@@ -92,7 +92,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-out', duration: 1000 }]}
           >
              Ease Out
@@ -107,7 +107,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-in-out', duration: 1000 }]}
           >
              Ease In Out
@@ -122,7 +122,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'bounce', duration: 1500 }]}
           >
              Bounce
@@ -137,7 +137,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'elastic', duration: 1500 }]}
           >
              Elastic
@@ -152,7 +152,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'spring', duration: 1200 }]}
           >
              Spring
@@ -167,7 +167,7 @@ export const AllCurves = () => (
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
             state='start'
-            states={positionVariants}
+            states={positionStates}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'custom', duration: 1000 }]}
           >
              Custom
