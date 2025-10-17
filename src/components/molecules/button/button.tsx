@@ -1,22 +1,22 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../atoms/frame/Frame';
-import { FrameVariantProps } from '../../atoms/frame/variants/variants';
+import { FrameStateProps } from '../../atoms/frame/states/states';
 
 /**
- * Available button variants with their visual characteristics
+ * Available button states with their visual characteristics
  */
-export type ButtonVariant = 
+export type ButtonState = 
   | 'default'      // Default state
   | 'hover'        // Hover state
   | 'active'       // Active/pressed state
   | 'disabled';    // Disabled state
 
-export interface ButtonProps extends Omit<FrameProps, 'variant' | 'variants'> {
+export interface ButtonProps extends Omit<FrameProps, 'state' | 'states'> {
   children?: React.ReactNode;
-  variant?: ButtonVariant;
+  state?: ButtonState;
 }
 
-export const buttonVariants: { [key: string]: FrameVariantProps } = {
+export const buttonStates: { [key: string]: FrameStateProps } = {
   default: {
     autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, width: 'full', height: 40, padding: { left: 16, right: 16 } },
     appearance: { radius: 6 },
@@ -91,12 +91,12 @@ export const buttonVariants: { [key: string]: FrameVariantProps } = {
 };
 
 /**
- * Button component - pure Frame wrapper with button-specific variants
- * Animates between default, hover, and active variants on interactions
+ * Button component - pure Frame wrapper with button-specific states
+ * Animates between default, hover, and active states on interactions
  */
 export const Button = (props: ButtonProps) => {
   const {
-    variant = 'default',
+    state = 'default',
     children,
     ...frameProps
   } = props;
@@ -104,8 +104,8 @@ export const Button = (props: ButtonProps) => {
   return (
     <Frame
       {...frameProps}
-      variant={variant}
-      variants={buttonVariants}
+      state={state}
+      states={buttonStates}
     >
       {children}
     </Frame>

@@ -1,32 +1,32 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Frame, FrameProps } from '../../atoms/frame/Frame';
-import { FrameVariantProps } from '../../atoms/frame/variants/variants';
-import { Button, ButtonProps, ButtonVariant } from '../button/button';
-import { List, ListItem, ListProps, ListVariant } from '../list/list';
+import { FrameStateProps } from '../../atoms/frame/states/states';
+import { Button, ButtonProps, ButtonState } from '../button/button';
+import { List, ListItem, ListProps, ListState } from '../list/list';
 
 /**
- * Available dropdown variants with their visual characteristics
+ * Available dropdown states with their visual characteristics
  */
-export type DropdownVariant =
+export type DropdownState =
   | 'default'    // Default closed state
   | 'open'       // Open state
   | 'closed'     // Explicitly closed state
   | 'disabled';  // Disabled state
 
 export interface Props {
-  variant?: DropdownVariant;
+  state?: DropdownState;
   items?: ListItem[];
 }
 
 
-export const dropdownVariants: { [key: string]: FrameVariantProps } = {
+export const dropdownStates: { [key: string]: FrameStateProps } = {
   default: {
     autoLayout: {
       flow: 'vertical' as const,
       width: 'hug-contents',
       height: 'hug-contents'
     },
-    childVariants: {
+    childStates: {
       'button': 'default',
       'list': 'default'
     }
@@ -37,7 +37,7 @@ export const dropdownVariants: { [key: string]: FrameVariantProps } = {
       width: 'hug-contents',
       height: 'hug-contents'
     },
-    childVariants: {
+    childStates: {
       'button': 'active',
       'list': 'default'
     }
@@ -48,7 +48,7 @@ export const dropdownVariants: { [key: string]: FrameVariantProps } = {
       width: 'hug-contents',
       height: 'hug-contents'
     },
-    childVariants: {
+    childStates: {
       'button': 'default',
       'list': 'default'
     }
@@ -59,7 +59,7 @@ export const dropdownVariants: { [key: string]: FrameVariantProps } = {
       width: 'hug-contents',
       height: 'hug-contents'
     },
-    childVariants: {
+    childStates: {
       'button': 'disabled',
       'list': 'default'
     }
@@ -68,7 +68,7 @@ export const dropdownVariants: { [key: string]: FrameVariantProps } = {
 
 export const Dropdown = (props: Props) => {
   const {
-  variant = 'default',
+  state = 'default',
   items = [],
   ...frameProps
 } = props;
@@ -77,15 +77,15 @@ export const Dropdown = (props: Props) => {
   return (
     
       <Frame
-        variant={variant}
-        variants={dropdownVariants}
+        state={state}
+        states={dropdownStates}
         style={{ overflow: 'visible' }}
         {...frameProps}
         animation={[
           {
             trigger: 'onClick',
             action: 'changeTo',
-            destination: variant === 'open' ? 'closed' : 'open',
+            destination: state === 'open' ? 'closed' : 'open',
             animation: 'dissolve',
             duration: 200,
           },
@@ -100,7 +100,7 @@ export const Dropdown = (props: Props) => {
         </Button>
 
         {/* Menu List - only render when open */}
-        {variant === 'open' && (
+        {state === 'open' && (
           <List
             id="list"
             items={items}

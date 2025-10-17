@@ -1,14 +1,14 @@
 // Destination logic for frame animation
 
-import type { FrameVariantName, AnimationDestination } from '../core';
+import type { FrameStateName, AnimationDestination } from '../core';
 
 // Resolve destination for different action types
-export function resolveDestination(destination: AnimationDestination, action: string): FrameVariantName | null {
+export function resolveDestination(destination: AnimationDestination, action: string): FrameStateName | null {
   switch (action) {
     case 'changeTo':
       // For changeTo, destination can be a variant name or a function
       if (typeof destination === 'string') {
-        return destination as FrameVariantName;
+        return destination as FrameStateName;
       } else if (typeof destination === 'function') {
         // For custom destination functions, they handle their own logic
         return null;
@@ -32,11 +32,11 @@ export function resolveDestination(destination: AnimationDestination, action: st
 }
 
 // Check if destination is valid for the given action
-export function isValidDestination(destination: AnimationDestination, action: string, availableVariants?: FrameVariantName[]): boolean {
+export function isValidDestination(destination: AnimationDestination, action: string, availableStates?: FrameStateName[]): boolean {
   switch (action) {
     case 'changeTo':
       if (typeof destination === 'string') {
-        return availableVariants ? availableVariants.includes(destination as FrameVariantName) : true;
+        return availableStates ? availableStates.includes(destination as FrameStateName) : true;
       } else if (typeof destination === 'function') {
         return true; // Functions are always considered valid
       }

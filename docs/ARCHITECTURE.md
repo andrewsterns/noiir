@@ -43,7 +43,7 @@ interface FrameProps {
 
   // Variant system
   variant?: string;
-  variants?: Record<string, FrameVariantProps>;
+  variants?: Record<string, FramestateProps>;
 
   // Child variant control (for organisms)
   childVariants?: Record<string, string>;
@@ -74,7 +74,7 @@ interface FrameProps {
 // components/molecules/button/button.tsx
 import React from 'react';
 import { Frame, FrameProps } from '../../atoms/frame/Frame';
-import { FrameVariantProps } from '../../atoms/frame/variants/variants';
+import { FramestateProps } from '../../atoms/frame/variants/variants';
 
 /**
  * Available button variants with their visual characteristics
@@ -90,7 +90,7 @@ export interface ButtonProps extends Omit<FrameProps, 'variant' | 'variants'> {
   variant?: ButtonVariant;
 }
 
-export const buttonVariants: { [key: string]: FrameVariantProps } = {
+export const buttonVariants: { [key: string]: FramestateProps } = {
   default: {
     autoLayout: { flow: 'horizontal', alignment: 'center', width: 'full', height: 40, padding: { left: 16, right: 16 } },
     appearance: { radius: 6 },
@@ -204,7 +204,7 @@ export interface DropdownProps extends Omit<FrameProps, 'variants'> {
   onSelect?: (value: string) => void;
 }
 
-const dropdownVariants: Record<string, FrameVariantProps & { childVariants: Record<string, string> }> = {
+const dropdownVariants: Record<string, FramestateProps & { childVariants: Record<string, string> }> = {
   default: {
     position: { width: 200 },
     childVariants: {
@@ -324,7 +324,7 @@ export function Dropdown({
 #### **For Molecules:**
 - [ ] Define component-specific `Variant` type (e.g., `ButtonVariant`)
 - [ ] Create `ComponentProps` interface extending `Omit<FrameProps, 'variant' | 'variants'>`
-- [ ] Define `componentVariants` object with FrameVariantProps
+- [ ] Define `componentVariants` object with FramestateProps
 - [ ] Include animation configurations within variant definitions
 - [ ] Export clean TypeScript interfaces
 - [ ] Create Storybook stories for all variants
@@ -435,7 +435,7 @@ The animation system supports two types of destinations for maximum flexibility:
 ```tsx
 export type AnimationDestination = 
   | string                    // Variant name
-  | Partial<FrameVariantProps> // Inline properties
+  | Partial<FramestateProps> // Inline properties
 ```
 
 For custom animations, you can still override:
@@ -509,7 +509,7 @@ For custom animations, you can still override:
 
 ### **Variant Structure:**
 ```tsx
-interface FrameVariantProps {
+interface FramestateProps {
   // Styling properties
   autoLayout?: AutoLayoutProps;
   appearance?: AppearanceProps;

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../atoms/frame/Frame';
-import { FrameVariantProps } from '../../atoms/frame/variants/variants';
+import { FrameStateProps } from '../../atoms/frame/states/states';
 
 /**
- * Available list variants with their visual characteristics
+ * Available list states with their visual characteristics
  */
-export type ListVariant =
+export type ListState =
   | 'default';    // Default list
 
-export interface ListProps extends Omit<FrameProps, 'variant' | 'variants'> {
-  variant?: ListVariant;
+export interface ListProps extends Omit<FrameProps, 'state' | 'states'> {
+  state?: ListState;
   items?: ListItem[];
   selectedItemId?: string;
   onItemClick?: (item: ListItem) => void;
@@ -26,7 +26,7 @@ export interface ListItem {
 }
 
 
-export const listVariants: { [key: string]: FrameVariantProps } = {
+export const listStates: { [key: string]: FrameStateProps } = {
   default: {
     autoLayout: {
       flow: 'vertical' as const,
@@ -40,9 +40,9 @@ export const listVariants: { [key: string]: FrameVariantProps } = {
 };
 
 /**
- * List item variants for individual list items
+ * List item states for individual list items
  */
-export const listItemVariants: { [key: string]: FrameVariantProps } = {
+export const listItemStates: { [key: string]: FrameStateProps } = {
   itemDefault: {
     autoLayout: {
       flow: 'horizontal' as const,
@@ -166,7 +166,7 @@ export const listItemVariants: { [key: string]: FrameVariantProps } = {
  * Built on Frame with self-contained styling and interaction logic
  */
 export const List: React.FC<ListProps> = ({
-  variant = 'default',
+  state = 'default',
   items = [],
   selectedItemId,
   onItemClick,
@@ -191,12 +191,12 @@ export const List: React.FC<ListProps> = ({
   return (
     <Frame
       {...frameProps}
-      variant={variant}
-      variants={listVariants}
+      state={state}
+      states={listStates}
     >
       {items.map((item) => {
         const isSelected = selectedItemId === item.id;
-        const itemVariant = item.disabled
+        const itemState = item.disabled
           ? 'itemDisabled'
           : isSelected
             ? 'itemSelected'
@@ -205,8 +205,8 @@ export const List: React.FC<ListProps> = ({
         return (
           <Frame
             key={item.id}
-            variant={itemVariant}
-            variants={listItemVariants}
+            state={itemState}
+            states={listItemStates}
             onClick={() => handleItemClick(item)}
           >
             {item.label}

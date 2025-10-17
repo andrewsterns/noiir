@@ -1,18 +1,18 @@
-// Variant types and logic for Frame components
+// State types and logic for Frame components
 
 import type { FrameProps } from '../Frame';
 import type { AnimationConfig } from '../frame-animation/core';
 
-export type FrameVariantName = string;
+export type FrameStateName = string;
 
-// FrameVariantProps allows all Frame visual/structural properties (appearance, layout, effects, position, etc.)
-// Includes animation for variant-specific animations
-export interface FrameVariantProps extends Omit<FrameProps, 'id' | 'variant' | 'variants' | 'children' | 'className' | 'style' | 'onClick' | 'onMouseEnter' | 'onMouseLeave'> {
-  // Animation properties for this variant
+// FrameStateProps allows all Frame visual/structural properties (appearance, layout, effects, position, etc.)
+// Includes animation for state-specific animations
+export interface FrameStateProps extends Omit<FrameProps, 'id' | 'state' | 'states' | 'children' | 'className' | 'style' | 'onClick' | 'onMouseEnter' | 'onMouseLeave'> {
+  // Animation properties for this state
   animation?: AnimationConfig | AnimationConfig[];
   
-  // Child variants - defines variants for child components by ID
-  childVariants?: { [childId: string]: string };
+  // Child states - defines states for child components by ID
+  childStates?: { [childId: string]: string };
   
   // This includes:
   // - position (x/y, z-index, constraints)
@@ -25,25 +25,25 @@ export interface FrameVariantProps extends Omit<FrameProps, 'id' | 'variant' | '
   // - effects (shadows, blurs)
 }
 
-export interface FrameVariants {
-  [variant: string]: FrameVariantProps;
+export interface FrameStates {
+  [state: string]: FrameStateProps;
 }
 
-// Helper to get props for a variant
-// Returns merged props for a variant, falling back to 'default' if needed
-export function getVariantProps(variants: FrameVariants, variant: FrameVariantName, baseProps: FrameVariantProps = {}): FrameVariantProps {
-  const variantProps = variants[variant] || variants['default'] || {};
-  return { ...baseProps, ...variantProps };
+// Helper to get props for a state
+// Returns merged props for a state, falling back to 'default' if needed
+export function getStateProps(states: FrameStates, state: FrameStateName, baseProps: FrameStateProps = {}): FrameStateProps {
+  const stateProps = states[state] || states['default'] || {};
+  return { ...baseProps, ...stateProps };
 }
 
-// AnimationProps extension for variants
-export interface AnimationVariantsProps {
-  variants?: FrameVariants;
-  initialVariant?: FrameVariantName;
+// AnimationProps extension for states
+export interface AnimationStatesProps {
+  states?: FrameStates;
+  initialState?: FrameStateName;
 }
 
-// Predefined semantic style variants that can be used across components
-export const semanticVariants: FrameVariants = {
+// Predefined semantic style states that can be used across components
+export const semanticStates: FrameStates = {
   solid: {
     fill: { type: 'solid', color: 'primary6' },
     stroke: { type: 'solid', color: 'primary6', weight: 0 },
@@ -85,12 +85,12 @@ export const semanticVariants: FrameVariants = {
   }
 };
 
-// Helper to create component-specific variants based on semantic variants
-export function createComponentVariants(baseVariants: FrameVariants, overrides: Record<string, Partial<FrameVariantProps>> = {}): FrameVariants {
-  const result: FrameVariants = {};
+// Helper to create component-specific states based on semantic states
+export function createComponentStates(baseStates: FrameStates, overrides: Record<string, Partial<FrameStateProps>> = {}): FrameStates {
+  const result: FrameStates = {};
 
-  for (const [variantName, baseProps] of Object.entries(baseVariants)) {
-    result[variantName] = { ...baseProps, ...(overrides[variantName] || {}) };
+  for (const [stateName, baseProps] of Object.entries(baseStates)) {
+    result[stateName] = { ...baseProps, ...(overrides[stateName] || {}) };
   }
 
   return result;

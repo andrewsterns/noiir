@@ -3,29 +3,29 @@ import { Frame } from '../components/atoms/frame/Frame';
 import { Button } from '../components/molecules/button/button';
 
 /**
- * Simple Variant Switching Example
+ * Simple State Switching Example
  *
- * This demonstrates how variants can contain their own animation logic
+ * This demonstrates how states can contain their own animation logic
  * to switch between different states.
  */
 
-export const SimpleVariantExample: React.FC = () => {
+export const SimpleStateExample: React.FC = () => {
   return (
     <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <h2>Simple Variant Switching</h2>
-      <p>Click the button to switch between variantDefault (blue) and variantActive (green).</p>
+      <h2>Simple State Switching</h2>
+      <p>Click the button to switch between stateDefault (blue) and stateActive (green).</p>
 
       <Button>
         Click to Switch States
       </Button>
 
-      <h3>Frame with Custom Variants</h3>
-      <p>This Frame has its own custom variants that switch on click.</p>
+      <h3>Frame with Custom States</h3>
+      <p>This Frame has its own custom states that switch on click.</p>
 
       <Frame
-        variant="variantDefault"
-        variants={{
-          variantDefault: {
+        state="stateDefault"
+        states={{
+          stateDefault: {
             autoLayout: { flow: 'horizontal', alignment: 'center', width: 200, height: 50 },
             appearance: { radius: 8 },
             fill: { type: 'solid', color: 'primary6' },
@@ -34,13 +34,13 @@ export const SimpleVariantExample: React.FC = () => {
               {
                 trigger: 'onClick',
                 action: 'changeTo',
-                destination: 'variantActive',
+                destination: 'stateActive',
                 animation: 'dissolve',
                 duration: 300,
               }
             ]
           },
-          variantActive: {
+          stateActive: {
             autoLayout: { flow: 'horizontal', alignment: 'center', width: 200, height: 50 },
             appearance: { radius: 8 },
             fill: { type: 'solid', color: 'success6' },
@@ -49,7 +49,7 @@ export const SimpleVariantExample: React.FC = () => {
               {
                 trigger: 'onClick',
                 action: 'changeTo',
-                destination: 'variantDefault',
+                destination: 'stateDefault',
                 animation: 'dissolve',
                 duration: 300,
               }

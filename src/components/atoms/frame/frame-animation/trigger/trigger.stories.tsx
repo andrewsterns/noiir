@@ -50,8 +50,8 @@ export const ClickTrigger = () => (
     <h3>Click Trigger</h3>
     <p>Click the frame to trigger animation to 'click' variant</p>
     <Frame
-      variant="default"
-      variants={triggerVariants}
+      state="default"
+      states={triggerVariants}
       animation={{
         trigger: 'onClick',
         action: 'changeTo',
@@ -70,8 +70,8 @@ export const HoverTrigger = () => (
     <h3>Hover Trigger</h3>
     <p>Hover over the frame to trigger animation to 'hover' variant</p>
     <Frame
-      variant="default"
-      variants={triggerVariants}
+      state="default"
+      states={triggerVariants}
       animation={{
         trigger: 'onHover',
         action: 'changeTo',
@@ -90,8 +90,8 @@ export const MouseEnterLeaveTrigger = () => (
     <h3>Mouse Enter/Leave Trigger</h3>
     <p>Move mouse in/out to see enter/leave triggers</p>
     <Frame
-      variant="default"
-      variants={triggerVariants}
+      state="default"
+      states={triggerVariants}
       animation={[
         {
           trigger: 'mouseEnter',
@@ -119,8 +119,8 @@ export const MouseDownUpTrigger = () => (
     <h3>Mouse Down/Up Trigger</h3>
     <p>Press and release mouse button to see down/up triggers</p>
     <Frame
-      variant="default"
-      variants={triggerVariants}
+      state="default"
+      states={triggerVariants}
       animation={[
         {
           trigger: 'mouseDown',
@@ -148,8 +148,8 @@ export const CombinedTriggers = () => (
     <h3>Combined Triggers</h3>
     <p>Hover, click, and mouse interactions all trigger different animations</p>
     <Frame
-      variant="default"
-      variants={triggerVariants}
+      state="default"
+      states={triggerVariants}
       animation={[
         {
           trigger: 'onHover',

@@ -14,7 +14,7 @@ export default {
 };
 
 // Common variants for destination testing
-const destinationVariants = {
+const destinationStates = {
   default: {
     autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, padding: 16, width: 180, height: 50 },
     fill: { type: 'solid' as const, color: 'neutral2' },
@@ -57,8 +57,8 @@ export const StringDestination = () => (
     <h3>String Destination</h3>
     <p>Click to go to 'state1' variant</p>
     <Frame
-      variant="default"
-      variants={destinationVariants}
+      state="default"
+      states={destinationStates}
       animation={{
         trigger: 'onClick',
         action: 'changeTo',
@@ -78,8 +78,8 @@ export const MultipleStringDestinations = () => (
     <p>Each button goes to a different variant</p>
 
     <Frame
-      variant="default"
-      variants={destinationVariants}
+      state="default"
+      states={destinationStates}
       animation={{
         trigger: 'onClick',
         action: 'changeTo',
@@ -92,8 +92,8 @@ export const MultipleStringDestinations = () => (
     </Frame>
 
     <Frame
-      variant="default"
-      variants={destinationVariants}
+      state="default"
+      states={destinationStates}
       animation={{
         trigger: 'onClick',
         action: 'changeTo',
@@ -106,8 +106,8 @@ export const MultipleStringDestinations = () => (
     </Frame>
 
     <Frame
-      variant="default"
-      variants={destinationVariants}
+      state="default"
+      states={destinationStates}
       animation={{
         trigger: 'onClick',
         action: 'changeTo',
@@ -120,8 +120,8 @@ export const MultipleStringDestinations = () => (
     </Frame>
 
     <Frame
-      variant="default"
-      variants={destinationVariants}
+      state="default"
+      states={destinationStates}
       animation={{
         trigger: 'onClick',
         action: 'changeTo',
@@ -140,8 +140,8 @@ export const DestinationWithHoverBack = () => (
     <h3>Destination with Hover Back</h3>
     <p>Click to go to state2, hover to go back to default</p>
     <Frame
-      variant="default"
-      variants={destinationVariants}
+      state="default"
+      states={destinationStates}
       animation={[
         {
           trigger: 'onClick',
@@ -169,8 +169,8 @@ export const ComplexDestinationFlow = () => (
     <h3>Complex Destination Flow</h3>
     <p>Hover → State1, Click → State3, MouseLeave → Default</p>
     <Frame
-      variant="default"
-      variants={destinationVariants}
+      state="default"
+      states={destinationStates}
       animation={[
         {
           trigger: 'onHover',

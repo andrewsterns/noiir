@@ -42,23 +42,23 @@ function handlePredefinedAction(
       console.log(`[PredefinedAction] changeTo: destination type is ${typeof destination}`);
       if (typeof destination === 'string') {
         console.log(`[PredefinedAction] changeTo: changing to variant "${destination}"`);
-        return { variant: destination };
+        return { state: destination };
       } else if (typeof destination === 'object' && destination !== null) {
         console.log(`[PredefinedAction] changeTo: applying inline properties`, destination);
         return { props: destination };
       } else if (typeof destination === 'function') {
         const result = destination(context);
         console.log(`[PredefinedAction] changeTo: function destination returned:`, result);
-        return typeof result === 'string' ? { variant: result } : result;
+        return typeof result === 'string' ? { state: result } : result;
       }
       console.log(`[PredefinedAction] changeTo: invalid destination type`);
       break;
 
     case 'cycleVariants':
-      const variantNames = Object.keys(context.variants);
-      const currentIndex = variantNames.indexOf(context.currentVariant);
-      const nextIndex = (currentIndex + 1) % variantNames.length;
-      return { variant: variantNames[nextIndex] };
+      const stateNames = Object.keys(context.states);
+      const currentIndex = stateNames.indexOf(context.currentState);
+      const nextIndex = (currentIndex + 1) % stateNames.length;
+      return { state: stateNames[nextIndex] };
 
     case 'navigateTo':
       // TODO: Implement navigation logic
@@ -121,7 +121,7 @@ export function handleAction(
   context: AnimationContext
 ): AnimationResult | void {
   console.log(`[Action] Handling action "${action}" with destination:`, destination);
-  console.log(`[Action] Context: currentVariant="${context.currentVariant}", available variants:`, Object.keys(context.variants));
+  console.log(`[Action] Context: currentState="${context.currentState}", available states:`, Object.keys(context.states));
   
   // Handle custom function actions
   if (typeof action === 'function') {

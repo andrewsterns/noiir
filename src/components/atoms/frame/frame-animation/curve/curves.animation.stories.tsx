@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Frame } from '../../Frame';
 
 export default {
@@ -31,7 +31,7 @@ const positionVariants = {
 
 // Custom action that toggles between start and end positions
 const togglePosition = (context: import('../core').AnimationContext) => {
-  return { variant: context.currentVariant === 'start' ? 'end' : 'start' };
+  return { state: context.currentState === 'start' ? 'end' : 'start' };
 };
 
 export const AllCurves = () => (
@@ -46,8 +46,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'linear', duration: 1000 }]}
           >
              Linear
@@ -61,8 +61,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease', duration: 1000 }]}
           >
              Ease
@@ -76,8 +76,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-in', duration: 1000 }]}
           >
              Ease In
@@ -91,8 +91,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-out', duration: 1000 }]}
           >
              Ease Out
@@ -106,8 +106,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'ease-in-out', duration: 1000 }]}
           >
              Ease In Out
@@ -121,8 +121,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'bounce', duration: 1500 }]}
           >
              Bounce
@@ -136,8 +136,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'elastic', duration: 1500 }]}
           >
              Elastic
@@ -151,8 +151,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'spring', duration: 1200 }]}
           >
              Spring
@@ -166,8 +166,8 @@ export const AllCurves = () => (
           <Frame
             autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
             appearance={{ radius: 4 }}
-            variant='start'
-            variants={positionVariants}
+            state='start'
+            states={positionVariants}
             animation={[{ trigger: 'onClick', action: togglePosition, animation: 'move', curve: 'custom', duration: 1000 }]}
           >
              Custom

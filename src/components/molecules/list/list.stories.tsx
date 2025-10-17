@@ -48,10 +48,10 @@ const meta: Meta<typeof List> = {
     },
   },
   argTypes: {
-    variant: {
+    state: {
       control: 'select',
       options: ['default'],
-      description: 'Visual style variant for the list container',
+      description: 'Visual style state for the list container',
     },
     items: {
       control: 'object',
@@ -81,7 +81,7 @@ type Story = StoryObj<typeof List>;
  */
 export const Interactive: Story = {
   args: {
-    variant: 'default',
+    state: 'default',
     items: createSampleItems(5), // 4 regular items + 1 disabled
     selectedItemId: 'item-2',
   },
@@ -99,13 +99,13 @@ export const Interactive: Story = {
  */
 export const Compact: Story = {
   args: {
-    variant: 'default',
+    state: 'default',
     items: createSampleItems(4), // 4 regular items (no disabled)
   },
   parameters: {
     docs: {
       description: {
-        story: 'Compact list variant with minimal spacing between items. Shows 4 identical regular items.',
+        story: 'Compact list state with minimal spacing between items. Shows 4 identical regular items.',
       },
     },
   },
@@ -116,13 +116,13 @@ export const Compact: Story = {
  */
 export const Spaced: Story = {
   args: {
-    variant: 'default',
+    state: 'default',
     items: createSampleItems(4), // 4 regular items (no disabled)
   },
   parameters: {
     docs: {
       description: {
-        story: 'Spaced list variant with extra padding and gaps between items. Shows 4 identical regular items.',
+        story: 'Spaced list state with extra padding and gaps between items. Shows 4 identical regular items.',
       },
     },
   },
@@ -133,7 +133,7 @@ export const Spaced: Story = {
  */
 export const CustomStyled: Story = {
   args: {
-    variant: 'default',
+    state: 'default',
     items: createSampleItems(5), // 4 regular items + 1 disabled
     fill: { type: 'solid', color: 'secondary1' },
     appearance: { radius: 12 },
@@ -153,7 +153,7 @@ export const CustomStyled: Story = {
  */
 export const FourIdentical: Story = {
   args: {
-    variant: 'default',
+    state: 'default',
     items: createIdenticalItems(4), // 4 identical items
     // No pre-selected item so all appear identical
   },
@@ -171,7 +171,7 @@ export const FourIdentical: Story = {
  */
 export const ManyItems: Story = {
   args: {
-    variant: 'default',
+    state: 'default',
     items: createNumberedItems(8, true), // 8 numbered items + 1 disabled
     autoLayout: { width: 250, height: 300 },
   },

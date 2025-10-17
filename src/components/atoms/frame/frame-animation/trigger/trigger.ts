@@ -28,16 +28,16 @@ export interface AnimationEventHandlers {
 export function createAnimationEventHandler(
   animation: any, // AnimationConfig
   context: {
-    currentVariant: string;
-    currentVariantRef: React.MutableRefObject<string>;
-    variants: any;
+    currentState: string;
+    currentStateRef: React.MutableRefObject<string>;
+    states: any;
     currentProps: any;
     customData?: any;
-    changeVariant: (variant: string) => void;
+    changeState: (state: string) => void;
     updateAnimationProps: (props: any) => void;
     updateActionData: (data: any) => void;
     handleAction: (action: any, destination: any, context: any) => any;
-    initialVariant?: string;
+    initialState?: string;
   }
 ): AnimationEventHandler {
   const {
@@ -58,8 +58,8 @@ export function createAnimationEventHandler(
     if (triggerResult && animAction) {
       console.log(`[AnimationEvent] Executing action: ${animAction} with destination:`, animDestination);
       const actionContext = {
-        currentVariant: context.currentVariant,
-        variants: context.variants,
+        currentState: context.currentState,
+        states: context.states,
         currentProps: context.currentProps,
         event,
         customData: context.customData
@@ -69,9 +69,9 @@ export function createAnimationEventHandler(
 
       // Apply the result
       if (result) {
-        if (result.variant) {
-          console.log(`[AnimationEvent] Changing to variant "${result.variant}"`);
-          context.changeVariant(result.variant);
+        if (result.state) {
+          console.log(`[AnimationEvent] Changing to state "${result.state}"`);
+          context.changeState(result.state);
         }
         if (result.props) {
           console.log(`[AnimationEvent] Updating props:`, result.props);
@@ -126,9 +126,9 @@ export function createAnimationEventHandlers(
       const enterHandler = createAnimationEventHandler(animation, context);
       const leaveHandler = (event: React.MouseEvent<HTMLDivElement>) => {
         // Only revert if we're currently at the hover destination
-        if (context.currentVariant === animation.destination) {
-          console.log(`[AnimationEvent] Hover leave: reverting to initial variant "${context.initialVariant}"`);
-          context.changeVariant(context.initialVariant || 'default');
+        if (context.currentState === animation.destination) {
+          console.log(`[AnimationEvent] Hover leave: reverting to initial state "${context.initialState}"`);
+          context.changeState(context.initialState || 'default');
         }
       };
       

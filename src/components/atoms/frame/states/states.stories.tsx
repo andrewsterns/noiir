@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { getVariantProps, semanticVariants } from './variants';
+import { getStateProps, semanticStates } from '../states/states';
 import { resolveColor } from '../../../../theme/colors';
 
 // Dummy Frame component for demonstration
-const Frame: React.FC<any> = ({ variant, variants }) => {
-  const props = getVariantProps(variants, variant);
+const Frame: React.FC<any> = ({ state, states }) => {
+  const props = getStateProps(states, state);
   return (
     <div style={{
       background: props.fill?.type === 'solid' && props.fill?.color ? resolveColor(props.fill.color) : 
@@ -17,7 +17,7 @@ const Frame: React.FC<any> = ({ variant, variants }) => {
       border: props.stroke?.weight ? `${props.stroke.weight}px solid ${props.stroke.color ? resolveColor(props.stroke.color) : '#000'}` : 'none',
       opacity: props.appearance?.opacity || 1,
       boxShadow: props.effects?.dropShadow ? 
-        props.effects.dropShadow.map(shadow => 
+        props.effects.dropShadow.map((shadow: any) => 
           `${shadow.x}px ${shadow.y}px ${shadow.blur}px ${resolveColor(shadow.color)}`
         ).join(', ') : 'none',
       textAlign: 'center',
@@ -25,60 +25,60 @@ const Frame: React.FC<any> = ({ variant, variants }) => {
       minWidth: 120,
       cursor: 'pointer'
     }}>
-      {variant.charAt(0).toUpperCase() + variant.slice(1)}
+      {state.charAt(0).toUpperCase() + state.slice(1)}
     </div>
   );
 };
 
 export default {
-  title: 'Frame/Variants',
+  title: 'Frame/States',
   component: Frame,
 };
 
-export const StyleVariants = () => {
-  const [selectedVariant, setSelectedVariant] = useState('solid');
+export const StyleStates = () => {
+  const [selectedState, setSelectedState] = useState('solid');
 
   return (
     <div style={{ padding: 20 }}>
-      <h3>Semantic Style Variants</h3>
-      <p>Choose a variant to see how it looks:</p>
+      <h3>Semantic Style States</h3>
+      <p>Choose a state to see how it looks:</p>
       
       <div style={{ marginBottom: 20 }}>
-        {Object.keys(semanticVariants).map(variant => (
+        {Object.keys(semanticStates).map(state => (
           <button 
-            key={variant}
-            onClick={() => setSelectedVariant(variant)}
+            key={state}
+            onClick={() => setSelectedState(state)}
             style={{
               margin: '0 8px 8px 0',
               padding: '8px 16px',
               border: '1px solid #ccc',
               borderRadius: 4,
-              background: selectedVariant === variant ? '#007acc' : 'white',
-              color: selectedVariant === variant ? 'white' : '#333',
+              background: selectedState === state ? '#007acc' : 'white',
+              color: selectedState === state ? 'white' : '#333',
               cursor: 'pointer'
             }}
           >
-            {variant.charAt(0).toUpperCase() + variant.slice(1)}
+            {state.charAt(0).toUpperCase() + state.slice(1)}
           </button>
         ))}
       </div>
 
       <Frame 
-        variant={selectedVariant} 
-        variants={semanticVariants}
+        state={selectedState} 
+        states={semanticStates}
       />
     </div>
   );
 };
 
-export const AllVariantsGrid = () => (
+export const AllStatesGrid = () => (
   <div style={{ padding: 20 }}>
-    <h3>All Style Variants</h3>
+    <h3>All Style States</h3>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-      {Object.entries(semanticVariants).map(([variantName, variantProps]) => (
-        <div key={variantName} style={{ textAlign: 'center' }}>
-          <h4 style={{ marginBottom: 8, textTransform: 'capitalize' }}>{variantName}</h4>
-          <Frame variant={variantName} variants={semanticVariants} />
+      {Object.entries(semanticStates).map(([stateName, stateProps]) => (
+        <div key={stateName} style={{ textAlign: 'center' }}>
+          <h4 style={{ marginBottom: 8, textTransform: 'capitalize' }}>{stateName}</h4>
+          <Frame state={stateName} states={semanticStates} />
         </div>
       ))}
     </div>

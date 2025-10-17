@@ -9,14 +9,14 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: 'Frame animation system with Figma-like interactions. Click, hover, and see smooth transitions between variants.',
+        component: 'Frame animation system with Figma-like interactions. Click, hover, and see smooth transitions between states.',
       },
     },
   },
 };
 
-// Common variants for all stories
-const buttonVariants = {
+// Common states for all stories
+const buttonStates = {
   default: {
     autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, padding: 8, width: 120, height: 40 },
     fill: { type: 'solid' as const, color: 'neutral2' },
@@ -54,8 +54,8 @@ const buttonVariants = {
   },
 };
 
-// Variants for hover animation (only override on hover)
-const hoverVariants = {
+// States for hover animation (only override on hover)
+const hoverStates = {
   default: {}, // Empty - use Frame's own properties
   hover: {
     fill: { type: 'solid' as const, color: 'neutral3' },
@@ -64,7 +64,7 @@ const hoverVariants = {
   }
 };
 
-const cardVariants = {
+const cardStates = {
   default: {
     fill: { type: 'solid' as const, color: 'white' },
     stroke: { type: 'solid' as const, color: 'neutral3', width: 1 },
@@ -86,19 +86,17 @@ export const BasicClickAnimation = () => (
   <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
     <h3>Click to Change Color</h3>
     <Frame
-      variant="default"
-      variants={buttonVariants}
+      state="default"
+      states={buttonStates}
       autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 40 }}
       appearance={{ radius: 6 }}
-      animation={[
-        {
-          trigger: 'click',
-          action: 'changeTo',
-          destination: 'active',
-          animation: 'dissolve',
-          duration: 200,
-        }
-      ]}
+      animation={{
+        trigger: 'click',
+        action: 'changeTo',
+        destination: 'active',
+        animation: 'dissolve',
+        duration: 200,
+      }}
     >
       Click Me
     </Frame>
@@ -109,13 +107,19 @@ export const HoverAnimation = () => (
   <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
     <h3>Hover to Change (with revert)</h3>
     <Frame
-      variants={hoverVariants}
+      states={hoverStates}
       autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 40 }}
-      fill={{ type: 'solid', color: '#f3f4f6' }}
+      fill={{ type: 'solid' as const, color: '#f3f4f6' }}
       stroke={{ color: '#d1d5db', weight: 1 }}
       appearance={{ radius: 6 }}
       typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
-      animation={{ trigger: 'hover', action: 'changeTo', destination: 'hover', animation: 'dissolve', duration: 150 }}
+      animation={{
+        trigger: 'hover',
+        action: 'changeTo',
+        destination: 'hover',
+        animation: 'dissolve',
+        duration: 150
+      }}
     >
       Hover Me
     </Frame>
@@ -126,14 +130,20 @@ export const CardHoverEffect = () => (
   <div style={{ padding: 20 }}>
     <h3>Card Hover Effect</h3>
     <Frame
-      variants={cardVariants}
+      states={cardStates}
       autoLayout={{ flow: 'horizontal', alignment: 'center', width: 300, height: 150 }}
-      fill={{ type: 'solid', color: '#ffffff' }}
+      fill={{ type: 'solid' as const, color: '#ffffff' }}
       stroke={{ color: '#e5e7eb', weight: 1 }}
       appearance={{ radius: 8 }}
       effects={{ dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.1)' }] }}
       position={{ x: 0, y: 0 }}
-      animation={{ trigger: 'hover', action: 'changeTo', destination: 'hover', animation: 'smart', duration: 300 }}
+      animation={{
+        trigger: 'hover',
+        action: 'changeTo',
+        destination: 'hover',
+        animation: 'smart',
+        duration: 300
+      }}
     >
       <Frame
         autoLayout={{ flow: 'vertical', alignment: 'center', gap: 8, width: '100%', height: 'auto' }}
@@ -155,10 +165,10 @@ export const CardHoverEffect = () => (
 
 export const StateCycleButton = () => {
   const cycleAction = (context: any) => {
-    const variantNames = Object.keys(buttonVariants);
-    const currentIndex = variantNames.indexOf(context.currentVariant);
-    const nextIndex = (currentIndex + 1) % variantNames.length;
-    return { variant: variantNames[nextIndex] };
+    const stateNames = Object.keys(buttonStates);
+    const currentIndex = stateNames.indexOf(context.currentState);
+    const nextIndex = (currentIndex + 1) % stateNames.length;
+    return { state: stateNames[nextIndex] };
   };
 
   return (
@@ -166,11 +176,16 @@ export const StateCycleButton = () => {
       <h3>State Cycle Button (Custom Action)</h3>
       <p>Click to cycle through states automatically using a custom action function</p>
       <Frame
-        variant="default"
-        variants={buttonVariants}
+        state="default"
+        states={buttonStates}
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 140, height: 40 }}
         appearance={{ radius: 6 }}
-        animation={{ trigger: 'click', action: cycleAction, animation: 'dissolve', duration: 250 }}
+        animation={{
+          trigger: 'click',
+          action: cycleAction,
+          animation: 'dissolve',
+          duration: 250
+        }}
       >
         Cycle States
       </Frame>
@@ -186,14 +201,20 @@ export const DifferentAnimationTypes = () => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <label>Dissolve</label>
         <Frame
-          variants={buttonVariants}
+          states={buttonStates}
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 100, height: 36 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
-          variant="default"
-          animation={{ trigger: 'click', action: 'changeTo', destination: 'active', animation: 'dissolve', duration: 300 }}
+          state="default"
+          animation={{
+            trigger: 'click',
+            action: 'changeTo',
+            destination: 'active',
+            animation: 'dissolve',
+            duration: 300
+          }}
         >
           Dissolve
         </Frame>
@@ -203,12 +224,18 @@ export const DifferentAnimationTypes = () => (
         <label>Smart</label>
         <Frame
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 100, height: 36 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
-          variant="default"
-          animation={{ trigger: 'click', action: 'changeTo', destination: 'success', animation: 'smart', duration: 400 }}
+          state="default"
+          animation={{
+            trigger: 'click',
+            action: 'changeTo',
+            destination: 'success',
+            animation: 'smart',
+            duration: 400
+          }}
         >
           Smart
         </Frame>
@@ -218,12 +245,17 @@ export const DifferentAnimationTypes = () => (
         <label>Instant</label>
         <Frame
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 100, height: 36 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, fontWeight: 500, color: '#374151' }}
-          variant="default"
-          animation={{ trigger: 'click', action: 'changeTo', destination: 'danger', animation: 'instant' }}
+          state="default"
+          animation={{
+            trigger: 'click',
+            action: 'changeTo',
+            destination: 'danger',
+            animation: 'instant'
+          }}
         >
           Instant
         </Frame>
@@ -235,7 +267,7 @@ export const DifferentAnimationTypes = () => (
 export const InteractiveDemo = () => {
   const [selectedButton, setSelectedButton] = useState<string | null>(null);
 
-  const demoVariants = {
+  const demoStates = {
     idle: {
       fill: { type: 'solid' as const, color: '#f3f4f6' },
       stroke: { type: 'solid' as const, color: '#d1d5db', width: 1 },
@@ -246,6 +278,12 @@ export const InteractiveDemo = () => {
       stroke: { type: 'solid' as const, color: '#3b82f6', width: 2 },
       typography: { fontSize: 14, fontWeight: 600, color: '#1d4ed8' }
     },
+  };
+
+  const toggleAction = (context: any) => {
+    // This is a simplified version - in real usage, you'd pass data differently
+    // For demo purposes, we'll just toggle between idle and selected
+    return { state: context.currentState === 'selected' ? 'idle' : 'selected' };
   };
 
   const buttons = [
@@ -264,11 +302,16 @@ export const InteractiveDemo = () => {
         {buttons.map((button) => (
           <Frame
             key={button.id}
-            variants={demoVariants}
+            states={demoStates}
             autoLayout={{ flow: 'horizontal', alignment: 'center', padding: { left: 16, right: 16, top: 8, bottom: 8 }, width: 'auto', height: 36 }}
             appearance={{ radius: 6 }}
-            variant={selectedButton === button.id ? 'selected' : 'idle'}
-            animation={{ trigger: 'click', action: 'changeTo', destination: selectedButton === button.id ? 'idle' : 'selected', animation: 'dissolve', duration: 200 }}
+            state={selectedButton === button.id ? 'selected' : 'idle'}
+            animation={{
+              trigger: 'click',
+              action: toggleAction,
+              animation: 'dissolve',
+              duration: 200
+            }}
             onClick={() => setSelectedButton(selectedButton === button.id ? null : button.id)}
           >
             {button.label}
@@ -287,16 +330,16 @@ export const ClickCounter = () => {
     const newCount = clickCount + 1;
     setClickCount(newCount);
 
-    // Determine variant based on click count
-    let variant = 'default';
-    if (newCount >= 10) variant = 'success';
-    else if (newCount >= 5) variant = 'active';
-    else if (newCount >= 1) variant = 'hover';
+    // Determine state based on click count
+    let state = 'default';
+    if (newCount >= 10) state = 'success';
+    else if (newCount >= 5) state = 'active';
+    else if (newCount >= 1) state = 'hover';
 
-    return { variant };
+    return { state };
   };
 
-  const counterVariants = {
+  const counterStates = {
     default: {
       fill: { type: 'solid' as const, color: '#f3f4f6' },
       stroke: { type: 'solid' as const, color: '#d1d5db', width: 1 },
@@ -327,7 +370,12 @@ export const ClickCounter = () => {
       <Frame
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 160, height: 40 }}
         appearance={{ radius: 6 }}
-        animation={{ trigger: 'click', action: counterAction, animation: 'dissolve', duration: 200 }}
+        animation={{
+          trigger: 'click',
+          action: counterAction,
+          animation: 'dissolve',
+          duration: 200
+        }}
       >
         Click to Count!
       </Frame>
@@ -345,7 +393,7 @@ export const CursorDemo = () => (
         <label>Click Trigger (pointer cursor)</label>
         <Frame
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 40 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{
@@ -364,7 +412,7 @@ export const CursorDemo = () => (
         <label>Hover Trigger (pointer cursor)</label>
         <Frame
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 40 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{
@@ -383,7 +431,7 @@ export const CursorDemo = () => (
         <label>Manual Cursor Override (grab)</label>
         <Frame
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 40 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{
@@ -392,7 +440,7 @@ export const CursorDemo = () => (
             destination: 'active',
             animation: 'dissolve',
             duration: 200,
-            cursor: 'grab', // Manual override
+            cursor: 'grab' as const, // Manual override
           }}
         >
           Grab Me
@@ -424,7 +472,7 @@ export const PolymorphicFrame = () => (
         <label style={{ minWidth: 120 }}>Default (div):</label>
         <Frame
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           animation={{
@@ -444,7 +492,7 @@ export const PolymorphicFrame = () => (
         <Frame
           as="button"
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           animation={{
@@ -464,7 +512,7 @@ export const PolymorphicFrame = () => (
         <Frame
           as="span"
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 120, height: 36 }}
-          fill={{ type: 'solid', color: '#f3f4f6' }}
+          fill={{ type: 'solid' as const, color: '#f3f4f6' }}
           stroke={{ color: '#d1d5db', weight: 1 }}
           appearance={{ radius: 4 }}
           animation={{
@@ -483,9 +531,9 @@ export const PolymorphicFrame = () => (
         <label style={{ minWidth: 120 }}>As section:</label>
         <Frame
           as="section"
-          variants={buttonVariants}
+          states={buttonStates}
           autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 50 }}
-          fill={{ type: 'solid', color: '#f0f9ff' }}
+          fill={{ type: 'solid' as const, color: '#f0f9ff' }}
           stroke={{ color: '#0ea5e9', weight: 1 }}
           appearance={{ radius: 6 }}
           animation={{

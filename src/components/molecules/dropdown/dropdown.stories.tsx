@@ -22,7 +22,7 @@ const meta: Meta<typeof Dropdown> = {
     },
   },
   argTypes: {
-    variant: {
+    state: {
       control: 'select',
       options: ['default', 'open', 'closed', 'disabled'],
       description: 'Dropdown visual state',
@@ -43,7 +43,7 @@ type Story = StoryObj<typeof Dropdown>;
 export const Basic: Story = {
   args: {
     items: sampleItems,
-    variant: 'default',
+    state: 'default',
   },
   parameters: {
     docs: {
@@ -60,7 +60,7 @@ export const Basic: Story = {
 export const WithSelection: Story = {
   args: {
     items: sampleItems,
-    variant: 'default',
+    state: 'default',
   },
   parameters: {
     docs: {
@@ -77,7 +77,7 @@ export const WithSelection: Story = {
 export const Disabled: Story = {
   args: {
     items: sampleItems,
-    variant: 'disabled',
+    state: 'disabled',
   },
   parameters: {
     docs: {
@@ -94,7 +94,7 @@ export const Disabled: Story = {
 export const Controlled: Story = {
   args: {
     items: sampleItems,
-    variant: 'default',
+    state: 'default',
   },
   parameters: {
     docs: {

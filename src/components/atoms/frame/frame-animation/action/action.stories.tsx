@@ -13,8 +13,8 @@ export default {
   },
 };
 
-// Common variants for action testing
-const actionVariants = {
+// Common states for action testing
+const actionStates = {
   default: {
     autoLayout: { flow: 'horizontal' as const, alignment: 'center' as const, padding: 16, width: 150, height: 50 },
     fill: { type: 'solid' as const, color: 'neutral2' },
@@ -100,8 +100,8 @@ export const ChangeToAction = () => (
     <h3>Change To Action</h3>
     <p>Click to change to the 'primary' variant</p>
     <Frame
-      variant="default"
-      variants={actionVariants}
+      state="default"
+      states={actionStates}
       animation={{
         trigger: 'mouseEnter',
         action: 'changeTo',
@@ -122,8 +122,8 @@ export const ChangeToDifferentDestinations = () => (
     <p>Each button changes to a different variant on click</p>
 
     <Frame
-      variant="default"
-      variants={actionVariants}
+      state="default"
+      states={actionStates}
       animation={{
         trigger: 'click',
         action: 'changeTo',
@@ -136,8 +136,8 @@ export const ChangeToDifferentDestinations = () => (
     </Frame>
 
     <Frame
-      variant="default"
-      variants={actionVariants}
+      state="default"
+      states={actionStates}
       animation={{
         trigger: 'click',
         action: 'changeTo',
@@ -150,8 +150,8 @@ export const ChangeToDifferentDestinations = () => (
     </Frame>
 
     <Frame
-      variant="default"
-      variants={actionVariants}
+      state="default"
+      states={actionStates}
       animation={{
         trigger: 'click',
         action: 'changeTo',
@@ -166,12 +166,12 @@ export const ChangeToDifferentDestinations = () => (
 );
 
 export const MultipleActions = () => (
-  <div style={{ padding: 20 }}>
+  <Frame >
     <h3>Multiple Actions</h3>
     <p>Hover changes to primary, click changes to success</p>
     <Frame
-      variant="default"
-      variants={actionVariants}
+      state="default"
+      states={actionStates}
       animation={[
         {
           trigger: 'mouseEnter',
@@ -191,7 +191,7 @@ export const MultipleActions = () => (
     >
       Hover + Click Actions
     </Frame>
-  </div>
+  </Frame>
 );
 
 export const ActionWithCursor = () => (
@@ -199,8 +199,8 @@ export const ActionWithCursor = () => (
     <h3>Action with Cursor Change</h3>
     <p>Hover changes cursor and variant</p>
     <Frame
-      variant="default"
-      variants={actionVariants}
+      state="default"
+      states={actionStates}
       animation={{
         trigger: 'mouseEnter',
         action: 'changeTo',
@@ -209,7 +209,7 @@ export const ActionWithCursor = () => (
         duration: 200
       }}
     >
-      Hover for Primary Variant
+      Hover for Primary State
     </Frame>
   </div>
 );

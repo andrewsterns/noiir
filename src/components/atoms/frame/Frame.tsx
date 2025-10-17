@@ -12,16 +12,16 @@ import { convertAppearanceProps } from './frame-properties/appearance/appearance
 import { resolveColor, colorUtils } from '../../../theme/colors';
 import type { AnimationConfig } from './frame-animation/core';
 import { useFrameAnimation } from './frame-animation/core';
-import type { FrameVariantProps } from './variants/variants';
+import type { FrameStateProps } from './states/states';
 
 interface FrameProps {
   id?: string;
-  variant?: string;
-  variants?: { [key: string]: FrameVariantProps };
+  state?: string;
+  states?: { [key: string]: FrameStateProps };
   as?: keyof JSX.IntrinsicElements;
   
-  // Child variants - defines variants for child components by ID
-  childVariants?: { [childId: string]: string };
+  // Child states - defines states for child components by ID
+  childStates?: { [childId: string]: string };
   
   // Animation Properties - handled by animation system
   animation?: AnimationConfig | AnimationConfig[];
@@ -59,8 +59,8 @@ interface FrameProps {
 export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
   const {
     as = 'div',
-    variant,
-    variants,
+    state,
+    states,
     animation,
     position,
     constraints,
@@ -80,88 +80,89 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
     onMouseUp,
   } = props;
 
-  // Frame manages its own variant state for animations to work
-  const [internalVariant, setInternalVariant] = useState(variant || 'default');
+  // Frame manages its own state for animations to work
+  const [internalState, setInternalState] = useState(state || 'default');
 
-  // Update internal variant when prop changes (for controlled usage)
+  // Update internal state when prop changes (for controlled usage)
   useEffect(() => {
-    if (variant !== undefined) {
-      setInternalVariant(variant);
+    if (state !== undefined) {
+      setInternalState(state);
     }
-  }, [variant]);
+  }, [state]);
 
-  // Get current variant props for styling
-  const currentVariantProps = internalVariant && variants?.[internalVariant] ? variants[internalVariant] : {};
-  const { animation: currentAnimation, ...currentVariantStyling } = currentVariantProps;
+  // Get current state props for styling
+  const currentStateProps = internalState && states?.[internalState] ? states[internalState] : {};
+  const { animation: currentAnimation, ...currentStateStyling } = currentStateProps;
 
   // Use animation hook with current animation config
-  // Use explicit animation prop if provided, otherwise use variant animation
+  // Use explicit animation prop if provided, otherwise use state animation
   const animationToUse = animation || currentAnimation;
   const {
     currentProps: animationProps,
     eventHandlers
   } = useFrameAnimation({ 
     ...props, // Pass all frame props
-    variant: internalVariant,
-    initialVariant: props.variant || 'default',
+    states, // Explicitly pass states
+    state: internalState,
+    initialState: props.state || 'default',
     animation: animationToUse,
-    onVariantChange: setInternalVariant
+    onStateChange: setInternalState
   });
 
   console.log('[Frame] Animation props received:', animationProps);
   console.log('[Frame] Event handlers received:', Object.keys(eventHandlers));
 
-  // Merge explicit props with current variant props and animation props
+  // Merge explicit props with current state props and animation props
   const finalProps = {
-    ...currentVariantStyling,
-    position: position ?? currentVariantStyling.position,
-    constraints: constraints ?? currentVariantStyling.constraints,
-    autoLayout: autoLayout ?? currentVariantStyling.autoLayout,
-    appearance: appearance ?? currentVariantStyling.appearance,
-    typography: typography ?? currentVariantStyling.typography,
-    fill: fill ?? currentVariantStyling.fill,
-    stroke: stroke ?? currentVariantStyling.stroke,
-    effects: effects ?? currentVariantStyling.effects,
-    cursor: props.cursor ?? currentVariantStyling.cursor,
+    ...currentStateStyling,
+    position: position ?? currentStateStyling.position,
+    constraints: constraints ?? currentStateStyling.constraints,
+    autoLayout: autoLayout ?? currentStateStyling.autoLayout,
+    appearance: appearance ?? currentStateStyling.appearance,
+    typography: typography ?? currentStateStyling.typography,
+    fill: fill ?? currentStateStyling.fill,
+    stroke: stroke ?? currentStateStyling.stroke,
+    effects: effects ?? currentStateStyling.effects,
+    cursor: props.cursor ?? currentStateStyling.cursor,
     // Animation props override everything
     ...animationProps,
   };
 
-  console.log(`[Frame] internalVariant:`, internalVariant);
+  console.log(`[Frame] internalState:`, internalState);
   console.log(`[Frame] finalProps.fill:`, finalProps.fill);
 
-  // Apply child variants to children with matching IDs
-  const applyChildVariants = (child: React.ReactNode): React.ReactNode => {
+  // Apply child states to children with matching IDs
+  const applyChildStates = (child: React.ReactNode): React.ReactNode => {
     if (!React.isValidElement(child)) return child;
     
     const childId = child.props.id;
-    const childVariant = finalProps.childVariants?.[childId];
+    const childState = finalProps.childStates?.[childId];
     
-    if (childId && childVariant) {
-      // Clone the child element with the new variant
+    if (childId && childState) {
+      // Clone the child element with the new state
       return React.cloneElement(child, { 
         ...child.props, 
-        variant: childVariant 
+        state: childState 
       });
     }
     
     // Recursively process children if they exist
     if (child.props.children) {
-      const processedChildren = React.Children.map(child.props.children, applyChildVariants);
+      const processedChildren = React.Children.map(child.props.children, applyChildStates);
       return React.cloneElement(child, { children: processedChildren });
     }
     
     return child;
   };
 
-  // Use children directly, then apply child variants
-  const finalChildren = React.Children.map(children, applyChildVariants);
+  // Use children directly, then apply child states
+  const finalChildren = React.Children.map(children, applyChildStates);
 
   // Determine if this frame uses auto layout
   const hasAutoLayout = !!finalProps.autoLayout &&
     (finalProps.autoLayout.flow === 'horizontal' || finalProps.autoLayout.flow === 'vertical');
 
-  // Convert Figma props to CSS styles (using finalProps which includes variant overrides)
+  // Convert Figma props to CSS styles (using finalProps which includes state overrides)
   const positionStyles = convertPositionProps(finalProps.position || {}, hasAutoLayout);
   const autoLayoutStyles = convertAutoLayoutProps(finalProps.autoLayout || {});
   const appearanceStyles = convertAppearanceProps(finalProps.appearance || {});

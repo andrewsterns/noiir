@@ -13,10 +13,10 @@ const meta: Meta<typeof Button> = {
     },
   },
   argTypes: {
-    variant: {
+    state: {
       control: 'select',
-      options: ['variantDefault', 'variantActive', 'variantHover', 'variantActiveHover'],
-      description: 'Button visual state - each variant has self-contained animation logic',
+      options: ['default', 'active', 'hover', 'activeHover'],
+      description: 'Button visual state - each state has self-contained animation logic',
     },
     children: {
       control: 'text',
@@ -43,7 +43,7 @@ type Story = StoryObj<typeof Button>;
 export const Interactive: Story = {
   args: {
     children: 'Interactive Button',
-    variant: 'default',
+    state: 'default',
   },
   parameters: {
     docs: {
@@ -60,7 +60,7 @@ export const Interactive: Story = {
 export const CustomStyled: Story = {
   args: {
     children: 'Custom Button',
-    variant: 'default',
+    state: 'default',
     fill: { type: 'solid', color: 'secondary6' },
     appearance: { radius: 12 },
     typography: { fontSize: 18, fontWeight: 600 },
@@ -69,7 +69,7 @@ export const CustomStyled: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Button with custom styling while maintaining all interactive behavior. The variant system still works with custom visual properties.',
+        story: 'Button with custom styling while maintaining all interactive behavior. The state system still works with custom visual properties.',
       },
     },
   },
