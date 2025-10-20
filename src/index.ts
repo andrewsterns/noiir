@@ -10,61 +10,61 @@ export * from './theme';
 export type {
   PositionProps,
   ConstraintProps
-} from './components/atoms/frame/frame-properties/position/position.props';
+} from './components/frame/frame-properties/position/position.props';
 
 export type {
   AutoLayoutProps
-} from './components/atoms/frame/frame-properties/layout/layout.props';
+} from './components/frame/frame-properties/layout/layout.props';
 
 export type {
   AppearanceProps
-} from './components/atoms/frame/frame-properties/appearance/appearance.props';
+} from './components/frame/frame-properties/appearance/appearance.props';
 export type {
   TypographyProps
-} from './components/atoms/frame/frame-properties/typography/typography.props';
+} from './components/frame/frame-properties/typography/typography.props';
 
 export type {
   FillProps
-} from './components/atoms/frame/frame-properties/appearance/fill.props';
+} from './components/frame/frame-properties/appearance/fill.props';
 export type {
   StrokeProps
-} from './components/atoms/frame/frame-properties/appearance/stroke.props';
+} from './components/frame/frame-properties/appearance/stroke.props';
 
 // Export component prop types
-export type { FrameProps } from './components/atoms/frame/Frame';
+export type { FrameProps } from './components/frame/Frame';
 
 // Export conversion utilities for advanced usage
 export {
   convertPositionProps,
   convertConstraintProps,
   convertPositionAndConstraints
-} from './components/atoms/frame/frame-properties/position/position.props';
+} from './components/frame/frame-properties/position/position.props';
 
 export {
   convertAutoLayoutProps
-} from './components/atoms/frame/frame-properties/layout/layout.props';
+} from './components/frame/frame-properties/layout/layout.props';
 
 export {
   convertAppearanceProps,
   convertCornerRadius,
   createAppearanceVariations
-} from './components/atoms/frame/frame-properties/appearance/appearance.props';
+} from './components/frame/frame-properties/appearance/appearance.props';
 
 export {
   convertTypographyProps,
   createTypographyScale,
   createTypographyPreset,
   createCommonPresets
-} from './components/atoms/frame/frame-properties';
+} from './components/frame/frame-properties';
 
 export {
   convertFillProps,
   createGradientString,
   createImageFillStyles,
   createMultipleFills
-} from './components/atoms/frame/frame-properties/appearance/fill.props';
+} from './components/frame/frame-properties/appearance/fill.props';
 
 export {
   convertStrokeProps,
   createStrokePattern
-} from './components/atoms/frame/frame-properties/appearance/stroke.props';
+} from './components/frame/frame-properties/appearance/stroke.props';

@@ -398,7 +398,7 @@ const ResponsiveGrid = ({ items }) => (
 
 ```tsx
 // ✅ Good - Use virtualization for large lists
-import { VirtualizedFrame } from '@/components/atoms/frame/VirtualizedFrame';
+import { VirtualizedFrame } from '@/components/frame/VirtualizedFrame';
 
 <VirtualizedFrame
   autoLayout={{ flow: 'vertical', gap: 8 }}

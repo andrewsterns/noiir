@@ -1,40 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { List, ListItem } from './list';
-
-// Reusable sample data generators for consistent testing across stories
-const createSampleItems = (count: number = 5): ListItem[] => [
-  { id: 'item-1', label: 'First Option', value: 'first' },
-  { id: 'item-2', label: 'Second Option', value: 'second' },
-  { id: 'item-3', label: 'Third Option', value: 'third' },
-  { id: 'item-4', label: 'Fourth Option', value: 'fourth' },
-  { id: 'item-5', label: 'Disabled Option', value: 'disabled', disabled: true },
-].slice(0, count);
-
-const createIdenticalItems = (count: number): ListItem[] =>
-  Array.from({ length: count }, (_, i) => ({
-    id: `item-${i + 1}`,
-    label: 'Same Option',
-    value: `same-${i + 1}`,
-  }));
-
-const createNumberedItems = (count: number, includeDisabled: boolean = false): ListItem[] => {
-  const items: ListItem[] = Array.from({ length: count }, (_, i) => ({
-    id: `item-${i + 1}`,
-    label: `Option ${i + 1}`,
-    value: `option-${i + 1}`,
-  }));
-
-  if (includeDisabled) {
-    items.push({
-      id: 'item-disabled',
-      label: 'Disabled Option',
-      value: 'disabled',
-      disabled: true,
-    });
-  }
-
-  return items;
-};
+import { List } from './list';
+import { useState } from 'react';
 
 const meta: Meta<typeof List> = {
   title: 'Molecules/List',
@@ -43,142 +9,140 @@ const meta: Meta<typeof List> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Interactive list component with selectable items and smooth animations.',
+        component: 'A list component that renders multiple Label components with selection support.',
       },
     },
   },
   argTypes: {
-    state: {
-      control: 'select',
-      options: ['default'],
-      description: 'Visual style state for the list container',
-    },
     items: {
-      control: 'object',
-      description: 'Array of items to display in the list',
+      control: { type: 'object' },
     },
-    selectedItemId: {
-      control: 'text',
-      description: 'ID of the currently selected item',
+    selectedIndex: {
+      control: { type: 'number' },
     },
-    onItemClick: { control: false },
-    onSelectionChange: { control: false },
-    // Allow customization of visual properties
-    fill: { control: 'object' },
-    appearance: { control: 'object' },
-    autoLayout: { control: 'object' },
-    // Hide internal props
-    className: { control: false },
-    style: { control: false },
+    multiSelect: {
+      control: { type: 'boolean' },
+    },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof List>;
 
-/**
- * Interactive List - Click items to select/deselect them
- */
-export const Interactive: Story = {
-  args: {
-    state: 'default',
-    items: createSampleItems(5), // 4 regular items + 1 disabled
-    selectedItemId: 'item-2',
+const sampleItems = [
+  'Apple',
+  'Banana',
+  'Cherry',
+  'Date',
+  'Elderberry'
+];
+
+const sampleItemsWithDisabled = [
+  'Apple',
+  'Banana',
+  { label: 'Cherry', disabled: true },
+  'Date',
+  'Elderberry'
+];
+
+export const SingleSelect: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    return (
+      <List
+        items={sampleItems}
+        selectedIndex={selectedIndex}
+        onItemClick={(index) => setSelectedIndex(index)}
+        fill={{ type: 'solid', color: 'gray1' }}
+        appearance={{ radius: 8 }}
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Interactive list with selectable items. Hover over items to see hover effects, click to select/deselect. The last item is disabled and cannot be selected.',
+        story: 'Single selection list - click to select one item.',
       },
     },
   },
 };
 
-/**
- * Compact List - Minimal spacing with 4 items
- */
-export const Compact: Story = {
-  args: {
-    state: 'default',
-    items: createSampleItems(4), // 4 regular items (no disabled)
+export const MultiSelect: Story = {
+  render: () => {
+    const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+
+    const handleItemClick = (index: number) => {
+      setSelectedIndices(prev =>
+        prev.includes(index)
+          ? prev.filter(i => i !== index)
+          : [...prev, index]
+      );
+    };
+
+    return (
+      <List
+        items={sampleItems}
+        selectedIndices={selectedIndices}
+        multiSelect={true}
+        onItemClick={handleItemClick}
+        fill={{ type: 'solid', color: 'gray1' }}
+        appearance={{ radius: 8 }}
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Compact list state with minimal spacing between items. Shows 4 identical regular items.',
+        story: 'Multi-selection list - click to toggle selection of multiple items.',
       },
     },
   },
 };
 
-/**
- * Spaced List - Extra spacing with 4 items
- */
-export const Spaced: Story = {
-  args: {
-    state: 'default',
-    items: createSampleItems(4), // 4 regular items (no disabled)
+export const WithDisabledItems: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    return (
+      <List
+        items={sampleItemsWithDisabled}
+        selectedIndex={selectedIndex}
+        onItemClick={(index) => setSelectedIndex(index)}
+        fill={{ type: 'solid', color: 'gray1' }}
+        appearance={{ radius: 8 }}
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Spaced list state with extra padding and gaps between items. Shows 4 identical regular items.',
+        story: 'List with disabled items that cannot be selected.',
       },
     },
   },
 };
 
-/**
- * Custom Styled List with all 5 items
- */
-export const CustomStyled: Story = {
-  args: {
-    state: 'default',
-    items: createSampleItems(5), // 4 regular items + 1 disabled
-    fill: { type: 'solid', color: 'secondary1' },
-    appearance: { radius: 12 },
-    autoLayout: { width: 300 },
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'List with custom styling while maintaining all interactive behavior. Shows all 5 items including the disabled one.',
-      },
-    },
-  },
-};
+export const StyledList: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(0);
 
-/**
- * Four Identical Items - Testing consistency
- */
-export const FourIdentical: Story = {
-  args: {
-    state: 'default',
-    items: createIdenticalItems(4), // 4 identical items
-    // No pre-selected item so all appear identical
+    return (
+      <List
+        items={sampleItems}
+        selectedIndex={selectedIndex}
+        onItemClick={(index) => setSelectedIndex(index)}
+        fill={{ type: 'solid', color: 'blue1' }}
+        stroke={{ type: 'solid', color: 'blue4', weight: 1 }}
+        appearance={{ radius: 12 }}
+        effects={{ dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.1)' }] }}
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'List with 4 identical items to test consistent behavior. All items have the same label "Same Option" and should appear identical until interacted with.',
-      },
-    },
-  },
-};
-
-/**
- * Many Numbered Items with Disabled
- */
-export const ManyItems: Story = {
-  args: {
-    state: 'default',
-    items: createNumberedItems(8, true), // 8 numbered items + 1 disabled
-    autoLayout: { width: 250, height: 300 },
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Compact list with many items and scrolling. Shows 8 numbered options plus one disabled item at the end.',
+        story: 'Styled list with custom colors, borders, and shadows.',
       },
     },
   },

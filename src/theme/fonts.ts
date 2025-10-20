@@ -25,5 +25,19 @@
     weights: [100, 200, 300, 400, 500, 600, 700, 800],
     styles: ["normal", "italic"],
     display: "swap"
+  },
+  
+  geist: {
+    family: "Geist, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    weights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    styles: ["normal"],
+    display: "swap"
+  },
+  
+  geistMono: {
+    family: "Geist Mono, JetBrains Mono, SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace",
+    weights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    styles: ["normal"],
+    display: "swap"
   }
 };

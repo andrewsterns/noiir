@@ -1,14 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Dropdown } from './dropdown';
-
-// Sample data for dropdown items
-const sampleItems = [
-  { id: 'item-1', label: 'First Option', value: 'first' },
-  { id: 'item-2', label: 'Second Option', value: 'second' },
-  { id: 'item-3', label: 'Third Option', value: 'third' },
-  { id: 'item-4', label: 'Fourth Option', value: 'fourth' },
-  { id: 'item-5', label: 'Disabled Option', value: 'disabled', disabled: true },
-];
+import { useState } from 'react';
 
 const meta: Meta<typeof Dropdown> = {
   title: 'Molecules/Dropdown',
@@ -17,19 +9,19 @@ const meta: Meta<typeof Dropdown> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Interactive dropdown component with selectable items, smooth animations, and keyboard navigation.',
+        component: 'A dropdown component that combines a Button trigger with a List of selectable options.',
       },
     },
   },
   argTypes: {
-    state: {
-      control: 'select',
-      options: ['default', 'open', 'closed', 'disabled'],
-      description: 'Dropdown visual state',
-    },
     items: {
-      control: 'object',
-      description: 'Array of dropdown items',
+      control: { type: 'object' },
+    },
+    placeholder: {
+      control: { type: 'text' },
+    },
+    disabled: {
+      control: { type: 'boolean' },
     },
   },
 };
@@ -37,69 +29,108 @@ const meta: Meta<typeof Dropdown> = {
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
-/**
- * Basic Dropdown - Click to open/close and select items
- */
+const sampleItems = [
+  'Apple',
+  'Banana',
+  'Cherry',
+  'Date',
+  'Elderberry'
+];
+
+const sampleItemsWithDisabled = [
+  'Apple',
+  'Banana',
+  { label: 'Cherry', disabled: true },
+  'Date',
+  'Elderberry'
+];
+
 export const Basic: Story = {
-  args: {
-    items: sampleItems,
-    state: 'default',
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    return (
+      <Dropdown
+        items={sampleItems}
+        selectedIndex={selectedIndex}
+        onChange={(index) => setSelectedIndex(index)}
+        placeholder="Choose a fruit..."
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Basic dropdown with selectable items. Click the trigger to open/close the menu.',
+        story: 'Basic dropdown with simple string items.',
       },
     },
   },
 };
 
-/**
- * Dropdown with Pre-selected Item
- */
-export const WithSelection: Story = {
-  args: {
-    items: sampleItems,
-    state: 'default',
+export const WithDisabledItems: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    return (
+      <Dropdown
+        items={sampleItemsWithDisabled}
+        selectedIndex={selectedIndex}
+        onChange={(index) => setSelectedIndex(index)}
+        placeholder="Choose a fruit..."
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Dropdown with a pre-selected item highlighted.',
+        story: 'Dropdown with some disabled items that cannot be selected.',
       },
     },
   },
 };
 
-/**
- * Disabled Dropdown
- */
-export const Disabled: Story = {
-  args: {
-    items: sampleItems,
-    state: 'disabled',
+export const Preselected: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(2);
+
+    return (
+      <Dropdown
+        items={sampleItems}
+        selectedIndex={selectedIndex}
+        onChange={(index) => setSelectedIndex(index)}
+        placeholder="Choose a fruit..."
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Disabled dropdown that cannot be interacted with.',
+        story: 'Dropdown with a pre-selected item.',
       },
     },
   },
 };
 
-/**
- * Controlled Dropdown - External state management
- */
-export const Controlled: Story = {
-  args: {
-    items: sampleItems,
-    state: 'default',
+export const Styled: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    return (
+      <Dropdown
+        items={sampleItems}
+        selectedIndex={selectedIndex}
+        onChange={(index) => setSelectedIndex(index)}
+        placeholder="Choose a fruit..."
+        buttonProps={{
+          fill: { type: 'solid', color: 'gray3' },
+        }}
+      />
+    );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Dropdown with externally controlled open state. Use the controls to toggle open/closed.',
+        story: 'Styled dropdown with custom button appearance.',
       },
     },
   },

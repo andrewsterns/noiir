@@ -1,220 +1,82 @@
 import React from 'react';
-import { Frame, FrameProps } from '../../atoms/frame/Frame';
-import { FrameStateProps } from '../../atoms/frame/states/states';
+import { Frame, FrameProps } from '../../frame/Frame';
+import { Label } from '../../atoms/label/label';
+import { LabelVariant } from '../../atoms/label/label.variants';
 
-/**
- * Available list states with their visual characteristics
- */
-export type ListState =
-  | 'default';    // Default list
+export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
-export interface ListProps extends Omit<FrameProps, 'state' | 'states'> {
-  state?: ListState;
-  items?: ListItem[];
-  selectedItemId?: string;
-  onItemClick?: (item: ListItem) => void;
-  onSelectionChange?: (item: ListItem | null) => void;
+export interface ListProps extends FrameProps {
+  items: ListItem[];
+  selectedIndex?: number;
+  selectedIndices?: number[];
+  multiSelect?: boolean;
+  onItemClick?: (index: number, item: ListItem) => void;
+  itemVariant?: LabelVariant;
+  selectedVariant?: LabelVariant;
+  disabledVariant?: LabelVariant;
 }
 
-
-
-export interface ListItem {
-  id: string;
-  label: React.ReactNode;
-  value?: any;
-  disabled?: boolean;
-}
-
-
-export const listStates: { [key: string]: FrameStateProps } = {
-  default: {
-    autoLayout: {
-      flow: 'vertical' as const,
-      gap: 4,
-      padding: { top: 8, right: 8, bottom: 8, left: 8 }
-    },
-    appearance: { radius: 6 },
-    fill: { type: 'solid' as const, color: 'neutral1' },
-    stroke: { type: 'solid' as const, color: 'neutral3', weight: 1 },
-  }
-};
-
-/**
- * List item states for individual list items
- */
-export const listItemStates: { [key: string]: FrameStateProps } = {
-  itemDefault: {
-    autoLayout: {
-      flow: 'horizontal' as const,
-      alignment: 'center' as const,
-      padding: { top: 8, right: 12, bottom: 8, left: 12 }
-    },
-    appearance: { radius: 4 },
-    fill: { type: 'solid' as const, color: 'transparent' },
-    typography: {
-      fontSize: 14,
-      fontWeight: 400,
-      color: 'neutral8',
-      lineHeight: 1.4
-    },
-    cursor: 'pointer',
-    animation: [
-      {
-        trigger: 'onHover',
-        action: 'changeTo',
-        destination: 'itemHover',
-        animation: 'dissolve',
-        duration: 150,
-      }
-    ]
-  },
-  itemHover: {
-    autoLayout: {
-      flow: 'horizontal' as const,
-      alignment: 'center' as const,
-      padding: { top: 8, right: 12, bottom: 8, left: 12 }
-    },
-    appearance: { radius: 4 },
-    fill: { type: 'solid' as const, color: 'primary2' },
-    typography: {
-      fontSize: 14,
-      fontWeight: 500,
-      color: 'primary8',
-      lineHeight: 1.4
-    },
-    cursor: 'pointer',
-    animation: [
-      {
-        trigger: 'onMouseLeave',
-        action: 'changeTo',
-        destination: 'itemDefault',
-        animation: 'dissolve',
-        duration: 150,
-      }
-    ]
-  },
-  itemSelected: {
-    autoLayout: {
-      flow: 'horizontal' as const,
-      alignment: 'center' as const,
-      padding: { top: 8, right: 12, bottom: 8, left: 12 }
-    },
-    appearance: { radius: 4 },
-    fill: { type: 'solid' as const, color: 'primary9' },
-    typography: {
-      fontSize: 14,
-      fontWeight: 500,
-      color: 'primary2',
-      lineHeight: 1.4
-    },
-    cursor: 'pointer',
-    animation: [
-      {
-        trigger: 'onHover',
-        action: 'changeTo',
-        destination: 'itemSelectedHover',
-        animation: 'dissolve',
-        duration: 150,
-      }
-    ]
-  },
-  itemSelectedHover: {
-    autoLayout: {
-      flow: 'horizontal' as const,
-      alignment: 'center' as const,
-      padding: { top: 8, right: 12, bottom: 8, left: 12 }
-    },
-    appearance: { radius: 4 },
-    fill: { type: 'solid' as const, color: 'primary10' },
-    typography: {
-      fontSize: 14,
-      fontWeight: 600,
-      color: 'primary2',
-      lineHeight: 1.4
-    },
-    cursor: 'pointer',
-    animation: [
-      {
-        trigger: 'onMouseLeave',
-        action: 'changeTo',
-        destination: 'itemSelected',
-        animation: 'dissolve',
-        duration: 150,
-      }
-    ]
-  },
-  itemDisabled: {
-    autoLayout: {
-      flow: 'horizontal' as const,
-      alignment: 'center' as const,
-      padding: { top: 8, right: 12, bottom: 8, left: 12 }
-    },
-    appearance: { radius: 4 },
-    fill: { type: 'solid' as const, color: 'transparent' },
-    typography: {
-      fontSize: 14,
-      fontWeight: 400,
-      color: 'neutral5',
-      lineHeight: 1.4
-    },
-    cursor: 'not-allowed'
-  }
-};
-
-/**
- * List component - displays a selectable list of items
- * Built on Frame with self-contained styling and interaction logic
- */
-export const List: React.FC<ListProps> = ({
-  state = 'default',
-  items = [],
-  selectedItemId,
+export const List = React.forwardRef<HTMLDivElement, ListProps>(({
+  items,
+  selectedIndex,
+  selectedIndices = [],
+  multiSelect = false,
   onItemClick,
-  onSelectionChange,
+  itemVariant = 'normal',
+  selectedVariant = 'active',
+  disabledVariant = 'disabled',
+  as,
   ...frameProps
-}) => {
-  const handleItemClick = (item: ListItem) => {
-    if (item.disabled) return;
-
-    // Call the item click handler
-    onItemClick?.(item);
-
-    // Update selection if different
-    if (selectedItemId !== item.id) {
-      onSelectionChange?.(item);
-    } else {
-      // Clicking selected item deselects it
-      onSelectionChange?.(null);
+}, ref) => {
+  const handleItemClick = (index: number, item: ListItem) => {
+    if (onItemClick) {
+      onItemClick(index, item);
     }
+  };
+
+  const getItemVariant = (index: number, item: ListItem): LabelVariant => {
+    if (typeof item === 'object' && item.disabled) {
+      return disabledVariant;
+    }
+
+    if (multiSelect) {
+      return selectedIndices.includes(index) ? selectedVariant : itemVariant;
+    } else {
+      return selectedIndex === index ? selectedVariant : itemVariant;
+    }
+  };
+
+  const getItemLabel = (item: ListItem): string => {
+    return typeof item === 'string' ? item : item.label;
+  };
+
+  const isItemDisabled = (item: ListItem): boolean => {
+    return typeof item === 'object' && item.disabled === true;
   };
 
   return (
     <Frame
+      ref={ref}
+      as={as || "div"}
+      autoLayout={{ flow: 'vertical', gap: 2, paddingVertical: 4 }}
+    fill={{ type: 'solid', color: 'transparent' }}
       {...frameProps}
-      state={state}
-      states={listStates}
     >
-      {items.map((item) => {
-        const isSelected = selectedItemId === item.id;
-        const itemState = item.disabled
-          ? 'itemDisabled'
-          : isSelected
-            ? 'itemSelected'
-            : 'itemDefault';
-
-        return (
-          <Frame
-            key={item.id}
-            state={itemState}
-            states={listItemStates}
-            onClick={() => handleItemClick(item)}
-          >
-            {item.label}
-          </Frame>
-        );
-      })}
+      {items.map((item, index) => (
+        <Label
+          key={index}
+          variant={getItemVariant(index, item)}
+          disabled={isItemDisabled(item)}
+          onClick={() => handleItemClick(index, item)}
+          autoLayout={{paddingHorizontal:12, paddingVertical:2}}
+        >
+          {getItemLabel(item)}
+        </Label>
+      ))}
     </Frame>
   );
-};
+});
 
 List.displayName = 'List';
+
+export default List;

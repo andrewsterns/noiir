@@ -15,7 +15,7 @@ Frame serves as the universal building block for all other components. Just like
 ## Quick Start
 
 ```tsx
-import { Frame } from '@/components/atoms/frame/Frame';
+import { Frame } from '@/components/frame/Frame';
 
 // Basic Frame
 <Frame
@@ -327,7 +327,7 @@ const [hovered, setHovered] = useState(false);
 Frame provides complete TypeScript support for all properties:
 
 ```tsx
-import type { FrameProps } from '@/components/atoms/frame/Frame';
+import type { FrameProps } from '@/components/frame/Frame';
 
 const MyComponent = (props: { variant: 'primary' | 'secondary' }) => {
   const frameProps: FrameProps = {

@@ -5,81 +5,98 @@
 
 export const colors = {
   // Primary Colors
-primary: {
-    1: '#f4f6fb',
-    2: '#e7ebfa',
-    3: '#c7d3f5',
-    4: '#9aaef0',
-    5: '#6a84e8',
-    6: '#495fd5',
-    7: '#3545b0',
-    8: '#27368c',
-    9: '#1d2967',
-    10: '#161f4c',
-    11: '#0f1634',
-    12: '#0a0b1e',
-  },
+"gray": {
+  "1": "#0A0A0A",  // Very dark gray (almost black)
+  "2": "#1A1A1A",  // Dark gray
+  "3": "#2A2A2A",  // Medium dark gray
+  "4": "#3A3A3A",  // Slightly lighter dark gray
+  "5": "#4A4A4A",  // Mid gray
+  "6": "#5A5A5A",  // Medium gray
+  "7": "#6A6A6A",  // Light medium gray
+  "8": "#7A7A7A",  // Light gray
+  "9": "#8A8A8A",  // Lighter gray
+  "10": "#9A9A9A", // Even lighter
+  "11": "#AAAAAA", // Light gray
+  "12": "#FFFFFF"  // Pure white for contrast
+},
 
-  secondary: {
-    1: '#f6f7f8',
-    2: '#eceef0',
-    3: '#dadde1',
-    4: '#b4b8bf',
-    5: '#8a9099',
-    6: '#666c74',
-    7: '#4c5158',
-    8: '#36393f',
-    9: '#25272b',
-    10: '#1b1c1f',
-    11: '#101113',
-    12: '#070708',
-  },
+"black": {
+  "1": "#050505",  // Ultra black
+  "2": "#0A0A0A",  // Very dark
+  "3": "#0F0F0F",  // Dark
+  "4": "#141414",  // Medium dark
+  "5": "#1A1A1A",  // Dark gray
+  "6": "#1F1F1F",  // Slightly lighter
+  "7": "#242424",  // Medium
+  "8": "#292929",  // Light medium
+  "9": "#2E2E2E",  // Lighter
+  "10": "#333333", // Even lighter
+  "11": "#383838", // Light
+  "12": "#FFFFFF"  // White
+},
 
-  accent: {
-    1: '#faf6ff',
-    2: '#f0e8ff',
-    3: '#dfccff',
-    4: '#c2a5ff',
-    5: '#9f77f5',
-    6: '#8458e8',
-    7: '#6b3fca',
-    8: '#532fa4',
-    9: '#3d227d',
-    10: '#2c175b',
-    11: '#1d0f3c',
-    12: '#0f061f',
-  },
+"purple": {
+  "1": "#F7F5FC",
+  "2": "#EDEAF9",
+  "3": "#E2DFF5",
+  "4": "#D6D2F0",
+  "5": "#C9C3EC",
+  "6": "#C0B3E2",
+  "7": "#AB95CC",
+  "8": "#9676B6",
+  "9": "#7A5DB3",
+  "10": "#62448F",
+  "11": "#4A356A",
+  "12": "#36264A"
+},
 
-  neutral: {
-    1: '#f5f5f6',
-    2: '#e8e8ea',
-    3: '#cfcfd3',
-    4: '#a8a8ad',
-    5: '#7d7d83',
-    6: '#57575d',
-    7: '#3d3d42',
-    8: '#28282c',
-    9: '#1a1a1e',
-    10: '#121215',
-    11: '#0a0a0c',
-    12: '#000000',
-  },
+"blue": {
+  "1": "#0A0F1A",  // Very dark blue
+  "2": "#0F1629",  // Dark blue
+  "3": "#141D38",  // Medium dark blue
+  "4": "#192447",  // Darker blue
+  "5": "#1E2B56",  // Medium blue
+  "6": "#233265",  // Lighter blue
+  "7": "#283974",  // Light blue
+  "8": "#2D4083",  // Lighter blue
+  "9": "#334792",  // Bright blue accent
+  "10": "#4A5FA1", // Lighter accent
+  "11": "#6177B0", // Even lighter
+  "12": "#FFFFFF"  // White
+},
+
+
+"oat": {
+  "1": "#FDFBF8",
+  "2": "#F9F5F1",
+  "3": "#F4F0ED",
+  "4": "#EEE8E2",
+  "5": "#E8E1DB",
+  "6": "#E1D9D2",
+  "7": "#D8CFC6",
+  "8": "#CFC5BA",
+  "9": "#C6BBB0",
+  "10": "#BCB1A6",
+  "11": "#B3A799",
+  "12": "#A99D8F"
+},
+
 
   // Semantic Colors
-  success: {
-    1: '#f0fdf4',
-    2: '#dcfce7',
-    3: '#bbf7d0',
-    4: '#86efac',
-    5: '#4ade80',
-    6: '#22c55e',
-    7: '#16a34a',
-    8: '#15803d',
-    9: '#166534',
-    10: '#14532d',
-    11: '#052e16',
-    12: '#021c08',
-  },
+"grass": {
+  "1": "#EDF7F0",
+  "2": "#DFF0E1",
+  "3": "#D0E9D2",
+  "4": "#C2E1C3",
+  "5": "#B3DACF",
+  "6": "#BDD3C1",
+  "7": "#A0BFA8",
+  "8": "#86AA8F",
+  "9": "#6C9575",
+  "10": "#55785F",
+  "11": "#405C49",
+  "12": "#2C3F34"
+},
 
   warning: {
     1: '#fffbeb',
@@ -96,20 +113,21 @@ primary: {
     12: '#1c0a01',
   },
 
-  error: {
-    1: '#fef2f2',
-    2: '#fee2e2',
-    3: '#fecaca',
-    4: '#fca5a5',
-    5: '#f87171',
-    6: '#ef4444',
-    7: '#dc2626',
-    8: '#b91c1c',
-    9: '#991b1b',
-    10: '#7f1d1d',
-    11: '#450a0a',
-    12: '#1a0404',
-  },
+ "tomato": {
+  "1": "#FFF1ED",
+  "2": "#FFE3DB",
+  "3": "#FFD5C9",
+  "4": "#FFC7B7",
+  "5": "#FFB99F",
+  "6": "#EE8F67",
+  "7": "#D4775A",
+  "8": "#B8604C",
+  "9": "#9B493F",
+  "10": "#7C362F",
+  "11": "#5F261F",
+  "12": "#42180F"
+}
+
 
 } as const;
 
@@ -147,7 +165,7 @@ export const resolveColor = (colorInput: string): string => {
   const match = colorInput.match(/^([a-z]+)(\d{1,2})$/);
   if (match) {
     const [, colorName, shadeNum] = match;
-    const shade = parseInt(shadeNum) as ColorShade;
+    const shade = parseInt(shadeNum) as unknown as ColorShade;
     
     if (colorName in colors) {
       const colorScale = colors[colorName as ColorKey];
@@ -157,14 +175,14 @@ export const resolveColor = (colorInput: string): string => {
     }
   }
   
-  // Fallback to primary6 if parsing fails
-  return colors.primary[6];
+  // Fallback to blue9 if parsing fails
+  return colors.blue[9];
 };
 
 /**
  * Type definitions for colors
  */
-export type ColorScale = typeof colors.primary;
+export type ColorScale = typeof colors.gray;
 export type ColorKey = keyof typeof colors;
 export type ColorShade = keyof ColorScale;
 

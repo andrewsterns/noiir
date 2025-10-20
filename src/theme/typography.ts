@@ -4,7 +4,7 @@ import {
   convertTypographyProps as convertTypographyPropsBase,
   applyTypographyPreset,
   mergeTypographyProps
-} from '../components/atoms/frame/frame-properties/typography/typography.props';
+} from '../components/frame/frame-properties/typography/typography.props';
 import { fonts } from './fonts';
 
 /**
@@ -24,44 +24,48 @@ export { fonts };
  * Predefined Figma-style typography presets
  */
 export const typographyPresets = {
+  Frame: {
+    fontFamily: fonts.geist.family,
+    fontWeight: 400,
+  },
   // Headings
   h1: {
-    fontFamily: fonts.atkinsonMono.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 700,
     fontSize: 32,
     lineHeight: 1.2,
     letterSpacing: -0.5,
   },
   h2: {
-    fontFamily: fonts.atkinsonMono.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 700,
     fontSize: 24,
     lineHeight: 1.3,
     letterSpacing: -0.25,
   },
   h3: {
-    fontFamily: fonts.atkinsonMono.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 600,
     fontSize: 20,
     lineHeight: 1.4,
     letterSpacing: 0,
   },
   h4: {
-    fontFamily: fonts.atkinsonMono.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 600,
     fontSize: 18,
     lineHeight: 1.4,
     letterSpacing: 0,
   },
   h5: {
-    fontFamily: fonts.atkinsonMono.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 500,
     fontSize: 16,
     lineHeight: 1.5,
     letterSpacing: 0,
   },
   h6: {
-    fontFamily: fonts.atkinsonMono.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 500,
     fontSize: 14,
     lineHeight: 1.5,
@@ -127,7 +131,7 @@ export const typographyPresets = {
     letterSpacing: -1,
   },
   code: {
-    fontFamily: fonts.jetbrainsMono.family,
+    fontFamily: fonts.geistMono.family,
     fontWeight: 400,
     fontSize: 14,
     lineHeight: 1.4,
