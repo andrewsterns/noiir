@@ -1,17 +1,15 @@
 import React from 'react';
-import { PositionProps, ConstraintProps } from './frame-properties/position/position.props';
-import { AutoLayoutProps } from './frame-properties/layout/layout.props';
-import { AppearanceProps } from './frame-properties/appearance/appearance.props';
-import { TypographyProps, convertTypographyProps } from './frame-properties/typography/typography.props';
-import { FillProps, convertFillProps } from './frame-properties/appearance/fill.props';
-import { StrokeProps, convertStrokeProps } from './frame-properties/appearance/stroke.props';
-import { EffectProps, convertEffectProps } from './frame-properties/effects/effects.props';
-import { convertPositionProps } from './frame-properties/position/position.props';
-import { convertAutoLayoutProps } from './frame-properties/layout/layout.props';
-import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
-import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
-import { convertAppearanceProps } from './frame-properties/appearance/appearance.props';
-import { resolveColor, colorUtils } from '../../theme/colors';
+import { PositionProps, ConstraintProps } from '../../frame/frame-properties/position/position.props';
+import { AutoLayoutProps } from '../../frame/frame-properties/layout/layout.props';
+import { AppearanceProps } from '../../frame/frame-properties/appearance/appearance.props';
+import { TypographyProps, convertTypographyProps } from '../../frame/frame-properties/typography/typography.props';
+import { FillProps, convertFillProps } from '../../frame/frame-properties/appearance/fill.props';
+import { StrokeProps, convertStrokeProps } from '../../frame/frame-properties/appearance/stroke.props';
+import { EffectProps, convertEffectProps } from '../../frame/frame-properties/effects/effects.props';
+import { convertPositionProps } from '../../frame/frame-properties/position/position.props';
+import { convertAutoLayoutProps } from '../../frame/frame-properties/layout/layout.props';
+import { convertAppearanceProps } from '../../frame/frame-properties/appearance/appearance.props';
+import { resolveColor, colorUtils } from '../../../theme/colors';
 
 interface FrameProps {
   id?: string;
@@ -65,32 +63,17 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
     if (!React.isValidElement(child)) return child;
     const childId = child.props.id;
     const childState = childStates?.[childId];
-    let newProps: any = { ...child.props };
     if (childId && childState) {
-      newProps.state = childState;
-    }
-    // If child has a position prop, apply absolute positioning styles
-    if (child.props.position) {
-      const { x = 0, y = 0, rotation = 0 } = child.props.position;
-      newProps.style = {
-        ...(child.props.style || {}),
-        position: 'absolute',
-        left: x,
-        top: y,
-        transform: `rotate(${rotation}deg)`
-      };
-    } else if (autoLayout?.flow === 'freeform') {
-      // For freeform, force absolute positioning if not already set
-      newProps.style = {
-        ...(child.props.style || {}),
-        position: 'absolute',
-      };
+      return React.cloneElement(child, {
+        ...child.props,
+        state: childState,
+      });
     }
     if (child.props.children) {
       const processedChildren = React.Children.map(child.props.children, applyChildStates);
-      newProps.children = processedChildren;
+      return React.cloneElement(child, { children: processedChildren });
     }
-    return React.cloneElement(child, newProps);
+    return child;
   };
 
   const finalChildren = React.Children.map(children, applyChildStates);
@@ -98,20 +81,11 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
   // Determine if this frame uses auto layout
   const hasAutoLayout = !!autoLayout && (autoLayout.flow === 'horizontal' || autoLayout.flow === 'vertical');
 
-  // Curved auto layout: distribute children along SVG path
-  let curvedChildren = finalChildren;
-  if (autoLayout?.flow === 'curved' && Array.isArray(finalChildren)) {
-    curvedChildren = getCurvedLayoutChildren(finalChildren, autoLayout).filter((c): c is React.ReactElement => !!c);
-  }
-
-  // No need to merge defaults here; handled in convertTypographyProps
-  const typographyWithDefault = typography;
-
   // Convert Figma props to CSS styles
   const positionStyles = convertPositionProps(position || {}, hasAutoLayout);
   const autoLayoutStyles = convertAutoLayoutProps(autoLayout || {});
   const appearanceStyles = convertAppearanceProps(appearance || {});
-  const typographyStyles = convertTypographyProps(typographyWithDefault || {});
+  const typographyStyles = convertTypographyProps(typography || {});
   const fillStyles = convertFillProps(fill || {}, false);
   const strokeStyles = convertStrokeProps(stroke || {});
   const effectStyles = convertEffectProps(effects || {});
@@ -178,64 +152,15 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
       ...positionStyles,
       ...autoLayoutStyles,
       ...appearanceStyles,
+      ...typographyStyles,
       ...fillStyles,
       ...strokeStyles,
       ...effectStyles,
       ...(cursor && { cursor }),
-      ...overrideStyle,
-      ...typographyStyles // typographyStyles last so fontFamily always wins
+      ...overrideStyle
     };
   }
 
-  // For freeform, wrap children in a relative container to anchor absolutely positioned children
-  if (autoLayout?.flow === 'freeform') {
-    // If width or height is 'hug', calculate bounding box of children
-    let hugWidth = undefined;
-    let hugHeight = undefined;
-    if (autoLayout.width === 'hug' || autoLayout.height === 'hug') {
-      // Only works if children are valid React elements with position and size
-      let maxRight = 0;
-      let maxBottom = 0;
-      React.Children.forEach(finalChildren, (child) => {
-        if (React.isValidElement(child)) {
-          const el = child as React.ReactElement<any>;
-          const x = el.props.position?.x || 0;
-          const y = el.props.position?.y || 0;
-          // Prefer autoLayout.width/height, fallback to style.width/height, fallback to 0
-          let w = 0;
-          let h = 0;
-          if (el.props.autoLayout?.width && typeof el.props.autoLayout.width === 'number') w = el.props.autoLayout.width;
-          else if (el.props.style?.width) w = parseInt(el.props.style.width, 10) || 0;
-          if (el.props.autoLayout?.height && typeof el.props.autoLayout.height === 'number') h = el.props.autoLayout.height;
-          else if (el.props.style?.height) h = parseInt(el.props.style.height, 10) || 0;
-          maxRight = Math.max(maxRight, x + w);
-          maxBottom = Math.max(maxBottom, y + h);
-        }
-      });
-      if (autoLayout.width === 'hug') hugWidth = maxRight;
-      if (autoLayout.height === 'hug') hugHeight = maxBottom;
-    }
-    return React.createElement(
-      as,
-      {
-        ref,
-        id,
-        className,
-        style: {
-          ...finalStyles,
-          position: 'relative',
-          ...(hugWidth !== undefined ? { width: hugWidth } : {}),
-          ...(hugHeight !== undefined ? { height: hugHeight } : {}),
-        },
-        onClick,
-        onMouseEnter,
-        onMouseLeave,
-        onMouseDown,
-        onMouseUp,
-      },
-      finalChildren
-    );
-  }
   return React.createElement(
     as,
     {
@@ -249,7 +174,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
       onMouseDown,
       onMouseUp,
     },
-    autoLayout?.flow === 'curved' ? curvedChildren : finalChildren
+    finalChildren
   );
 });
 

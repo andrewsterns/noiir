@@ -44,6 +44,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
 
   // Get base variant styles
   const baseVariant = BUTTON_VARIANTS[effectiveVariant];
+  // Debug: log the effective variant and typography
+  // eslint-disable-next-line no-console
+  console.log('Button variant:', effectiveVariant, 'Typography:', baseVariant.typography);
 
   // Determine which icons to show
   const showIconStart = iconStartActive !== undefined ? (isHovered ? iconStartActive : iconStart) : iconStart;
@@ -98,7 +101,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
       fill={baseVariant.fill}
       stroke={baseVariant.stroke}
       appearance={baseVariant.appearance}
-      autoLayout={baseVariant.autoLayout}
+  autoLayout={{ ...baseVariant.autoLayout, margin: undefined }}
       typography={baseVariant.typography}
       effects={baseVariant.effects}
       onClick={handleClick}
@@ -118,6 +121,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
       )}
       <Frame
         autoLayout={{ flow: 'grid' }}
+        typography={baseVariant.typography}
       >
         {children}
       </Frame>

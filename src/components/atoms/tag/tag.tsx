@@ -7,6 +7,8 @@ export interface TagProps extends Omit<FrameProps, 'onClick'> {
   action?: TagAction;
   children: React.ReactNode;
   onAction?: () => void;
+  iconStart?: React.ReactNode;
+  iconEnd?: React.ReactNode;
 }
 
 export const Tag = React.forwardRef<HTMLDivElement, TagProps>(({

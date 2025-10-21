@@ -211,7 +211,9 @@ export const TypographyPresets: Story = {
           Headings
         </h2>
         
-        {['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map((heading) => (
+        {['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map((heading) => {
+          const p = typographyPresets[heading as keyof typeof typographyPresets] as any;
+          return (
           <div key={heading} style={{ marginBottom: '2rem' }}>
             <div style={{
               ...applyThemePreset(heading as keyof typeof typographyPresets),
@@ -227,13 +229,13 @@ export const TypographyPresets: Story = {
               padding: '0.5rem',
               borderRadius: '4px'
             }}>
-              Font: {typographyPresets[heading as keyof typeof typographyPresets].fontFamily} | 
-              Size: {typographyPresets[heading as keyof typeof typographyPresets].fontSize}px | 
-              Weight: {typographyPresets[heading as keyof typeof typographyPresets].fontWeight} | 
-              Line Height: {typographyPresets[heading as keyof typeof typographyPresets].lineHeight}
+              Font: {p.fontFamily} | 
+              Size: {p.fontSize ? `${p.fontSize}px` : '—'} | 
+              Weight: {p.fontWeight} | 
+              Line Height: {p.lineHeight ?? '—'}
             </div>
           </div>
-        ))}
+        )})}
       </div>
       
       <div style={{ marginBottom: '3rem' }}>
@@ -241,7 +243,9 @@ export const TypographyPresets: Story = {
           Body Text & UI Elements
         </h2>
         
-        {['body1', 'body2', 'label', 'caption', 'button', 'overline'].map((preset) => (
+        {['body1', 'body2', 'label', 'caption', 'button', 'overline'].map((preset) => {
+          const p = typographyPresets[preset as keyof typeof typographyPresets] as any;
+          return (
           <div key={preset} style={{ marginBottom: '2rem' }}>
             <div style={{
               ...applyThemePreset(preset as keyof typeof typographyPresets),
@@ -257,13 +261,13 @@ export const TypographyPresets: Story = {
               padding: '0.5rem',
               borderRadius: '4px'
             }}>
-              Font: {typographyPresets[preset as keyof typeof typographyPresets].fontFamily} | 
-              Size: {typographyPresets[preset as keyof typeof typographyPresets].fontSize}px | 
-              Weight: {typographyPresets[preset as keyof typeof typographyPresets].fontWeight} | 
-              Line Height: {typographyPresets[preset as keyof typeof typographyPresets].lineHeight}
+              Font: {p.fontFamily} | 
+              Size: {p.fontSize ? `${p.fontSize}px` : '—'} | 
+              Weight: {p.fontWeight} | 
+              Line Height: {p.lineHeight ?? '—'}
             </div>
           </div>
-        ))}
+        )})}
       </div>
       
       <div style={{ marginBottom: '3rem' }}>
@@ -271,7 +275,9 @@ export const TypographyPresets: Story = {
           Special Presets
         </h2>
         
-        {['display', 'code'].map((preset) => (
+        {['display', 'code'].map((preset) => {
+          const p = typographyPresets[preset as keyof typeof typographyPresets] as any;
+          return (
           <div key={preset} style={{ marginBottom: '2rem' }}>
             <div style={{
               ...applyThemePreset(preset as keyof typeof typographyPresets),
@@ -287,13 +293,13 @@ export const TypographyPresets: Story = {
               padding: '0.5rem',
               borderRadius: '4px'
             }}>
-              Font: {typographyPresets[preset as keyof typeof typographyPresets].fontFamily} | 
-              Size: {typographyPresets[preset as keyof typeof typographyPresets].fontSize}px | 
-              Weight: {typographyPresets[preset as keyof typeof typographyPresets].fontWeight} | 
-              Line Height: {typographyPresets[preset as keyof typeof typographyPresets].lineHeight}
+              Font: {p.fontFamily} | 
+              Size: {p.fontSize ? `${p.fontSize}px` : '—'} | 
+              Weight: {p.fontWeight} | 
+              Line Height: {p.lineHeight ?? '—'}
             </div>
           </div>
-        ))}
+        )})}
       </div>
       
       <div style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: '#f9fafb', borderRadius: '8px' }}>

@@ -54,8 +54,6 @@ export const SingleSelect: Story = {
         items={sampleItems}
         selectedIndex={selectedIndex}
         onItemClick={(index) => setSelectedIndex(index)}
-        fill={{ type: 'solid', color: 'gray1' }}
-        appearance={{ radius: 8 }}
       />
     );
   },
@@ -86,8 +84,6 @@ export const MultiSelect: Story = {
         selectedIndices={selectedIndices}
         multiSelect={true}
         onItemClick={handleItemClick}
-        fill={{ type: 'solid', color: 'gray1' }}
-        appearance={{ radius: 8 }}
       />
     );
   },
@@ -109,8 +105,6 @@ export const WithDisabledItems: Story = {
         items={sampleItemsWithDisabled}
         selectedIndex={selectedIndex}
         onItemClick={(index) => setSelectedIndex(index)}
-        fill={{ type: 'solid', color: 'gray1' }}
-        appearance={{ radius: 8 }}
       />
     );
   },
@@ -132,10 +126,6 @@ export const StyledList: Story = {
         items={sampleItems}
         selectedIndex={selectedIndex}
         onItemClick={(index) => setSelectedIndex(index)}
-        fill={{ type: 'solid', color: 'blue1' }}
-        stroke={{ type: 'solid', color: 'blue4', weight: 1 }}
-        appearance={{ radius: 12 }}
-        effects={{ dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.1)' }] }}
       />
     );
   },

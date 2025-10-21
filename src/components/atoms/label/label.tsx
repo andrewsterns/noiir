@@ -15,7 +15,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   children,
   onClick,
   disabled = false,
-  variant = 'normal',
+  variant = 'primary',
   as,
   onMouseEnter,
   onMouseLeave,
@@ -34,8 +34,8 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
                          isHovered ? 'hovered' :
                          variant;
 
-  // Get base variant styles
-  const baseVariant = LABEL_VARIANTS[effectiveVariant];
+  // Get base variant styles, fallback to 'primary' if undefined
+  const baseVariant = LABEL_VARIANTS[effectiveVariant] || LABEL_VARIANTS['primary'];
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (!disabled) {
@@ -86,6 +86,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
       fill={baseVariant.fill}
       stroke={baseVariant.stroke}
       appearance={baseVariant.appearance}
+      autoLayout={baseVariant.autoLayout}
       typography={baseVariant.typography}
       effects={baseVariant.effects}
       onClick={handleClick}

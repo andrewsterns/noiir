@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
-import { LabelVariant } from '../../atoms/label/label.variants';
+import { LabelVariant, LABEL_VARIANTS } from '../../atoms/label/label.variants';
 
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
@@ -22,13 +22,14 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   selectedIndices = [],
   multiSelect = false,
   onItemClick,
-  itemVariant = 'normal',
+  itemVariant = 'primary',
   selectedVariant = 'active',
   disabledVariant = 'disabled',
   as,
   ...frameProps
 }, ref) => {
   const handleItemClick = (index: number, item: ListItem) => {
+    if (isItemDisabled(item)) return;
     if (onItemClick) {
       onItemClick(index, item);
     }
@@ -58,21 +59,28 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
     <Frame
       ref={ref}
       as={as || "div"}
-      autoLayout={{ flow: 'vertical', gap: 2, paddingVertical: 4 }}
-    fill={{ type: 'solid', color: 'transparent' }}
+      autoLayout={{ flow: 'vertical', paddingVertical: 4, paddingHorizontal: 0, gap: 4, width: 'fill', height: 'fill'  }}
+      fill={{ type: 'none'}}
       {...frameProps}
     >
-      {items.map((item, index) => (
-        <Label
-          key={index}
-          variant={getItemVariant(index, item)}
-          disabled={isItemDisabled(item)}
-          onClick={() => handleItemClick(index, item)}
-          autoLayout={{paddingHorizontal:12, paddingVertical:2}}
-        >
-          {getItemLabel(item)}
-        </Label>
-      ))}
+      {items.map((item, index) => {
+        const variant = getItemVariant(index, item);
+        const disabled = isItemDisabled(item);
+        const variantConfig = LABEL_VARIANTS[variant] || {};
+        const variantAutoLayout = variantConfig.autoLayout || {};
+
+        return (
+          <Label
+            key={index}
+            variant={variant}
+            autoLayout={{ ...variantAutoLayout, width: 'fill', height: 'fill' }}
+            disabled={disabled}
+            onClick={() => handleItemClick(index, item)}
+          >
+            {getItemLabel(item)}
+          </Label>
+        );
+      })}
     </Frame>
   );
 });

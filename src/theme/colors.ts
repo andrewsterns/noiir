@@ -6,18 +6,18 @@
 export const colors = {
   // Primary Colors
 "gray": {
-  "1": "#0A0A0A",  // Very dark gray (almost black)
-  "2": "#1A1A1A",  // Dark gray
-  "3": "#2A2A2A",  // Medium dark gray
-  "4": "#3A3A3A",  // Slightly lighter dark gray
-  "5": "#4A4A4A",  // Mid gray
-  "6": "#5A5A5A",  // Medium gray
-  "7": "#6A6A6A",  // Light medium gray
-  "8": "#7A7A7A",  // Light gray
-  "9": "#8A8A8A",  // Lighter gray
-  "10": "#9A9A9A", // Even lighter
-  "11": "#AAAAAA", // Light gray
-  "12": "#FFFFFF"  // Pure white for contrast
+  "1": "#f5f3f3ff",  // Very light gray
+  "2": "#f3f3f5ff",  // Light gray
+  "3": "#e4e5e9ff",  // Slightly darker light gray
+  "4": "#cacdcfff",  // Light-medium gray
+  "5": "#b0b3b6",    // Medium gray
+  "6": "#96999c",    // Medium-dark gray
+  "7": "#7c7f82",    // Darker gray
+  "8": "#626568",    // Even darker gray
+  "9": "#484b4e",    // Very dark gray
+  "10": "#2e3134",   // Near black
+  "11": "#18191a",   // Almost black
+  "12": "#050505"    // Pure black for contrast
 },
 
 "black": {
@@ -51,18 +51,18 @@ export const colors = {
 },
 
 "blue": {
-  "1": "#0A0F1A",  // Very dark blue
-  "2": "#0F1629",  // Dark blue
-  "3": "#141D38",  // Medium dark blue
-  "4": "#192447",  // Darker blue
-  "5": "#1E2B56",  // Medium blue
-  "6": "#233265",  // Lighter blue
-  "7": "#283974",  // Light blue
-  "8": "#2D4083",  // Lighter blue
-  "9": "#334792",  // Bright blue accent
-  "10": "#4A5FA1", // Lighter accent
-  "11": "#6177B0", // Even lighter
-  "12": "#FFFFFF"  // White
+  "1": "#fcfdfdff",  // Very light blue
+  "2": "#e6f1fb",    // Lighter blue
+  "3": "#c7e0f7",    // Light blue
+  "4": "#a7cdf2",    // Soft blue
+  "5": "#7db3ea",    // Muted blue
+  "6": "#5ca2e7",    // Subtle blue
+  "7": "#449de6ff",  // Main blue
+  "8": "#357dc2",    // Slightly darker blue
+  "9": "#285f99",    // Medium dark blue
+  "10": "#1b406b",   // Dark blue
+  "11": "#10263d",   // Very dark blue
+  "12": "#0a1621"    // Near black blue
 },
 
 

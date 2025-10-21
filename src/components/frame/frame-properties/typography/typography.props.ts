@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { resolveColor } from '../../../../theme/colors';
+import { typographyPresets } from '../../../../theme/typography';
 
 /**
  * Typography Properties
@@ -47,21 +48,23 @@ export interface RectangleProps extends TypographyProps {
 /**
  * Convert typography props to CSS styles
  */
-export const convertTypographyProps = (props: TypographyProps): React.CSSProperties => {
+export function convertTypographyProps(props: TypographyProps): React.CSSProperties {
+  // Always merge Frame defaults with provided props, so variant props override but missing values fall back to Frame defaults
+  const frameDefaults = typographyPresets?.Frame || {};
+  const merged = { ...frameDefaults, ...props } as TypographyProps;
+
   const styles: React.CSSProperties = {};
-  
-  if (props.fontFamily !== undefined) styles.fontFamily = props.fontFamily;
-  if (props.fontSize !== undefined) styles.fontSize = typeof props.fontSize === 'number' ? `${props.fontSize}px` : props.fontSize;
-  if (props.fontWeight !== undefined) styles.fontWeight = props.fontWeight;
-  if (props.lineHeight !== undefined) styles.lineHeight = props.lineHeight;
-  if (props.letterSpacing !== undefined) styles.letterSpacing = typeof props.letterSpacing === 'number' ? `${props.letterSpacing}px` : props.letterSpacing;
-  if (props.textAlign !== undefined) styles.textAlign = props.textAlign;
-  if (props.textDecoration !== undefined) styles.textDecoration = props.textDecoration;
-  if (props.textTransform !== undefined) styles.textTransform = props.textTransform;
-  if (props.color !== undefined) styles.color = resolveColor(props.color);
-  
+  if (merged.fontFamily !== undefined) styles.fontFamily = merged.fontFamily;
+  if (merged.fontSize !== undefined) styles.fontSize = typeof merged.fontSize === 'number' ? `${merged.fontSize}px` : merged.fontSize;
+  if (merged.fontWeight !== undefined) styles.fontWeight = merged.fontWeight;
+  if (merged.lineHeight !== undefined) styles.lineHeight = merged.lineHeight;
+  if (merged.letterSpacing !== undefined) styles.letterSpacing = typeof merged.letterSpacing === 'number' ? `${merged.letterSpacing}px` : merged.letterSpacing;
+  if (merged.textAlign !== undefined) styles.textAlign = merged.textAlign;
+  if (merged.textDecoration !== undefined) styles.textDecoration = merged.textDecoration;
+  if (merged.textTransform !== undefined) styles.textTransform = merged.textTransform;
+  if (merged.color !== undefined) styles.color = resolveColor(merged.color);
   return styles;
-};
+}
 
 /**
  * Resolve text properties (alias for convertTypographyProps)
