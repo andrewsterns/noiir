@@ -1,13 +1,15 @@
-import { FillProps } from '../../frame/frame-properties/appearance/fill.props';
-import { StrokeProps } from '../../frame/frame-properties/appearance/stroke.props';
-import { AppearanceProps } from '../../frame/frame-properties/appearance/appearance.props';
-import { TypographyProps } from '../../frame/frame-properties/typography/typography.props';
-import { EffectProps } from '../../frame/frame-properties/effects/effects.props';
-
+import {
+  FillProps,
+  StrokeProps,
+  AppearanceProps,
+  TypographyProps,
+  EffectProps,
+  AutoLayoutProps,
+  AnimateProps,
+  CursorProps
+} from '../../frame/frame-properties';
 
 export type LabelVariant = 'primary' | 'secondary' | 'outline' | 'active' | 'hovered' | 'disabled' | 'ghost' | 'surface' | 'glass';
-
-import { AutoLayoutProps } from '../../frame/frame-properties';
 
 export interface LabelVariantConfig {
   fill: FillProps;
@@ -16,6 +18,8 @@ export interface LabelVariantConfig {
   autoLayout?: AutoLayoutProps;
   typography: TypographyProps;
   effects?: EffectProps;
+  animate?: AnimateProps;
+  cursor?: CursorProps;
 }
 
 
@@ -32,6 +36,8 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
       textAlign: 'center',
       color: 'gray3',
     },
+    cursor: { type: 'pointer' },
+    animate: { hover: 'hovered', click: 'secondary' }
   },
   secondary: {
     fill: { type: 'solid', color: 'black7' },
@@ -45,6 +51,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
       textAlign: 'center',
       color: 'gray4',
     },
+    animate: { hover: 'hovered', click: 'primary' }
   },
   outline: {
     fill: { type: 'none', color: 'transparent' },
@@ -82,6 +89,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
       textAlign: 'center',
       color: 'gray1',
     },
+    cursor: { type: 'pointer' },
     effects: { dropShadow: [{ x: 0, y: 1, blur: 2, color: 'rgba(255,255,255,0.1)' }] },
   },
   disabled: {
@@ -95,6 +103,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
       textAlign: 'center',
       color: 'gray7',
     },
+    cursor: { type: 'not-allowed' }
   },
   ghost: {
     fill: { type: 'none', color: 'transparent' },

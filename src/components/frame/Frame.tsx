@@ -6,6 +6,7 @@ import { AppearanceProps } from './frame-properties/appearance/appearance.props'
 import { TypographyProps } from './frame-properties/typography/typography.props';
 import { FillProps } from './frame-properties/appearance/fill.props';
 import { StrokeProps } from './frame-properties/appearance/stroke.props';
+import { CursorProps } from './frame-properties/appearance/cursor.props';
 import { EffectProps } from './frame-properties/effects/effects.props';
 import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
@@ -38,7 +39,7 @@ export interface FrameProps {
   fill?: FillProps;
   stroke?: StrokeProps;
   effects?: EffectProps;
-  cursor?: 'default' | 'pointer' | 'text' | 'move' | 'not-allowed' | 'grab' | 'grabbing';
+  cursor?: CursorProps | CursorProps['type'];
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -140,7 +141,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     fill: finalFill,
     stroke: finalStroke,
     effects: finalEffects,
-    cursor: finalCursor,
+    cursor: finalCursorRaw,
     onClick: finalOnClick,
     onMouseEnter: finalOnMouseEnter,
     onMouseLeave: finalOnMouseLeave,
@@ -149,6 +150,11 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onHover: finalOnHover,
     animate: finalAnimate,
   } = mergedProps;
+
+  // Handle cursor - it can be an object { type: 'pointer' } or string 'pointer'
+  const finalCursor = typeof finalCursorRaw === 'object' && finalCursorRaw?.type 
+    ? finalCursorRaw.type 
+    : finalCursorRaw;
 
   // Use the same animation state for children
   const childCurrentVariant = currentVariant;
@@ -180,6 +186,11 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     effects: finalEffects,
     style: overrideStyle
   }, hasAutoLayout);
+
+  // Add cursor to styles
+  if (finalCursor) {
+    finalStyles.cursor = finalCursor;
+  }
 
   // Compose event handlers: Frame's animation handlers take precedence but call original handlers too
   const composedHandlers = composeEventHandlers({

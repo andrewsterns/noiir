@@ -1,10 +1,13 @@
-import { FillProps } from '../../frame/frame-properties/appearance/fill.props';
-import { StrokeProps } from '../../frame/frame-properties/appearance/stroke.props';
-import { AppearanceProps } from '../../frame/frame-properties/appearance/appearance.props';
-import { TypographyProps } from '../../frame/frame-properties/typography/typography.props';
-import { EffectProps } from '../../frame/frame-properties/effects/effects.props';
-import { AutoLayoutProps } from '../../frame/frame-properties';
-import { AnimateProps } from '../../frame/frame-properties/animation/animate.props';
+import {
+  FillProps,
+  StrokeProps,
+  AppearanceProps,
+  TypographyProps,
+  EffectProps,
+  AutoLayoutProps,
+  AnimateProps,
+  CursorProps
+} from '../../frame/frame-properties';
 
 export type ButtonVariant =
     | 'primary'
@@ -27,6 +30,7 @@ export interface ButtonVariantConfig {
     typography: TypographyProps;
     effects?: EffectProps;
     animate?: AnimateProps;
+    cursor?: CursorProps;
 }
 
 export const BUTTON_VARIANTS: Record<ButtonVariant, ButtonVariantConfig> = {
