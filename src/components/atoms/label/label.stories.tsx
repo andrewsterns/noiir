@@ -59,7 +59,7 @@ export const Disabled: Story = {
   },
 };
 
-import { Frame } from '../frame/Frame';
+import { Frame } from '../../frame/Frame';
 
 export const InteractiveDemo: Story = {
   render: () => (

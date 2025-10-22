@@ -1,19 +1,31 @@
 import React from 'react';
+import { useAnimateVariant, AnimateProps } from './frame-properties/animation/animate.props';
 import { PositionProps, ConstraintProps } from './frame-properties/position/position.props';
 import { AutoLayoutProps } from './frame-properties/layout/layout.props';
 import { AppearanceProps } from './frame-properties/appearance/appearance.props';
-import { TypographyProps, convertTypographyProps } from './frame-properties/typography/typography.props';
-import { FillProps, convertFillProps } from './frame-properties/appearance/fill.props';
-import { StrokeProps, convertStrokeProps } from './frame-properties/appearance/stroke.props';
-import { EffectProps, convertEffectProps } from './frame-properties/effects/effects.props';
-import { convertPositionProps } from './frame-properties/position/position.props';
-import { convertAutoLayoutProps } from './frame-properties/layout/layout.props';
+import { TypographyProps } from './frame-properties/typography/typography.props';
+import { FillProps } from './frame-properties/appearance/fill.props';
+import { StrokeProps } from './frame-properties/appearance/stroke.props';
+import { EffectProps } from './frame-properties/effects/effects.props';
 import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
-import { convertAppearanceProps } from './frame-properties/appearance/appearance.props';
-import { resolveColor, colorUtils } from '../../theme/colors';
+import {
+  applyChildStates,
+  injectVariant,
+  composeEventHandlers,
+  convertFramePropsToStyles,
+  calculateHugDimensions,
+  ChildStateMap
+} from './frame-properties';
 
-interface FrameProps {
+export interface FrameAnimateMap {
+  hover?: string;
+  click?: string;
+  event?: string;
+  [key: string]: string | undefined;
+}
+
+export interface FrameProps {
   id?: string;
   as?: keyof JSX.IntrinsicElements;
   childStates?: { [childId: string]: string };
@@ -22,6 +34,7 @@ interface FrameProps {
   autoLayout?: AutoLayoutProps;
   appearance?: AppearanceProps;
   typography?: TypographyProps;
+  animate?: AnimateProps;
   fill?: FillProps;
   stroke?: StrokeProps;
   effects?: EffectProps;
@@ -34,9 +47,15 @@ interface FrameProps {
   onMouseLeave?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseDown?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseUp?: (event: React.MouseEvent<HTMLElement>) => void;
+  onHover?: string;
+  
+  variant?: any;
+  variants?: Record<string, any>;
+  [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
-export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
+// Add the missing Frame component definition
+export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(props, ref) {
   const {
     as = 'div',
     id,
@@ -58,163 +77,127 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
     onMouseLeave,
     onMouseDown,
     onMouseUp,
+    onHover,
+    animate,
+    variant,
+    variants: variantsProp,
+    ...otherProps
   } = props;
 
-  // Apply child states to children with matching IDs
-  const applyChildStates = (child: React.ReactNode): React.ReactNode => {
-    if (!React.isValidElement(child)) return child;
-    const childId = child.props.id;
-    const childState = childStates?.[childId];
-    let newProps: any = { ...child.props };
-    if (childId && childState) {
-      newProps.state = childState;
+  // Collect variant configurations from props starting with 'variant-' and variants prop
+  const variants: Record<string, any> = { ...(variantsProp || {}) };
+  Object.keys(otherProps).forEach(key => {
+    if (key.startsWith('variant-')) {
+      const variantName = key.slice(8); // Remove 'variant-' prefix
+      variants[variantName] = otherProps[key as keyof typeof otherProps];
     }
-    // If child has a position prop, apply absolute positioning styles
-    if (child.props.position) {
-      const { x = 0, y = 0, rotation = 0 } = child.props.position;
-      newProps.style = {
-        ...(child.props.style || {}),
-        position: 'absolute',
-        left: x,
-        top: y,
-        transform: `rotate(${rotation}deg)`
-      };
-    } else if (autoLayout?.flow === 'freeform') {
-      // For freeform, force absolute positioning if not already set
-      newProps.style = {
-        ...(child.props.style || {}),
-        position: 'absolute',
-      };
-    }
-    if (child.props.children) {
-      const processedChildren = React.Children.map(child.props.children, applyChildStates);
-      newProps.children = processedChildren;
-    }
-    return React.cloneElement(child, newProps);
+  });
+
+  // Get animate prop from variant if it exists, otherwise use explicit animate
+  const variantProps = typeof variant === 'string' ? (variants[variant] || {}) : (variant || {});
+  const effectiveAnimate = variantProps.animate || animate;
+
+  // Use the animation logic hook
+  const { currentVariant, eventHandlers } = useAnimateVariant({ animate: effectiveAnimate, onHover, variants });
+
+  // Get the current variant props based on currentVariant
+  const currentVariantProps = currentVariant ? variants[currentVariant] : {};
+
+  // Merge variant props with explicit props, explicit props take precedence
+  const explicitProps: Record<string, any> = {};
+  
+  // Only include explicit props that are actually defined
+  if (position !== undefined) explicitProps.position = position;
+  if (constraints !== undefined) explicitProps.constraints = constraints;
+  if (autoLayout !== undefined) explicitProps.autoLayout = autoLayout;
+  if (appearance !== undefined) explicitProps.appearance = appearance;
+  if (typography !== undefined) explicitProps.typography = typography;
+  if (fill !== undefined) explicitProps.fill = fill;
+  if (stroke !== undefined) explicitProps.stroke = stroke;
+  if (effects !== undefined) explicitProps.effects = effects;
+  if (cursor !== undefined) explicitProps.cursor = cursor;
+  if (onClick !== undefined) explicitProps.onClick = onClick;
+  if (onMouseEnter !== undefined) explicitProps.onMouseEnter = onMouseEnter;
+  if (onMouseLeave !== undefined) explicitProps.onMouseLeave = onMouseLeave;
+  if (onMouseDown !== undefined) explicitProps.onMouseDown = onMouseDown;
+  if (onMouseUp !== undefined) explicitProps.onMouseUp = onMouseUp;
+  if (onHover !== undefined) explicitProps.onHover = onHover;
+  if (animate !== undefined) explicitProps.animate = animate;
+
+  const mergedProps = {
+    ...variantProps,
+    ...explicitProps,
+    ...currentVariantProps,
   };
 
-  const finalChildren = React.Children.map(children, applyChildStates);
+  // Extract merged props for use
+  const {
+    position: finalPosition,
+    constraints: finalConstraints,
+    autoLayout: finalAutoLayout,
+    appearance: finalAppearance,
+    typography: finalTypography,
+    fill: finalFill,
+    stroke: finalStroke,
+    effects: finalEffects,
+    cursor: finalCursor,
+    onClick: finalOnClick,
+    onMouseEnter: finalOnMouseEnter,
+    onMouseLeave: finalOnMouseLeave,
+    onMouseDown: finalOnMouseDown,
+    onMouseUp: finalOnMouseUp,
+    onHover: finalOnHover,
+    animate: finalAnimate,
+  } = mergedProps;
+
+  // Use the same animation state for children
+  const childCurrentVariant = currentVariant;
+
+  // Apply child states to children with matching IDs
+  const processedChildren = applyChildStates(children, childStates);
+
+  // If currentVariant is set, inject it as a prop to children (if they accept 'variant')
+  const finalChildren = injectVariant(processedChildren, childCurrentVariant);
 
   // Determine if this frame uses auto layout
-  const hasAutoLayout = !!autoLayout && (autoLayout.flow === 'horizontal' || autoLayout.flow === 'vertical');
+  const hasAutoLayout = !!finalAutoLayout && (finalAutoLayout.flow === 'horizontal' || finalAutoLayout.flow === 'vertical');
 
   // Curved auto layout: distribute children along SVG path
   let curvedChildren = finalChildren;
-  if (autoLayout?.flow === 'curved' && Array.isArray(finalChildren)) {
-    curvedChildren = getCurvedLayoutChildren(finalChildren, autoLayout).filter((c): c is React.ReactElement => !!c);
+  if (finalAutoLayout?.flow === 'curved' && Array.isArray(finalChildren)) {
+    curvedChildren = getCurvedLayoutChildren(finalChildren, finalAutoLayout).filter((c): c is React.ReactElement => !!c);
   }
 
-  // No need to merge defaults here; handled in convertTypographyProps
-  const typographyWithDefault = typography;
+  // Convert all frame props to CSS styles
+  const finalStyles = convertFramePropsToStyles({
+    position: finalPosition,
+    constraints: finalConstraints,
+    autoLayout: finalAutoLayout,
+    appearance: finalAppearance,
+    typography: finalTypography,
+    fill: finalFill,
+    stroke: finalStroke,
+    effects: finalEffects,
+    style: overrideStyle
+  }, hasAutoLayout);
 
-  // Convert Figma props to CSS styles
-  const positionStyles = convertPositionProps(position || {}, hasAutoLayout);
-  const autoLayoutStyles = convertAutoLayoutProps(autoLayout || {});
-  const appearanceStyles = convertAppearanceProps(appearance || {});
-  const typographyStyles = convertTypographyProps(typographyWithDefault || {});
-  const fillStyles = convertFillProps(fill || {}, false);
-  const strokeStyles = convertStrokeProps(stroke || {});
-  const effectStyles = convertEffectProps(effects || {});
+  // Compose event handlers: Frame's animation handlers take precedence but call original handlers too
+  const composedHandlers = composeEventHandlers({
+    onMouseEnter: finalOnMouseEnter,
+    onMouseLeave: finalOnMouseLeave,
+    onMouseDown: finalOnMouseDown,
+    onMouseUp: finalOnMouseUp
+  }, eventHandlers || {});
 
-  // Check if we have a gradient stroke that needs special handling
-  const hasGradientStroke = stroke?.type === 'gradient' && stroke.stops && stroke.stops.length > 0;
-
-  // Base styles for frames
-  const baseStyles: React.CSSProperties = {
-    boxSizing: 'border-box',
-    // Only set position: relative if not using absolute positioning
-    ...((!position?.x && !position?.y && !constraints) && { position: 'relative' })
-  };
-
-  // For gradient strokes, combine fill and stroke backgrounds using CSS background-clip technique
-  let finalStyles: React.CSSProperties;
-  if (hasGradientStroke) {
-    const strokeWeight = stroke.weight || 1;
-    // Create gradient stops
-    const gradientStops = stroke.stops!.map((stop: any) => {
-      const color = resolveColor(stop.color);
-      const opacity = stop.opacity !== undefined ? stop.opacity : 1;
-      const rgbaColor = opacity < 1 ? colorUtils.hexToRgba(color, opacity) : color;
-      return `${rgbaColor} ${stop.position * 100}%`;
-    }).join(', ');
-    const angle = stroke.angle || 0;
-    const gradientValue = `linear-gradient(${angle}deg, ${gradientStops})`;
-    // Get the fill background - handle both background and backgroundColor
-    let fillBackgroundValue = 'transparent';
-    if (fillStyles.background && typeof fillStyles.background === 'string') {
-      fillBackgroundValue = fillStyles.background;
-    } else if (fillStyles.backgroundColor && typeof fillStyles.backgroundColor === 'string') {
-      fillBackgroundValue = `linear-gradient(${fillStyles.backgroundColor}, ${fillStyles.backgroundColor})`;
-    }
-    // Combine backgrounds: fill in padding-box, gradient in border-box
-    const combinedBackground = fillBackgroundValue === 'transparent'
-      ? gradientValue
-      : `${fillBackgroundValue} padding-box, ${gradientValue} border-box`;
-    const combinedBackgroundClip = fillBackgroundValue === 'transparent'
-      ? 'border-box'
-      : 'padding-box, border-box';
-    finalStyles = {
-      ...baseStyles,
-      ...positionStyles,
-      ...autoLayoutStyles,
-      ...appearanceStyles,
-      ...typographyStyles,
-      ...effectStyles,
-      ...(cursor && { cursor }),
-      ...overrideStyle,
-      // Gradient stroke styles
-      border: `${strokeWeight}px solid transparent`,
-      background: combinedBackground,
-      backgroundClip: combinedBackgroundClip,
-    };
-    // Remove backgroundColor since we're using background
-    if (finalStyles.backgroundColor) {
-      delete (finalStyles as any).backgroundColor;
-    }
-  } else {
-    // Normal case - merge all styles
-    finalStyles = {
-      ...baseStyles,
-      ...positionStyles,
-      ...autoLayoutStyles,
-      ...appearanceStyles,
-      ...fillStyles,
-      ...strokeStyles,
-      ...effectStyles,
-      ...(cursor && { cursor }),
-      ...overrideStyle,
-      ...typographyStyles // typographyStyles last so fontFamily always wins
-    };
-  }
+  const handleClick = finalOnClick;
+  const handleMouseEnter = composedHandlers.onMouseEnter;
+  const handleMouseLeave = composedHandlers.onMouseLeave;
+  const handleMouseDown = composedHandlers.onMouseDown;
+  const handleMouseUp = composedHandlers.onMouseUp;
 
   // For freeform, wrap children in a relative container to anchor absolutely positioned children
-  if (autoLayout?.flow === 'freeform') {
-    // If width or height is 'hug', calculate bounding box of children
-    let hugWidth = undefined;
-    let hugHeight = undefined;
-    if (autoLayout.width === 'hug' || autoLayout.height === 'hug') {
-      // Only works if children are valid React elements with position and size
-      let maxRight = 0;
-      let maxBottom = 0;
-      React.Children.forEach(finalChildren, (child) => {
-        if (React.isValidElement(child)) {
-          const el = child as React.ReactElement<any>;
-          const x = el.props.position?.x || 0;
-          const y = el.props.position?.y || 0;
-          // Prefer autoLayout.width/height, fallback to style.width/height, fallback to 0
-          let w = 0;
-          let h = 0;
-          if (el.props.autoLayout?.width && typeof el.props.autoLayout.width === 'number') w = el.props.autoLayout.width;
-          else if (el.props.style?.width) w = parseInt(el.props.style.width, 10) || 0;
-          if (el.props.autoLayout?.height && typeof el.props.autoLayout.height === 'number') h = el.props.autoLayout.height;
-          else if (el.props.style?.height) h = parseInt(el.props.style.height, 10) || 0;
-          maxRight = Math.max(maxRight, x + w);
-          maxBottom = Math.max(maxBottom, y + h);
-        }
-      });
-      if (autoLayout.width === 'hug') hugWidth = maxRight;
-      if (autoLayout.height === 'hug') hugHeight = maxBottom;
-    }
+  if (finalAutoLayout?.flow === 'freeform') {
+    const hugDimensions = calculateHugDimensions(finalChildren, finalAutoLayout);
     return React.createElement(
       as,
       {
@@ -224,14 +207,13 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
         style: {
           ...finalStyles,
           position: 'relative',
-          ...(hugWidth !== undefined ? { width: hugWidth } : {}),
-          ...(hugHeight !== undefined ? { height: hugHeight } : {}),
+          ...hugDimensions,
         },
-        onClick,
-        onMouseEnter,
-        onMouseLeave,
-        onMouseDown,
-        onMouseUp,
+        onClick: handleClick,
+        onMouseEnter: handleMouseEnter,
+        onMouseLeave: handleMouseLeave,
+        onMouseDown: handleMouseDown,
+        onMouseUp: handleMouseUp,
       },
       finalChildren
     );
@@ -243,20 +225,17 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>((props, ref) => {
       id,
       className,
       style: finalStyles,
-      onClick,
-      onMouseEnter,
-      onMouseLeave,
-      onMouseDown,
-      onMouseUp,
+      onClick: handleClick,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      onMouseDown: handleMouseDown,
+      onMouseUp: handleMouseUp,
     },
-    autoLayout?.flow === 'curved' ? curvedChildren : finalChildren
+    finalAutoLayout?.flow === 'curved' ? curvedChildren : finalChildren
   );
 });
 
 Frame.displayName = 'Frame';
-
-// Export the props type for external use
-export type { FrameProps };
 
 // Export default for convenience
 export default Frame;

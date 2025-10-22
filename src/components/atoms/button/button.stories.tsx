@@ -1,3 +1,43 @@
+// --- Animate + custom event logic demo ---
+import React, { useState } from 'react';
+
+export const Animate: Story = {
+  args: {
+    children: 'Animate Button',
+    variant: 'primary',
+    animate: { hover: 'primary-hover', click: 'active' },
+  },
+};
+
+export const AnimateWithHandlers: Story = {
+  render: () => {
+    const [count, setCount] = useState(0);
+    const [hoverCount, setHoverCount] = useState(0);
+    const addNumber = () => setCount((c) => c + 5);
+    const hoverCounter = () => setHoverCount((h) => h + 1);
+    return (
+      <Frame autoLayout={{ flow: 'vertical', gap: 12, alignment: 'center' }}>
+        <div>Click count: {count}</div>
+        <div>Hover count: {hoverCount}</div>
+        <Button
+          variant="primary"
+          onClick={addNumber}
+          onMouseEnter={hoverCounter}
+        >
+          Primary
+        </Button>
+      </Frame>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Button uses animate prop for variant switching and custom onClick/onHover handlers for counting.',
+      },
+    },
+  },
+};
+// --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './button';
 import { ButtonVariant } from './button.variants';
@@ -23,9 +63,6 @@ const meta: Meta<typeof Button> = {
       control: { type: 'select' },
       options: ['sm', 'md', 'lg'],
     },
-    disabled: {
-      control: { type: 'boolean' },
-    },
     children: {
       control: { type: 'text' },
     },
@@ -48,55 +85,6 @@ export const Secondary: Story = {
     variant: 'secondary',
     size: 'md',
     children: 'Secondary Button',
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    variant: 'outline',
-    size: 'md',
-    children: 'Outline Button',
-  },
-};
-
-export const Ghost: Story = {
-  args: {
-    variant: 'ghost',
-    size: 'md',
-    children: 'Ghost Button',
-  },
-};
-
-export const Surface: Story = {
-  args: {
-    variant: 'surface',
-    size: 'md',
-    children: 'Surface Button',
-  },
-};
-
-export const Active: Story = {
-  args: {
-    variant: 'active',
-    size: 'md',
-    children: 'Active Button',
-  },
-};
-
-export const Hovered: Story = {
-  args: {
-    variant: 'hovered',
-    size: 'md',
-    children: 'Hovered Button',
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    variant: 'disabled',
-    size: 'md',
-    children: 'Disabled Button',
-    disabled: true,
   },
 };
 
@@ -129,16 +117,16 @@ export const StateDemo: Story = {
       <p>• <strong>Click & hold</strong> → active variant during press</p>
       
       <Frame autoLayout={{flow: 'grid'}}>
-        <Button variant="primary">Primary</Button>
+        <Button variant="primary" >Primary</Button>
         <Button variant="secondary">Secondary</Button>
-        <Button variant="outline">Outline</Button>
+       
         <Button variant="ghost">Ghost</Button>
         <Button variant="surface">Surface</Button>
       </Frame>
       
       <Frame autoLayout={{flow: 'horizontal', gap: 12, alignment: 'center'}}>
         <Button variant="primary" iconStart="🎯" iconStartActive="✅">With Icons</Button>
-        <Button variant="outline" size="lg">Large Outline</Button>
+
       </Frame>
     </Frame>
   ),

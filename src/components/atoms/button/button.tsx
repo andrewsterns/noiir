@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
+import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { ButtonVariant, BUTTON_VARIANTS } from './button.variants';
 
 export interface ButtonProps extends FrameProps {
-  children: React.ReactNode;
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  disabled?: boolean;
+  children: ReactNode;
   variant?: ButtonVariant;
   size?: 'sm' | 'md' | 'lg';
-  iconStart?: React.ReactNode;
-  iconStartActive?: React.ReactNode;
-  iconEnd?: React.ReactNode;
-  iconEndActive?: React.ReactNode;
+  iconStart?: ReactNode;
+  iconStartActive?: ReactNode;
+  iconEnd?: ReactNode;
+  iconEndActive?: ReactNode;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
-  onClick,
-  disabled = false,
   variant = 'primary',
   size = 'md',
   iconStart,
@@ -25,91 +21,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   iconEnd,
   iconEndActive,
   as,
-  onMouseEnter,
-  onMouseLeave,
-  onMouseDown,
-  onMouseUp,
   ...frameProps
 }, ref) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const [isActive, setIsActive] = useState(false);
+  // Get variant styles
+  const baseVariant = BUTTON_VARIANTS[variant];
 
-  // Determine effective variant based on state
-  const effectiveVariant: ButtonVariant = disabled ? 'disabled' :
-                         isActive ? 'active' :
-                         isClicked ? 'ghost' :
-                         isHovered ? 'hovered' :
-                         variant;
-
-  // Get base variant styles
-  const baseVariant = BUTTON_VARIANTS[effectiveVariant];
-  // Debug: log the effective variant and typography
-  // eslint-disable-next-line no-console
-  console.log('Button variant:', effectiveVariant, 'Typography:', baseVariant.typography);
-
-  // Determine which icons to show
-  const showIconStart = iconStartActive !== undefined ? (isHovered ? iconStartActive : iconStart) : iconStart;
-  const showIconEnd = iconEndActive !== undefined ? (isHovered ? iconEndActive : iconEnd) : iconEnd;
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (!disabled) {
-      setIsActive(!isActive);
-      if (onClick) {
-        onClick(event);
-      }
-    }
-  };
-
-  const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
-    if (!disabled) {
-      setIsHovered(true);
-    }
-    if (onMouseEnter) {
-      onMouseEnter(event);
-    }
-  };
-
-  const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
-    setIsHovered(false);
-    setIsClicked(false); // Reset click state when leaving
-    if (onMouseLeave) {
-      onMouseLeave(event);
-    }
-  };
-
-  const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
-    if (!disabled) {
-      setIsClicked(true);
-    }
-    if (onMouseDown) {
-      onMouseDown(event);
-    }
-  };
-
-  const handleMouseUp = (event: React.MouseEvent<HTMLElement>) => {
-    setIsClicked(false);
-    if (onMouseUp) {
-      onMouseUp(event);
-    }
-  };
+  // Determine which icons to show (simplified - just use active versions if provided)
+  const showIconStart = iconStartActive || iconStart;
+  const showIconEnd = iconEndActive || iconEnd;
 
   return (
     <Frame
       ref={ref}
       as={as || "button"}
-      fill={baseVariant.fill}
-      stroke={baseVariant.stroke}
-      appearance={baseVariant.appearance}
-  autoLayout={{ ...baseVariant.autoLayout, margin: undefined }}
-      typography={baseVariant.typography}
-      effects={baseVariant.effects}
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      cursor={disabled ? 'not-allowed' : 'pointer'}
+      variant={baseVariant}
+      variants={BUTTON_VARIANTS}
+      cursor="pointer"
       {...frameProps}
     >
       {showIconStart && (
@@ -128,7 +55,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
 
       {showIconEnd && (
         <Frame
-        autoLayout={{ flow: 'grid' }}
+          autoLayout={{ flow: 'grid' }}
         >
           {showIconEnd}
         </Frame>

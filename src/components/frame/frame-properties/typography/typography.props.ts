@@ -15,6 +15,7 @@ export interface TypographyProps {
   textDecoration?: 'none' | 'underline' | 'line-through';
   textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
   color?: string;
+  opacity?: number;
 }
 
 /**
@@ -63,6 +64,7 @@ export function convertTypographyProps(props: TypographyProps): React.CSSPropert
   if (merged.textDecoration !== undefined) styles.textDecoration = merged.textDecoration;
   if (merged.textTransform !== undefined) styles.textTransform = merged.textTransform;
   if (merged.color !== undefined) styles.color = resolveColor(merged.color);
+  if (merged.opacity !== undefined) styles.opacity = merged.opacity;
   return styles;
 }
 

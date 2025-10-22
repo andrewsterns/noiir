@@ -5,3 +5,4 @@ export * from './effects/effects.props';
 export * from './layout/layout.props';
 export * from './position/position.props';
 export * from './typography/typography.props';
+export * from './utils';
