@@ -22,6 +22,33 @@ export interface LabelVariantConfig {
   cursor?: CursorProps;
 }
 
+export const LABEL_SIZES = {
+  sm: {
+    autoLayout: { paddingHorizontal: 12, paddingVertical: 4 },
+    typography: {
+      fontSize: 12,
+      fontWeight: 400,
+      textAlign: 'center',
+    }
+  },
+  md: {
+    autoLayout: { paddingHorizontal: 16, paddingVertical: 8 },
+    typography: {
+      fontSize: 14,
+      fontWeight: 400,
+      textAlign: 'center',
+    }
+  },
+  lg: {
+    autoLayout: { paddingHorizontal: 20, paddingVertical: 12 },
+    typography: {
+      fontSize: 16,
+      fontWeight: 400,
+      textAlign: 'center',
+    }
+  }
+};
+
 
 
 export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
@@ -29,7 +56,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'none', color: 'black8' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
     stroke: { type: 'none' },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 300,
@@ -43,7 +70,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'solid', color: 'black7' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
     stroke: { type: 'solid', color: 'gray10', weight: 1 },
-    appearance: { radius: 6 },
+    appearance: {},
     effects: { innerShadow: [{ x: 3, y: 6, blur: 13, spread: 5, color: 'rgba(255, 255, 255, 0.14)' }] },
     typography: {
       fontSize: 16,
@@ -57,7 +84,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'none', color: 'transparent' },
     stroke: { type: 'solid', color: 'gray6', weight: 1 },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 500,
@@ -69,7 +96,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'solid', color: 'blue7', opacity: 0.2 },
     stroke: { type: 'solid', color: 'blue7', weight: 1, position: 'inside' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 500,
@@ -82,7 +109,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'solid', color: 'gray5', opacity: 0.25 },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
     stroke: { type: 'solid', color: 'gray4', weight: 1, position: 'inside' },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 400,
@@ -96,7 +123,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'none', color: 'transparent' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
     stroke: { type: 'solid', color: 'gray8', weight: 1 },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 500,
@@ -109,7 +136,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'none', color: 'transparent' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
     stroke: { type: 'none' },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 500,
@@ -121,7 +148,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'solid', color: 'black2', opacity: 0.8 },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
     stroke: { type: 'solid', color: 'gray4', weight: 1 },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 500,
@@ -138,7 +165,7 @@ export const LABEL_VARIANTS: Record<LabelVariant, LabelVariantConfig> = {
     fill: { type: 'solid', color: 'black3' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, margin: 4, width: 'fill', height: 'fill' },
     stroke: { type: 'solid', color: 'gray4', weight: 1 },
-    appearance: { radius: 6 },
+    appearance: {},
     typography: {
       fontSize: 16,
       fontWeight: 500,

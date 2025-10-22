@@ -10,6 +10,7 @@ import { CursorProps } from './frame-properties/appearance/cursor.props';
 import { EffectProps } from './frame-properties/effects/effects.props';
 import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
+import { mergeSizeProps } from './frame-properties/variants/variants.props';
 import {
   applyChildStates,
   injectVariant,
@@ -49,7 +50,8 @@ export interface FrameProps {
   onMouseDown?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseUp?: (event: React.MouseEvent<HTMLElement>) => void;
   onHover?: string;
-  
+  size?: any;
+  sizeKey?: string;
   variant?: any;
   variants?: Record<string, any>;
   [key: `variant-${string}`]: any; // Allow variant-* properties
@@ -66,6 +68,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     autoLayout,
     appearance,
     typography,
+    animate,
     fill,
     stroke,
     effects,
@@ -79,7 +82,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onMouseDown,
     onMouseUp,
     onHover,
-    animate,
+    size,
+    sizeKey,
     variant,
     variants: variantsProp,
     ...otherProps
@@ -117,6 +121,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (stroke !== undefined) explicitProps.stroke = stroke;
   if (effects !== undefined) explicitProps.effects = effects;
   if (cursor !== undefined) explicitProps.cursor = cursor;
+  if (size !== undefined) explicitProps.size = size;
+  if (sizeKey !== undefined) explicitProps.sizeKey = sizeKey;
   if (onClick !== undefined) explicitProps.onClick = onClick;
   if (onMouseEnter !== undefined) explicitProps.onMouseEnter = onMouseEnter;
   if (onMouseLeave !== undefined) explicitProps.onMouseLeave = onMouseLeave;
@@ -131,7 +137,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     ...currentVariantProps,
   };
 
-  // Extract merged props for use
+  // Merge size properties into mergedProps and get size's autoLayout
+  const sizeAutoLayout = mergeSizeProps(mergedProps);  // Extract merged props for use
   const {
     position: finalPosition,
     constraints: finalConstraints,
@@ -151,6 +158,12 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     animate: finalAnimate,
   } = mergedProps;
 
+  // Merge size's autoLayout into finalAutoLayout if present
+  let mergedAutoLayout = finalAutoLayout;
+  if (sizeAutoLayout) {
+    mergedAutoLayout = { ...finalAutoLayout, ...sizeAutoLayout };
+  }
+
   // Handle cursor - it can be an object { type: 'pointer' } or string 'pointer'
   const finalCursor = typeof finalCursorRaw === 'object' && finalCursorRaw?.type 
     ? finalCursorRaw.type 
@@ -166,19 +179,19 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   const finalChildren = injectVariant(processedChildren, childCurrentVariant);
 
   // Determine if this frame uses auto layout
-  const hasAutoLayout = !!finalAutoLayout && (finalAutoLayout.flow === 'horizontal' || finalAutoLayout.flow === 'vertical');
+  const hasAutoLayout = !!mergedAutoLayout && (mergedAutoLayout.flow === 'horizontal' || mergedAutoLayout.flow === 'vertical' || mergedAutoLayout.flow === 'grid');
 
   // Curved auto layout: distribute children along SVG path
   let curvedChildren = finalChildren;
-  if (finalAutoLayout?.flow === 'curved' && Array.isArray(finalChildren)) {
-    curvedChildren = getCurvedLayoutChildren(finalChildren, finalAutoLayout).filter((c): c is React.ReactElement => !!c);
+  if (mergedAutoLayout?.flow === 'curved' && Array.isArray(finalChildren)) {
+    curvedChildren = getCurvedLayoutChildren(finalChildren, mergedAutoLayout).filter((c): c is React.ReactElement => !!c);
   }
 
   // Convert all frame props to CSS styles
   const finalStyles = convertFramePropsToStyles({
     position: finalPosition,
     constraints: finalConstraints,
-    autoLayout: finalAutoLayout,
+    autoLayout: mergedAutoLayout,
     appearance: finalAppearance,
     typography: finalTypography,
     fill: finalFill,
@@ -190,6 +203,12 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   // Add cursor to styles
   if (finalCursor) {
     finalStyles.cursor = finalCursor;
+  }
+
+  // Add size to styles if it's an object and doesn't have autoLayout
+  const finalSize = mergedProps.size;
+  if (finalSize && typeof finalSize === 'object' && !finalSize.autoLayout) {
+    Object.assign(finalStyles, finalSize);
   }
 
   // Compose event handlers: Frame's animation handlers take precedence but call original handlers too
@@ -207,8 +226,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   const handleMouseUp = composedHandlers.onMouseUp;
 
   // For freeform, wrap children in a relative container to anchor absolutely positioned children
-  if (finalAutoLayout?.flow === 'freeform') {
-    const hugDimensions = calculateHugDimensions(finalChildren, finalAutoLayout);
+  if (mergedAutoLayout?.flow === 'freeform') {
+    const hugDimensions = calculateHugDimensions(finalChildren, mergedAutoLayout);
     return React.createElement(
       as,
       {
@@ -242,7 +261,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
     },
-    finalAutoLayout?.flow === 'curved' ? curvedChildren : finalChildren
+    mergedAutoLayout?.flow === 'curved' ? curvedChildren : finalChildren
   );
 });
 

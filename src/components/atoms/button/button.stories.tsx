@@ -120,8 +120,6 @@ export const StateDemo: Story = {
         <Button variant="primary" >Primary</Button>
         <Button variant="secondary">Secondary</Button>
        
-        <Button variant="ghost">Ghost</Button>
-        <Button variant="surface">Surface</Button>
       </Frame>
       
       <Frame autoLayout={{flow: 'horizontal', gap: 12, alignment: 'center'}}>
@@ -141,16 +139,16 @@ export const StateDemo: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-      <Button size="sm">Small (prop available)</Button>
-      <Button size="md">Medium (prop available)</Button>
-      <Button size="lg">Large (prop available)</Button>
-    </div>
+    <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
+      <Button size="sm" variant="primary">Small</Button>
+      <Button size="md" variant="primary">Medium</Button>
+      <Button size="lg" variant="primary">Large</Button>
+    </Frame>
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Size prop is available but sizing logic not implemented yet. Use Frame props for custom sizing.',
+        story: 'Buttons with different sizes (sm, md, lg) showing varying padding applied in addition to the primary variant styling.',
       },
     },
   },

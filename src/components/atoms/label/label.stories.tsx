@@ -18,6 +18,10 @@ const meta: Meta<typeof Label> = {
       control: { type: 'select' },
   options: ['primary', 'secondary', 'outline', 'active', 'hovered', 'disabled', 'ghost', 'surface', 'glass'] as LabelVariant[],
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg'],
+    },
     disabled: {
       control: { type: 'boolean' },
     },
@@ -59,6 +63,23 @@ export const Disabled: Story = {
   },
 };
 
+export const Sizes: Story = {
+  render: () => (
+    <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
+      <Label size="sm" variant="primary">Small</Label>
+      <Label size="md" variant="primary">Medium</Label>
+      <Label size="lg" variant="primary">Large</Label>
+    </Frame>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Labels with different sizes (sm, md, lg) showing varying padding and font sizes.',
+      },
+    },
+  },
+};
+
 import { Frame } from '../../frame/Frame';
 
 export const InteractiveDemo: Story = {
@@ -79,6 +100,7 @@ export const InteractiveDemo: Story = {
 
   <Frame autoLayout={{ flow: 'freeform' }} style={{ alignItems: 'center', marginTop: 20 }}>
     <Label
+    size='sm'
       variant="primary"
       fill={{ type: 'solid', color: 'primary3' }}
       appearance={{ radius: 4 }}

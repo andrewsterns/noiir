@@ -8,18 +8,15 @@ import {
   AnimateProps,
   CursorProps
 } from '../../frame/frame-properties';
+import { Typography } from '../../frame/frame-properties/typography/typography.props.stories';
 
 export type ButtonVariant =
     | 'primary'
     | 'primary-hover'
     | 'secondary'
     | 'secondary-hover'
-    | 'outline'
-    | 'active'
     | 'disabled'
-    | 'ghost'
-    | 'surface'
-    | 'glass';
+
 
 
 export interface ButtonVariantConfig {
@@ -33,10 +30,33 @@ export interface ButtonVariantConfig {
     cursor?: CursorProps;
 }
 
+
+export const BUTTON_SIZES = {
+    sm: {
+        autoLayout: { paddingHorizontal: 16, paddingVertical: 2 },
+        typography: {
+            fontSize: 12,
+            fontWeight: 300,
+            textAlign: 'center',
+        }
+    },
+    md: {
+        autoLayout: { paddingHorizontal: 20, paddingVertical: 8 },
+                typography: {
+            fontSize: 14,
+            fontWeight: 300,
+            textAlign: 'center',
+        }
+    },
+    lg: {
+        autoLayout: { paddingHorizontal: 24, paddingVertical: 10 },
+    }
+};
+
 export const BUTTON_VARIANTS: Record<ButtonVariant, ButtonVariantConfig> = {
     primary: {
         fill: { type: 'solid', color: 'black9', opacity: .9 },
-        autoLayout: { flow: 'grid', paddingHorizontal: 25, paddingVertical: 8 },
+        autoLayout: { flow: 'grid' },
         stroke: { type: 'none' },
         appearance: { radius: 30 },
 
@@ -45,7 +65,7 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, ButtonVariantConfig> = {
             fontWeight: 300,
             textAlign: 'center',
             color: 'gray4',
-            opacity: 0.8,
+
         },
         animate: { hover: 'primary-hover', click: 'secondary' }
     },
@@ -60,7 +80,7 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, ButtonVariantConfig> = {
             fontWeight: 300,
             textAlign: 'center',
             color: 'gray4',
-            opacity: 0.8,
+
         },
         animate: { hover: 'secondary-hover', click: 'primary' }
     },
@@ -89,31 +109,6 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, ButtonVariantConfig> = {
             color: 'gray7'
         },
     },
-    outline: {
-        fill: { type: 'none', color: 'transparent' },
-        stroke: { type: 'solid', color: 'gray6', weight: 1 },
-        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-        appearance: { radius: 6 },
-        typography: {
-            fontSize: 16,
-            fontWeight: 500,
-            textAlign: 'center',
-            color: 'gray5'
-        },
-    },
-    active: {
-        fill: { type: 'solid', color: 'gray1' },
-        stroke: { type: 'none', color: 'gray7', weight: 1 },
-        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-
-        appearance: { radius: 6 },
-        typography: {
-            fontSize: 16,
-            fontWeight: 500,
-            textAlign: 'center',
-            color: 'black2'
-        },
-    },
     disabled: {
         fill: { type: 'none', color: 'transparent' },
         autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
@@ -125,49 +120,6 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, ButtonVariantConfig> = {
             textAlign: 'center',
             color: 'gray7'
         },
-    },
-    ghost: {
-        fill: { type: 'none', color: 'transparent' },
-        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-        stroke: { type: 'none' },
-        appearance: { radius: 6 },
-        typography: {
-            fontSize: 16,
-            fontWeight: 500,
-            textAlign: 'center',
-            color: 'gray4'
-        },
-    },
-    glass: {
-        fill: { type: 'solid', color: 'black2', opacity: 0.8 },
-        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-        stroke: { type: 'solid', color: 'gray4', weight: 1 },
-        appearance: { radius: 6 },
-        typography: {
-            fontSize: 16,
-            fontWeight: 500,
-            textAlign: 'center',
-            color: 'gray12'
-        },
-        effects: {
-            innerShadow: [{ x: 0, y: 0, blur: 10, spread: 0, color: 'rgba(255, 255, 255, 0.1)' }],
-            dropShadow: [{ x: 0, y: 4, blur: 6, color: 'rgba(0,0,0,0.3)' }],
-            noise: { intensity: 0.02 }
-        }
-    },
-
-    surface: {
-        fill: { type: 'solid', color: 'black3' },
-        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-        stroke: { type: 'solid', color: 'gray4', weight: 1 },
-        appearance: { radius: 6 },
-        typography: {
-            fontSize: 16,
-            fontWeight: 500,
-            textAlign: 'center',
-            color: 'gray4'
-        },
-        effects: { dropShadow: [{ x: 0, y: 1, blur: 2, color: 'rgba(0,0,0,0.2)' }] }
     },
 
 };

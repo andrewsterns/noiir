@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { ButtonVariant, BUTTON_VARIANTS } from './button.variants';
+import { ButtonVariant, BUTTON_VARIANTS, BUTTON_SIZES } from './button.variants';
 
 export interface ButtonProps extends FrameProps {
   children: ReactNode;
@@ -34,6 +34,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
     <Frame
       ref={ref}
       as={as || "button"}
+      size={BUTTON_SIZES[size]}
       variant={baseVariant}
       variants={BUTTON_VARIANTS}
       cursor="pointer"
@@ -46,14 +47,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
           {showIconStart}
         </Frame>
       )}
-      <Frame
-        autoLayout={{ flow: 'grid' }}
-        typography={baseVariant.typography}
-      >
-        {children}
-      </Frame>
-
-      {showIconEnd && (
+    <Frame
+      autoLayout={{ flow: 'grid' }}
+    >
+      {children}
+    </Frame>      {showIconEnd && (
         <Frame
           autoLayout={{ flow: 'grid' }}
         >

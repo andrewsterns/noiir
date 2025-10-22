@@ -1,14 +1,18 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { LabelVariant, LABEL_VARIANTS } from './label.variants';
+import { LabelVariant, LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
 
 export type { LabelVariant };
+
+export type LabelSize = keyof typeof LABEL_SIZES;
 
 export interface LabelProps extends FrameProps {
   children: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
   variant?: LabelVariant;
+  size?: 'sm' | 'md' | 'lg';
+  as?: React.ElementType;
 }
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
@@ -16,6 +20,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   onClick,
   disabled = false,
   variant = 'primary',
+  size = 'md',
   as,
   ...frameProps
 }, ref) => {
@@ -29,6 +34,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
     <Frame
       ref={ref}
       as={as || "div"}
+      size={LABEL_SIZES[size]}
       variant={baseVariant}
       variants={LABEL_VARIANTS}
       onClick={disabled ? undefined : onClick}
