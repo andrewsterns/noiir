@@ -40,38 +40,38 @@ export const typographyPresets = {
   },
   h2: {
     fontFamily: fonts.geist.family,
-    fontWeight: 700,
+    fontWeight: 600,
     fontSize: 24,
     lineHeight: 1.3,
     letterSpacing: -0.25,
   },
   h3: {
     fontFamily: fonts.geist.family,
-    fontWeight: 600,
+    fontWeight: 500,
     fontSize: 20,
     lineHeight: 1.4,
-    letterSpacing: 0,
+    letterSpacing: .45,
   },
   h4: {
     fontFamily: fonts.geist.family,
-    fontWeight: 600,
+    fontWeight: 500,
     fontSize: 18,
     lineHeight: 1.4,
-    letterSpacing: 0,
+    letterSpacing: .45,
   },
   h5: {
     fontFamily: fonts.geist.family,
     fontWeight: 500,
     fontSize: 16,
     lineHeight: 1.5,
-    letterSpacing: 0,
+    letterSpacing: .45,
   },
   h6: {
     fontFamily: fonts.geist.family,
     fontWeight: 500,
     fontSize: 14,
     lineHeight: 1.5,
-    letterSpacing: 0,
+    letterSpacing: .45,
   },
 
   // Body text
@@ -113,15 +113,6 @@ export const typographyPresets = {
     lineHeight: 1.6,
     letterSpacing: 1.5,
     textTransform: 'uppercase' as const,
-  },
-
-  // Button text
-  button: {
-    fontFamily: fonts.inter.family,
-    fontWeight: 500,
-    fontSize: 14,
-    lineHeight: 1.4,
-    letterSpacing: 0.25,
   },
 
   // Special presets with different fonts

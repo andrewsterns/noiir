@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Frame, FrameProps } from '../../Frame';
 
 interface EffectsArgs extends Partial<FrameProps> {
+  children?: React.ReactNode;
   // Drop shadow controls
   dropShadowEnabled: boolean;
   dropShadowX: number;
@@ -53,15 +54,15 @@ type EffectsStory = StoryObj<EffectsArgs>;
 export const Effects: EffectsStory = {
   args: {
     children: 'Effects Demo',
-    fill: { type: 'solid', color: '#FFFFFF' },
-    appearance: { radius: 16 },
+    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
+    appearance: { radius: 8 },
     // Drop shadow defaults
     dropShadowEnabled: true,
-    dropShadowX: 0,
-    dropShadowY: 4,
-    dropShadowBlur: 12,
-    dropShadowSpread: 0,
-    dropShadowColor: 'rgba(0, 0, 0, 0.15)',
+    dropShadowX: 1,
+    dropShadowY: 3,
+    dropShadowBlur: 8,
+    dropShadowSpread: -3,
+    dropShadowColor: 'rgba(0, 0, 0, 0.25)',
     // Inner shadow defaults
     innerShadowEnabled: false,
     innerShadowX: 0,
@@ -303,6 +304,7 @@ export const Effects: EffectsStory = {
         <Frame
           fill={args.fill}
           appearance={args.appearance}
+          stroke={{ type: 'solid', color: 'white4', weight: 1, opacity: 0 }}
           effects={Object.keys(effectsProps).length > 0 ? effectsProps : undefined}
           autoLayout={{
             flow: 'vertical',
@@ -314,11 +316,10 @@ export const Effects: EffectsStory = {
           }}
         >
           <Frame
-            stroke={undefined}
             typography={{
-              color: '#374151',
-              fontSize: 18,
-              fontWeight: 700,
+              type: 'h6',
+              color: 'gray7',
+              wrap: 'nowrap',
               textAlign: 'center'
             }}
           >
@@ -326,13 +327,13 @@ export const Effects: EffectsStory = {
           </Frame>
 
           <Frame
-          fill={{ type: 'solid', color: '#E5E7EB' }}
-          appearance={{ radius: 12 }}
+            fill={{ type: 'solid', color: '#E5E7EB' }}
+            appearance={{ radius: 12 }}
             typography={{
-              color: '#6B7280',
-              fontSize: 14,
-              textAlign: 'center',
-              lineHeight: 1.4
+              type: 'h6',
+              color: 'gray7',
+              wrap: 'nowrap',
+              textAlign: 'center'
             }}
           >
             Active Effects: {activeEffects.length > 0 ? activeEffects.join(', ') : 'None'}

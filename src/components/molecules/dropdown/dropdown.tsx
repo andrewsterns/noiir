@@ -2,13 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
+import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT } from './dropdown.variants';
+import { LIST_VARIANTS } from '../list/list.variants';
 
 export interface DropdownProps extends Omit<FrameProps, 'onClick'> {
   items: ListItem[];
   selectedIndex?: number;
+  selectedIndices?: number[];
+  multiSelect?: boolean;
   placeholder?: string;
   onChange?: (selectedIndex: number, item: ListItem) => void;
+  onMultiChange?: (selectedIndices: number[], items: ListItem[]) => void;
   disabled?: boolean;
+  variant?: keyof typeof DROPDOWN_BUTTON_VARIANTS;
+  size?: 'sm' | 'md' | 'lg';
+  buttonSize?: 'sm' | 'md' | 'lg';
   buttonProps?: Partial<React.ComponentProps<typeof Button>>;
   listProps?: Partial<React.ComponentProps<typeof List>>;
 }
@@ -16,19 +24,27 @@ export interface DropdownProps extends Omit<FrameProps, 'onClick'> {
 export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   items,
   selectedIndex,
+  selectedIndices = [],
+  multiSelect = false,
   placeholder = "Select an option...",
   onChange,
+  onMultiChange,
   disabled = false,
+  variant = 'default',
+  size = 'md',
+  buttonSize = 'md',
   buttonProps,
   listProps,
   ...frameProps
 }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [internalSelectedIndex, setInternalSelectedIndex] = useState<number | undefined>(selectedIndex);
+  const [internalSelectedIndices, setInternalSelectedIndices] = useState<number[]>(selectedIndices);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Use controlled selectedIndex if provided, otherwise use internal state
+  // Use controlled props if provided, otherwise use internal state
   const currentSelectedIndex = selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
+  const currentSelectedIndices = selectedIndices !== undefined ? selectedIndices : internalSelectedIndices;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -54,68 +70,78 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   };
 
   const handleItemClick = (index: number, item: ListItem) => {
-    if (selectedIndex === undefined) {
-      setInternalSelectedIndex(index);
-    }
-    setIsOpen(false);
-    if (onChange) {
-      onChange(index, item);
+    if (multiSelect) {
+      const newSelectedIndices = currentSelectedIndices.includes(index)
+        ? currentSelectedIndices.filter(i => i !== index)
+        : [...currentSelectedIndices, index];
+
+      if (selectedIndices === undefined) {
+        setInternalSelectedIndices(newSelectedIndices);
+      }
+
+      if (onMultiChange) {
+        onMultiChange(newSelectedIndices, items.filter((_, i) => newSelectedIndices.includes(i)));
+      }
+    } else {
+      if (selectedIndex === undefined) {
+        setInternalSelectedIndex(index);
+      }
+      setIsOpen(false);
+      if (onChange) {
+        onChange(index, item);
+      }
     }
   };
 
   const getSelectedLabel = (): string => {
-    if (currentSelectedIndex !== undefined && items[currentSelectedIndex]) {
-      const item = items[currentSelectedIndex];
-      return typeof item === 'string' ? item : item.label;
+    if (multiSelect) {
+      if (currentSelectedIndices.length === 0) {
+        return placeholder;
+      } else if (currentSelectedIndices.length === 1) {
+        const item = items[currentSelectedIndices[0]];
+        return typeof item === 'string' ? item : item.label;
+      } else {
+        return `${currentSelectedIndices.length} selected`;
+      }
+    } else {
+      if (currentSelectedIndex !== undefined && items[currentSelectedIndex]) {
+        const item = items[currentSelectedIndex];
+        return typeof item === 'string' ? item : item.label;
+      }
+      return placeholder;
     }
-    return placeholder;
   };
-
-  const getButtonText = (): string => {
-    const label = getSelectedLabel();
-    return label + (isOpen ? ' ▲' : ' ▼');
-  };
-
-  // Dynamic appearance for the button based on open state
-  const buttonAppearance = isOpen 
-    ? { radiusBottomLeft: 0, radiusBottomRight: 0, radiusTopLeft: 12, radiusTopRight: 12 }
-    : { radius: 12 };
 
   return (
     <Frame
       ref={dropdownRef}
-      autoLayout={{ flow: 'vertical' }}
+      variants={DROPDOWN_VARIANT}
+      variant="default"
       {...frameProps}
     >
       <Button
-        variant='outline'
+        variant={isOpen ? 'primary-open' : 'primary' as any}
+        variants={DROPDOWN_BUTTON_VARIANTS}
+        size={buttonSize}
         onClick={disabled ? undefined : handleButtonClick}
-        cursor={disabled ? 'not-allowed' : 'pointer'}
-        appearance={buttonAppearance}
+        autoLayout={{alignment: 'left', width: 'fill', gap: 'fill', paddingRight: 18}}
+        stroke={{ type: 'solid', color: 'gray4' }}
         {...buttonProps}
       >
-        {getButtonText()}
+        {getSelectedLabel()}
       </Button>
+      <List
+        items={items}
+        selectedIndex={multiSelect ? undefined : currentSelectedIndex}
+        selectedIndices={multiSelect ? currentSelectedIndices : undefined}
+        multiSelect={multiSelect}
+        onItemClick={handleItemClick}
+        variant={isOpen ? 'active' : 'hidden'}
+        variants={LIST_VARIANTS}
+        animate={{ duration: '0.3s', curve: 'ease-in-out' }}
+        {...listProps}
+      />
 
-      {isOpen && (
-        <Frame
-          autoLayout={{ flow: 'vertical' }}
-          fill={{ type: 'solid', color: 'gray1' }}
-          stroke={{ type: 'solid', color: 'gray4', weight: 1 }}
-          appearance={{ radiusTopLeft: 0, radiusTopRight: 0, radiusBottomLeft: 12, radiusBottomRight: 12 }}
-          effects={{ dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.1)' }] }}
-        >
-          <List
-            items={items}
-            selectedIndex={currentSelectedIndex}
-            onItemClick={handleItemClick}
-            fill={{ type: 'solid', color: 'black8' }}
-            appearance={{ radiusTopLeft: 0, radiusTopRight: 0, radiusBottomLeft: 12, radiusBottomRight: 12 }}
-            
-            {...listProps}
-          />
-        </Frame>
-      )}
     </Frame>
   );
 });

@@ -1,16 +1,6 @@
-import { AnimateProps } from '../../frame/frame-properties/animation/animate.props';
-import { FillProps } from '../../frame/frame-properties/appearance/fill.props';
-import { TypographyProps } from '../../frame/frame-properties/typography/typography.props';
+import { VariantDocument } from '../../frame/frame-properties/variants/variants.props';
 
-export type BadgeVariant = 'neutral' | 'accent' | 'outline' | 'softDark' | 'softLight' | 'primary' | 'neutral-hover' | 'active';
-
-export interface BadgeVariantConfig {
-  fill: FillProps;
-  typography: TypographyProps;
-  border?: string;
-  animate?: AnimateProps;
-}
-export const BADGE_VARIANTS: Record<BadgeVariant, BadgeVariantConfig> = {
+export default {
   neutral: {
     fill: { type: 'solid', color: 'gray4' },
     typography: { color: 'gray1', fontSize: 12, fontWeight: 600 }
@@ -22,7 +12,7 @@ export const BADGE_VARIANTS: Record<BadgeVariant, BadgeVariantConfig> = {
   outline: {
     fill: { type: 'solid', color: 'transparent' },
     typography: { color: 'gray10', fontSize: 12, fontWeight: 600 },
-    border: '1px solid #d1d5db'
+    stroke: { type: 'solid', color: 'gray5', weight: 1 }
   },
   softDark: {
     fill: { type: 'solid', color: 'gray10' },
@@ -44,4 +34,4 @@ export const BADGE_VARIANTS: Record<BadgeVariant, BadgeVariantConfig> = {
     fill: { type: 'solid', color: 'gray2' },
     typography: { color: 'gray1', fontSize: 12, fontWeight: 600 }
   },
-};
+} satisfies VariantDocument;

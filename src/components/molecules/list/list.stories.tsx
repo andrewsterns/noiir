@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { List } from './list';
+import { List, ListItem } from './list';
 import { useState } from 'react';
+import { Frame } from '../../frame/Frame';
+import { Label } from '../..';
 
 const meta: Meta<typeof List> = {
   title: 'Molecules/List',
@@ -45,32 +47,11 @@ const sampleItemsWithDisabled = [
   'Elderberry'
 ];
 
-export const SingleSelect: Story = {
-  render: () => {
-    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
-
-    return (
-      <List
-        items={sampleItems}
-        selectedIndex={selectedIndex}
-        onItemClick={(index) => setSelectedIndex(index)}
-      />
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Single selection list - click to select one item.',
-      },
-    },
-  },
-};
-
 export const MultiSelect: Story = {
   render: () => {
     const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
 
-    const handleItemClick = (index: number) => {
+    const handleItemClick = (index: number, item: ListItem) => {
       setSelectedIndices(prev =>
         prev.includes(index)
           ? prev.filter(i => i !== index)
@@ -90,49 +71,170 @@ export const MultiSelect: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Multi-selection list - click to toggle selection of multiple items.',
+        story: 'Multi-selection list - hover over labels and click to toggle selection of multiple items.',
       },
     },
   },
 };
 
-export const WithDisabledItems: Story = {
+export const SingleSelect: Story = {
   render: () => {
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
 
-    return (
-      <List
-        items={sampleItemsWithDisabled}
-        selectedIndex={selectedIndex}
-        onItemClick={(index) => setSelectedIndex(index)}
-      />
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'List with disabled items that cannot be selected.',
-      },
-    },
-  },
-};
-
-export const StyledList: Story = {
-  render: () => {
-    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(0);
+    const handleItemClick = (index: number, item: ListItem) => {
+      setSelectedIndex(selectedIndex === index ? undefined : index);
+    };
 
     return (
       <List
         items={sampleItems}
         selectedIndex={selectedIndex}
-        onItemClick={(index) => setSelectedIndex(index)}
+        selectedVariant="primary-active"
+        multiSelect={false}
+        onItemClick={handleItemClick}
       />
     );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Styled list with custom colors, borders, and shadows.',
+        story: 'Single-selection list - hover over labels and click to select one item at a time.',
+      },
+    },
+  },
+};
+
+export const WithDisabled: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    const handleItemClick = (index: number, item: ListItem) => {
+      setSelectedIndex(selectedIndex === index ? undefined : index);
+    };
+
+    return (
+      <List
+        items={sampleItemsWithDisabled}
+        selectedIndex={selectedIndex}
+        selectedVariant="primary-active"
+        multiSelect={false}
+        onItemClick={handleItemClick}
+      />
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'List with disabled items - some labels are disabled and cannot be selected.',
+      },
+    },
+  },
+};
+
+export const TwoLists: Story = {
+  render: () => {
+    const [selectedIndex1, setSelectedIndex1] = useState<number | undefined>(undefined);
+    const [selectedIndex2, setSelectedIndex2] = useState<number | undefined>(undefined);
+
+    const handleItemClick1 = (index: number, item: ListItem) => {
+      setSelectedIndex1(selectedIndex1 === index ? undefined : index);
+    };
+
+    const handleItemClick2 = (index: number, item: ListItem) => {
+      setSelectedIndex2(selectedIndex2 === index ? undefined : index);
+    };
+
+    return (
+      <Frame autoLayout={{ flow: 'horizontal', gap: 32 }}>
+        <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
+          <Label variant="primary" animate={{ hover: 'none', click: 'none' }}>List 1</Label>
+          <List
+            items={sampleItems}
+            selectedIndex={selectedIndex1}
+            selectedVariant="primary-active"
+            multiSelect={false}
+            onItemClick={handleItemClick1}
+          />
+        </Frame>
+        <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
+          <h3>List 2</h3>
+          <List
+            items={sampleItems}
+            selectedIndex={selectedIndex2}
+            selectedVariant="primary-active"
+            multiSelect={false}
+            onItemClick={handleItemClick2}
+          />
+        </Frame>
+      </Frame>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Two separate lists to test if selection state is properly isolated between components.',
+      },
+    },
+  },
+};
+
+export const ClickOrder: Story = {
+  render: () => {
+    const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+    const [clickOrder, setClickOrder] = useState<string[]>([]);
+
+    const getItemLabel = (item: ListItem): string => {
+      return typeof item === 'string' ? item : item.label;
+    };
+
+    const handleMultiClick = (index: number, item: ListItem) => {
+      setSelectedIndices(prev =>
+        prev.includes(index)
+          ? prev.filter(i => i !== index)
+          : [...prev, index]
+      );
+      setClickOrder(prev => [...prev, getItemLabel(item)]);
+    };
+
+    const handleSingleClick = (index: number, item: ListItem) => {
+      setSelectedIndex(selectedIndex === index ? undefined : index);
+      setClickOrder(prev => [...prev, getItemLabel(item)]);
+    };
+
+    return (
+      <Frame autoLayout={{ flow: 'vertical', gap: 32 }}>
+        <Frame autoLayout={{ flow: 'horizontal', gap: 32 }}>
+          <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
+            <h3>Multi-Select List</h3>
+            <List
+              items={sampleItems}
+              selectedIndices={selectedIndices}
+              multiSelect={true}
+              onItemClick={handleMultiClick}
+            />
+          </Frame>
+          <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
+            <h3>Single-Select List</h3>
+            <List
+              items={sampleItems}
+              selectedIndex={selectedIndex}
+              selectedVariant="primary-active"
+              multiSelect={false}
+              onItemClick={handleSingleClick}
+            />
+          </Frame>
+        </Frame>
+        <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
+          <h3>Click Order: {clickOrder.join(', ')}</h3>
+        </Frame>
+      </Frame>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Two lists (multi-select and single-select) that track and display the order of clicked items.',
       },
     },
   },

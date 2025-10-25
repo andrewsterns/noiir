@@ -22,5 +22,17 @@ const config: StorybookConfig = {
       propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
     },
   },
+  managerHead: (head) => `
+    ${head}
+    <style>
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+      .sidebar-item, .sidebar-header, .sidebar-tree {
+        color: #000000 !important;
+      }
+    </style>
+  `,
 };
 export default config;

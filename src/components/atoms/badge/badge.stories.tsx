@@ -22,11 +22,10 @@ export const Default: Story = {
   },
 };
 
-export const Animate: Story = {
+export const Variants: Story = {
   args: {
-    children: 'Animate',
+    children: 'Badge',
     variant: 'primary',
-    animate: { hover: 'neutral-hover', click: 'active' },
     size: 24,
   },
 };

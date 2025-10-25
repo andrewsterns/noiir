@@ -8,9 +8,15 @@ export interface AutoLayoutProps {
   // Dimensions
   width?: string | number | 'hug' | 'fill-container';
   height?: string | number | 'hug' | 'fill-container';
+  minWidth?: string | number;
+  maxWidth?: string | number;
+  minHeight?: string | number;
+  maxHeight?: string | number;
+  overflow?: string;
+
   
   // Spacing
-  gap?: number | 'full';
+  gap?: number | 'full' | 'none' | 'hug' | 'fill';
 
   // Margin (new)
   margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
@@ -112,7 +118,8 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
       break;
     case 'freeform':
     default:
-      styles.position = 'relative';
+      // Don't set position: relative for frames that might be absolutely positioned
+      // Only containers with specific flow types need relative positioning
       // width/height for hug handled above
       break;
   }
@@ -254,13 +261,77 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     }
   }
   
+  if (props.maxHeight !== undefined) {
+    if (typeof props.maxHeight === 'number') {
+      styles.maxHeight = `${props.maxHeight}px`;
+    } else {
+      styles.maxHeight = props.maxHeight;
+    }
+  }
+  
+  if (props.minWidth !== undefined) {
+    if (typeof props.minWidth === 'number') {
+      styles.minWidth = `${props.minWidth}px`;
+    } else {
+      styles.minWidth = props.minWidth;
+    }
+  }
+  
+  if (props.maxWidth !== undefined) {
+    if (typeof props.maxWidth === 'number') {
+      styles.maxWidth = `${props.maxWidth}px`;
+    } else {
+      styles.maxWidth = props.maxWidth;
+    }
+  }
+  
+  if (props.minHeight !== undefined) {
+    if (typeof props.minHeight === 'number') {
+      styles.minHeight = `${props.minHeight}px`;
+    } else {
+      styles.minHeight = props.minHeight;
+    }
+  }
+  
+  if (props.overflow !== undefined) {
+    styles.overflow = props.overflow;
+  }
+  
+  
   // Gap between items (like Figma's spacing between items)
   // Only apply gap for non-freeform flows
   if (
     props.gap !== undefined &&
     (props.flow === 'horizontal' || props.flow === 'vertical' || props.flow === 'grid' || props.flow === 'curved')
   ) {
-    styles.gap = `${props.gap}px`;
+    switch (props.gap) {
+      case 'none':
+        styles.gap = '0';
+        break;
+      case 'hug':
+        styles.gap = '0'; // Hug means minimal spacing
+        break;
+      case 'fill':
+        // For fill, we want to distribute space between items
+        // This is tricky with CSS gap alone, but we can use justify-content
+        if (props.flow === 'horizontal') {
+          styles.justifyContent = 'space-between';
+          styles.gap = '0'; // Let space-between handle the distribution
+        } else if (props.flow === 'vertical') {
+          styles.justifyContent = 'space-between';
+          styles.gap = '0';
+        }
+        break;
+      case 'full':
+        // Full might mean maximum gap, but we'll treat it as a large value
+        styles.gap = '100%';
+        break;
+      default:
+        if (typeof props.gap === 'number') {
+          styles.gap = `${props.gap}px`;
+        }
+        break;
+    }
   }
   
   
@@ -274,7 +345,19 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     }
   }
   
-  // Individual padding controls (override general padding)
+  // Horizontal and vertical padding shortcuts (applied before individual controls)
+  if (props.paddingHorizontal !== undefined) {
+    const hPadding = typeof props.paddingHorizontal === 'number' ? `${props.paddingHorizontal}px` : props.paddingHorizontal;
+    styles.paddingLeft = hPadding;
+    styles.paddingRight = hPadding;
+  }
+  if (props.paddingVertical !== undefined) {
+    const vPadding = typeof props.paddingVertical === 'number' ? `${props.paddingVertical}px` : props.paddingVertical;
+    styles.paddingTop = vPadding;
+    styles.paddingBottom = vPadding;
+  }
+  
+  // Individual padding controls (override shortcuts and general padding)
   if (props.paddingTop !== undefined) {
     styles.paddingTop = typeof props.paddingTop === 'number' ? `${props.paddingTop}px` : props.paddingTop;
   }
@@ -286,18 +369,6 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
   }
   if (props.paddingLeft !== undefined) {
     styles.paddingLeft = typeof props.paddingLeft === 'number' ? `${props.paddingLeft}px` : props.paddingLeft;
-  }
-  
-  // Horizontal and vertical padding shortcuts
-  if (props.paddingHorizontal !== undefined) {
-    const hPadding = typeof props.paddingHorizontal === 'number' ? `${props.paddingHorizontal}px` : props.paddingHorizontal;
-    styles.paddingLeft = hPadding;
-    styles.paddingRight = hPadding;
-  }
-  if (props.paddingVertical !== undefined) {
-    const vPadding = typeof props.paddingVertical === 'number' ? `${props.paddingVertical}px` : props.paddingVertical;
-    styles.paddingTop = vPadding;
-    styles.paddingBottom = vPadding;
   }
   
   // Wrapping behavior (flex-wrap)

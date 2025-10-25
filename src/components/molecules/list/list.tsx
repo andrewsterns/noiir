@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
-import { LabelVariant, LABEL_VARIANTS } from '../../atoms/label/label.variants';
+import { LABEL_VARIANTS } from '../../atoms/label/label.variants';
 
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
@@ -11,9 +11,9 @@ export interface ListProps extends FrameProps {
   selectedIndices?: number[];
   multiSelect?: boolean;
   onItemClick?: (index: number, item: ListItem) => void;
-  itemVariant?: LabelVariant;
-  selectedVariant?: LabelVariant;
-  disabledVariant?: LabelVariant;
+  itemVariant?: 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled';
+  selectedVariant?: 'primary' | 'primary-active';
+  disabledVariant?: 'disabled';
 }
 
 export const List = React.forwardRef<HTMLDivElement, ListProps>(({
@@ -23,7 +23,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   multiSelect = false,
   onItemClick,
   itemVariant = 'primary',
-  selectedVariant = 'active',
+  selectedVariant = 'primary',
   disabledVariant = 'disabled',
   as,
   ...frameProps
@@ -35,7 +35,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
     }
   };
 
-  const getItemVariant = (index: number, item: ListItem): LabelVariant => {
+  const getItemVariant = (index: number, item: ListItem): 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled' => {
     if (typeof item === 'object' && item.disabled) {
       return disabledVariant;
     }
@@ -55,25 +55,23 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
     return typeof item === 'object' && item.disabled === true;
   };
 
+
   return (
     <Frame
       ref={ref}
       as={as || "div"}
-      autoLayout={{ flow: 'vertical', paddingVertical: 4, paddingHorizontal: 0, gap: 4, width: 'fill', height: 'fill'  }}
-      fill={{ type: 'none'}}
+      autoLayout={{ flow: 'vertical' }}
       {...frameProps}
     >
       {items.map((item, index) => {
-        const variant = getItemVariant(index, item);
+        const itemVariantValue = getItemVariant(index, item);
         const disabled = isItemDisabled(item);
-        const variantConfig = LABEL_VARIANTS[variant] || {};
-        const variantAutoLayout = variantConfig.autoLayout || {};
 
         return (
           <Label
             key={index}
-            variant={variant}
-            autoLayout={{ ...variantAutoLayout, width: 'fill', height: 'fill' }}
+            variant={itemVariantValue}
+            variants={LABEL_VARIANTS}
             disabled={disabled}
             onClick={() => handleItemClick(index, item)}
           >

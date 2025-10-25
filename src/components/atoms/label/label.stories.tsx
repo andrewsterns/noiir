@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Label } from './label';
-import type { LabelVariant } from './label';
+import { useState } from 'react';
 
 const meta: Meta<typeof Label> = {
   title: 'Atoms/Label',
@@ -16,11 +16,7 @@ const meta: Meta<typeof Label> = {
   argTypes: {
     variant: {
       control: { type: 'select' },
-  options: ['primary', 'secondary', 'outline', 'active', 'hovered', 'disabled', 'ghost', 'surface', 'glass'] as LabelVariant[],
-    },
-    size: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      options: ['primary', 'primary-hover', 'primary-active', 'primary-active-hover', 'disabled'],
     },
     disabled: {
       control: { type: 'boolean' },
@@ -41,40 +37,64 @@ export const Primary: Story = {
   },
 };
 
-export const Hovered: Story = {
-  args: {
-    variant: 'hovered',
-    children: 'Hovered Label',
-  },
-};
-
-export const Active: Story = {
-  args: {
-    variant: 'active',
-    children: 'Active Label',
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    variant: 'disabled',
-    children: 'Disabled Label',
-    disabled: true,
-  },
-};
-
-export const Sizes: Story = {
+export const AnimationCycle: Story = {
   render: () => (
-    <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
-      <Label size="sm" variant="primary">Small</Label>
-      <Label size="md" variant="primary">Medium</Label>
-      <Label size="lg" variant="primary">Large</Label>
+    <Frame autoLayout={{ flow: 'vertical', gap: 20, padding: 20 }}>
+      <h3>Label Animation Cycle Test</h3>
+      <p>Test the natural hover/click interactions:</p>
+      <p>• <strong>Hover</strong> over each label to see hover animations</p>
+      <p>• <strong>Click</strong> while hovering to trigger state changes</p>
+      <p>• Each label starts in its base state and responds to interactions</p>
+
+      <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
+        <div>
+          <h4>Primary State</h4>
+          <p>Hover → primary-hover | Click → primary-active</p>
+          <Label variant="primary" onClick={() => {}}>Primary (hover & click me)</Label>
+        </div>
+
+        <div>
+          <h4>Primary-Hover State</h4>
+          <p>Hover → stays primary-hover | Click → primary-active</p>
+          <Label variant="primary-hover" onClick={() => {}}>Primary Hover (hover & click me)</Label>
+        </div>
+
+        <div>
+          <h4>Primary-Active State</h4>
+          <p>Hover → primary-active-hover | Click → stays primary-active</p>
+          <Label variant="primary-active" onClick={() => {}}>Primary Active (hover & click me)</Label>
+        </div>
+
+        <div>
+          <h4>Primary-Active-Hover State</h4>
+          <p>Hover → stays primary-active-hover | Click → primary</p>
+          <Label variant="primary-active-hover" onClick={() => {}}>Primary Active Hover (hover & click me)</Label>
+        </div>
+      </Frame>
     </Frame>
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Labels with different sizes (sm, md, lg) showing varying padding and font sizes.',
+        story: 'Test story showing each variant state and its hover/click behavior to verify the animation cycle works correctly.',
+      },
+    },
+  },
+};
+
+
+export const Sizes: Story = {
+  render: () => (
+    <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
+      <Label variant="primary">Primary</Label>
+      <Label variant="primary-active">Active</Label>
+      <Label variant="disabled" disabled>Disabled</Label>
+    </Frame>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Labels with different variants showing the available states.',
       },
     },
   },
@@ -84,66 +104,64 @@ import { Frame } from '../../frame/Frame';
 
 export const InteractiveDemo: Story = {
   render: () => (
-  <Frame autoLayout={{ flow: 'vertical', gap: 16, padding: 20 }}>
+    <Frame autoLayout={{ flow: 'vertical', gap: 16, padding: 20 }}>
       <h3>Interactive Label Demo</h3>
-      <p>Labels have persistent toggle states:</p>
-      <p>• <strong>Hover</strong> → hovered variant</p>
-      <p>• <strong>Click</strong> → toggles active variant (persists)</p>
-      <p>• <strong>Click & hold</strong> → active variant during press</p>
+      <p>Labels support hover animations:</p>
+      <p>• <strong>Hover</strong> → hover variant animation</p>
+      <p>• <strong>Click</strong> → onClick handler (if provided)</p>
 
-  <Frame autoLayout={{ flow: 'horizontal', gap: 12 }} style={{ alignItems: 'center' }}>
+      <Frame autoLayout={{ flow: 'horizontal', gap: 12 }} style={{ alignItems: 'center' }}>
         <Label variant="primary">Primary</Label>
-        <Label variant="hovered">Hovered</Label>
-        <Label variant="active">Active</Label>
+        <Label variant="primary-active">Active</Label>
+        <Label variant="primary-hover">Hover</Label>
+        <Label variant="primary-active-hover">Active Hover</Label>
         <Label variant="disabled" disabled>Disabled</Label>
       </Frame>
 
-  <Frame autoLayout={{ flow: 'freeform' }} style={{ alignItems: 'center', marginTop: 20 }}>
-    <Label
-    size='sm'
-      variant="primary"
-      fill={{ type: 'solid', color: 'primary3' }}
-      appearance={{ radius: 4 }}
-      typography={{ fontSize: 14, color: 'primary9' }}
-      position={{ x: 0, y: 0 }}
-    >
-      Primary (freeform)
-    </Label>
-    <Label
-      variant="hovered"
-      fill={{ type: 'solid', color: 'primary3' }}
-      appearance={{ radius: 4 }}
-      typography={{ fontSize: 14, color: 'primary9' }}
-      position={{ x: 180, y: 0 }}
-    >
-      Hovered (freeform)
-    </Label>
-    <Label
-      variant="active"
-      fill={{ type: 'solid', color: 'primary3' }}
-      appearance={{ radius: 4 }}
-      typography={{ fontSize: 14, color: 'primary9' }}
-      position={{ x: 360, y: 0 }}
-    >
-      Active (freeform)
-    </Label>
-    <Label
-      variant="disabled"
-      fill={{ type: 'solid', color: 'primary3' }}
-      appearance={{ radius: 4 }}
-      typography={{ fontSize: 14, color: 'primary9' }}
-      disabled
-      position={{ x: 540, y: 0 }}
-    >
-      Disabled (freeform)
-    </Label>
-  </Frame>
+      <Frame autoLayout={{ flow: 'freeform' }} style={{ alignItems: 'center', marginTop: 20 }}>
+        <Label
+          variant="primary"
+          fill={{ type: 'solid', color: 'primary3' }}
+          appearance={{ radius: 4 }}
+          typography={{ fontSize: 14, color: 'primary9' }}
+          position={{ x: 0, y: 0 }}
+        >
+          Primary (freeform)
+        </Label>
+        <Label
+          variant="primary-active"
+          fill={{ type: 'solid', color: 'primary3' }}
+          appearance={{ radius: 4 }}
+          typography={{ fontSize: 14, color: 'primary9' }}
+          position={{ x: 180, y: 0 }}
+        >
+          Active (freeform)
+        </Label>
+        <Label
+          variant="primary-hover"
+          fill={{ type: 'solid', color: 'primary3' }}
+          appearance={{ radius: 4 }}
+          typography={{ fontSize: 14, color: 'primary9' }}
+          position={{ x: 360, y: 0 }}
+        >
+          Hover (freeform)
+        </Label>
+        <Label
+          variant="primary-active-hover"
+          fill={{ type: 'solid', color: 'primary3' }}
+          appearance={{ radius: 4 }}
+          typography={{ fontSize: 14, color: 'primary9' }}
+          position={{ x: 540, y: 0 }}
+        >
+          Active Hover (freeform)
+        </Label>
+      </Frame>
     </Frame>
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Demonstrates persistent active state toggling on click, plus hover and press states.',
+        story: 'Demonstrates hover animations and different label variants.',
       },
     },
   },

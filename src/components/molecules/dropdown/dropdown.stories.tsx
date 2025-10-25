@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Dropdown } from './dropdown';
 import { useState } from 'react';
+import { Frame } from '../../frame/Frame';
 
 const meta: Meta<typeof Dropdown> = {
   title: 'Molecules/Dropdown',
@@ -9,7 +10,7 @@ const meta: Meta<typeof Dropdown> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'A dropdown component that combines a Button trigger with a List of selectable options.',
+        component: 'A dropdown component that supports both single and multiple selection with customizable styling.',
       },
     },
   },
@@ -17,11 +18,32 @@ const meta: Meta<typeof Dropdown> = {
     items: {
       control: { type: 'object' },
     },
+    selectedIndex: {
+      control: { type: 'number' },
+    },
+    selectedIndices: {
+      control: { type: 'object' },
+    },
+    multiSelect: {
+      control: { type: 'boolean' },
+    },
     placeholder: {
       control: { type: 'text' },
     },
     disabled: {
       control: { type: 'boolean' },
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['primary', 'secondary'],
+    },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg'],
+    },
+    buttonSize: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg'],
     },
   },
 };
@@ -45,23 +67,66 @@ const sampleItemsWithDisabled = [
   'Elderberry'
 ];
 
-export const Basic: Story = {
+export const SingleSelect: Story = {
   render: () => {
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
 
+    const handleChange = (index: number, item: any) => {
+      setSelectedIndex(index);
+      console.log('Selected:', index, item);
+    };
+
     return (
-      <Dropdown
-        items={sampleItems}
-        selectedIndex={selectedIndex}
-        onChange={(index) => setSelectedIndex(index)}
-        placeholder="Choose a fruit..."
-      />
+      <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 300 }}>
+        <h3>Single Select Dropdown</h3>
+        <Dropdown
+          items={sampleItems}
+          selectedIndex={selectedIndex}
+          placeholder="Choose a fruit..."
+          onChange={handleChange}
+          variant="primary"
+        />
+        <p>Selected index: {selectedIndex !== undefined ? selectedIndex : 'none'}</p>
+      </Frame>
     );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Basic dropdown with simple string items.',
+        story: 'Single selection dropdown - click to open and select one item.',
+      },
+    },
+  },
+};
+
+export const MultiSelect: Story = {
+  render: () => {
+    const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+
+    const handleMultiChange = (indices: number[], items: any[]) => {
+      setSelectedIndices(indices);
+      console.log('Selected:', indices, items);
+    };
+
+    return (
+      <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 300 }}>
+        <h3>Multi Select Dropdown</h3>
+        <Dropdown
+          items={sampleItems}
+          selectedIndices={selectedIndices}
+          multiSelect={true}
+          placeholder="Choose fruits..."
+          onMultiChange={handleMultiChange}
+          variant="primary"
+        />
+        <p>Selected indices: [{selectedIndices.join(', ')}]</p>
+      </Frame>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Multiple selection dropdown - click to open and select multiple items.',
       },
     },
   },
@@ -71,13 +136,23 @@ export const WithDisabledItems: Story = {
   render: () => {
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
 
+    const handleChange = (index: number, item: any) => {
+      setSelectedIndex(index);
+      console.log('Selected:', index, item);
+    };
+
     return (
-      <Dropdown
-        items={sampleItemsWithDisabled}
-        selectedIndex={selectedIndex}
-        onChange={(index) => setSelectedIndex(index)}
-        placeholder="Choose a fruit..."
-      />
+      <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 300 }}>
+        <h3>Dropdown with Disabled Items</h3>
+        <Dropdown
+          items={sampleItemsWithDisabled}
+          selectedIndex={selectedIndex}
+          placeholder="Choose a fruit..."
+          onChange={handleChange}
+          variant="primary"
+        />
+        <p>Note: "Cherry" is disabled and cannot be selected</p>
+      </Frame>
     );
   },
   parameters: {
@@ -89,48 +164,53 @@ export const WithDisabledItems: Story = {
   },
 };
 
-export const Preselected: Story = {
+export const SecondaryVariant: Story = {
   render: () => {
-    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(2);
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    const handleChange = (index: number, item: any) => {
+      setSelectedIndex(index);
+      console.log('Selected:', index, item);
+    };
 
     return (
-      <Dropdown
-        items={sampleItems}
-        selectedIndex={selectedIndex}
-        onChange={(index) => setSelectedIndex(index)}
-        placeholder="Choose a fruit..."
-      />
+      <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 300 }}>
+        <h3>Secondary Variant Dropdown</h3>
+        <Dropdown
+          items={sampleItems}
+          selectedIndex={selectedIndex}
+          placeholder="Choose a fruit..."
+          onChange={handleChange}
+          variant="secondary"
+        />
+      </Frame>
     );
   },
   parameters: {
     docs: {
       description: {
-        story: 'Dropdown with a pre-selected item.',
+        story: 'Dropdown with secondary styling variant.',
       },
     },
   },
 };
 
-export const Styled: Story = {
-  render: () => {
-    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
-
-    return (
+export const Disabled: Story = {
+  render: () => (
+    <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 300 }}>
+      <h3>Disabled Dropdown</h3>
       <Dropdown
         items={sampleItems}
-        selectedIndex={selectedIndex}
-        onChange={(index) => setSelectedIndex(index)}
-        placeholder="Choose a fruit..."
-        buttonProps={{
-          fill: { type: 'solid', color: 'gray3' },
-        }}
+        placeholder="Cannot select..."
+        disabled={true}
+        variant="primary"
       />
-    );
-  },
+    </Frame>
+  ),
   parameters: {
     docs: {
       description: {
-        story: 'Styled dropdown with custom button appearance.',
+        story: 'Disabled dropdown that cannot be opened.',
       },
     },
   },

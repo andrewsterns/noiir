@@ -5,37 +5,35 @@
 
 export const colors = {
   // Primary Colors
-"gray": {
-  "1": "#f5f3f3ff",  // Very light gray
-  "2": "#f3f3f5ff",  // Light gray
-  "3": "#e4e5e9ff",  // Slightly darker light gray
-  "4": "#cacdcfff",  // Light-medium gray
-  "5": "#b0b3b6",    // Medium gray
-  "6": "#96999c",    // Medium-dark gray
-  "7": "#7c7f82",    // Darker gray
-  "8": "#626568",    // Even darker gray
-  "9": "#484b4e",    // Very dark gray
-  "10": "#2e3134",   // Near black
-  "11": "#18191a",   // Almost black
-  "12": "#050505"    // Pure black for contrast
-},
-
-
+  "white": {
+    "1": "#FFFFFF",  // Pure white
+    "2": "#F8F8F8",  // Almost white
+    "3": "#F2F2F2",  // Very light gray
+    "4": "#ECECEC",  // Light neutral gray
+    "5": "#E6E6E6",  // Slightly darker
+    "6": "#E0E0E0",  // Transition into gray range
+    "7": "#DADADA"   // Deepest white tone, bordering gray
+  },
+  "gray": {
+    "1": "#CFCFCF",  // Soft mid-light gray
+    "2": "#BFBFBF",  // Balanced neutral gray
+    "3": "#AFAFAF",  // Middle gray
+    "4": "#9F9F9F",  // Slightly darker mid-gray
+    "5": "#8F8F8F",  // Deep gray
+    "6": "#7F7F7F",  // Classic mid-dark gray
+    "7": "#6F6F6F"   // Dark neutral gray, approaching black
+  },
   "black": {
-    "1": "#f2f2f2ff",  // Very light black
-    "2": "#d9d9d9ff",  // Light black
-    "3": "#bfbfbfff",  // Slightly darker light black
-    "4": "#a6a6a6ff",  // Medium light black
-    "5": "#8c8c8cff",  // Medium black
-    "6": "#737373ff",  // Medium dark black
-    "7": "#595959ff",  // Dark black
-    "8": "#404040ff",  // Darker black
-    "9": "#262626ff",  // Very dark black
-    "10": "#0d0d0dff", // Near black
-    "11": "#050505ff", // Almost black
-    "12": "#000000ff"  // Pure black
-},
-} as const;
+    "1": "#5C5C5C",  // Deep charcoal
+    "2": "#4A4A4A",  // Dark gray
+    "3": "#383838",  // Almost black
+    "4": "#2A2A2A",  // Very dark charcoal
+    "5": "#1C1C1C",  // Near black
+    "6": "#0E0E0E",  // Almost full black
+    "7": "#000000"   // Pure black
+  }
+}
+
 
 /**
  * Color utility functions
@@ -82,7 +80,7 @@ export const resolveColor = (colorInput: string): string => {
   }
   
   // Fallback to blue9 if parsing fails
-  return colors.black[9];
+  return colors.black[7];
 };
 
 /**

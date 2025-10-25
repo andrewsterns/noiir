@@ -1,7 +1,7 @@
 export const HorizontalVsFreeform: LayoutStory = {
   args: {
-    fill: { type: 'solid', color: 'black8' },
-    stroke: { type: 'none' },
+    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
+    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
     appearance: { radius: 8 },
     width: 600,
     height: 120,
@@ -17,14 +17,15 @@ export const HorizontalVsFreeform: LayoutStory = {
           autoLayout={{ flow: 'vertical', gap: 32 }}
           style={{ width: 640 }}
         >
-          <Frame typography={{ fontWeight: 600, fontSize: 16, color: 'gray2' }} style={{ marginBottom: 4 }}>Horizontal Layout (gap, shifting)</Frame>
+          <Frame typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'left' }} style={{ marginBottom: 4 }}>Horizontal Layout (gap, shifting)</Frame>
           <Frame
             autoLayout={{ flow: 'horizontal', gap: 16, padding: 8, width: 'hug', height: 60 }}
-            fill={{ type: 'solid', color: 'black8' }}
+            fill={{ type: 'solid', color: 'white2', opacity: 0.9 }}
+            stroke={{ type: 'solid', color: 'white4', weight: 1, opacity: 0 }}
             appearance={{ radius: 8 }}
           >
             <Frame
-              fill={{ type: 'solid', color: 'blue6' }}
+              fill={{ type: 'solid', color: 'white7' }}
               autoLayout={{ width: 140, height: 40 }}
               appearance={{ radius: 4 }}
               style={{ transition: 'width 0.3s', cursor: 'pointer' }}
@@ -33,17 +34,18 @@ export const HorizontalVsFreeform: LayoutStory = {
             >
               A (hover me)
             </Frame>
-            <Frame fill={{ type: 'solid', color: 'tomato6' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }}>B</Frame>
-            <Frame fill={{ type: 'solid', color: 'grass6' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }}>C</Frame>
+            <Frame fill={{ type: 'solid', color: 'white4' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }}>B</Frame>
+            <Frame fill={{ type: 'solid', color: 'white4' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }}>C</Frame>
           </Frame>
-          <Frame typography={{ fontWeight: 600, fontSize: 16, color: 'gray2' }}>Freeform Layout (no shifting)</Frame>
+          <Frame typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'left' }}>Freeform Layout (no shifting)</Frame>
           <Frame
             autoLayout={{ flow: 'freeform', padding: 8, width: 'hug', height: 60, gap: 16 }}
-            fill={{ type: 'solid', color: 'black8' }}
+            fill={{ type: 'solid', color: 'white2', opacity: 0.9 }}
+            stroke={{ type: 'solid', color: 'white4', weight: 1, opacity: 0 }}
             appearance={{ radius: 8 }}
           >
             <Frame
-              fill={{ type: 'solid', color: 'blue6' }}
+              fill={{ type: 'solid', color: 'white7' }}
               autoLayout={{ width: 140, height: 40 }}
               appearance={{ radius: 4 }}
               position={{ x: 0, y: 0 }}
@@ -51,10 +53,39 @@ export const HorizontalVsFreeform: LayoutStory = {
               onMouseEnter={e => e.currentTarget.style.width = '260px'}
               onMouseLeave={e => e.currentTarget.style.width = '140px'}
             >
-              A (hover me)
+              <Frame
+                typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
+                autoLayout={{ padding: 8, alignment: 'center' }}
+              >
+                A (hover me)
+              </Frame>
             </Frame>
-            <Frame fill={{ type: 'solid', color: 'tomato6' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }} position={{ x: 180, y: 0 }}>B</Frame>
-            <Frame fill={{ type: 'solid', color: 'grass6' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }} position={{ x: 340, y: 0 }}>C</Frame>
+            <Frame 
+              fill={{ type: 'solid', color: 'white4' }} 
+              autoLayout={{ width: 140, height: 40 }} 
+              appearance={{ radius: 4 }} 
+              position={{ x: 180, y: 0 }}
+            >
+              <Frame
+                typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
+                autoLayout={{ padding: 8, alignment: 'center' }}
+              >
+                B
+              </Frame>
+            </Frame>
+            <Frame 
+              fill={{ type: 'solid', color: 'white4' }} 
+              autoLayout={{ width: 140, height: 40 }} 
+              appearance={{ radius: 4 }} 
+              position={{ x: 340, y: 0 }}
+            >
+              <Frame
+                typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
+                autoLayout={{ padding: 8, alignment: 'center' }}
+              >
+                C
+              </Frame>
+            </Frame>
           </Frame>
         </Frame>
       </>
@@ -74,6 +105,7 @@ import { Frame, FrameProps } from '../../Frame';
 
 // Layout story controls interface
 interface LayoutArgs extends Partial<FrameProps> {
+  children?: React.ReactNode;
   flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';
   alignment?: 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
   gap: number;
@@ -107,8 +139,8 @@ type LayoutStory = StoryObj<LayoutArgs>;
 
 export const Layout: LayoutStory = {
   args: {
-    fill: { type: 'solid', color: 'black8' },
-    stroke: { type: 'none' },
+    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
+    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
     appearance: { radius: 8 },
     flow: 'freeform',
     path: { d: 'M 40 200 Q 120 40 200 200 T 360 200' },
@@ -134,33 +166,56 @@ export const Layout: LayoutStory = {
       description: 'SVG path object ({ d: "M ..." })',
       table: { category: 'Layout' }
     },
+    alignment: {
+      control: { type: 'select' },
+      options: [undefined, 'top-left', 'top-center', 'top-right', 'center-left', 'center', 'center-right', 'bottom-left', 'bottom-center', 'bottom-right'],
+      description: 'Container alignment',
+      table: { category: 'Layout' }
+    },
+    wrap: {
+      control: { type: 'select' },
+      options: ['nowrap', 'wrap', 'wrap-reverse'],
+      description: 'Flex wrap behavior',
+      table: { category: 'Layout' }
+    },
+    clipContent: {
+      control: { type: 'boolean' },
+      description: 'Clip content that overflows',
+      table: { category: 'Layout' }
+    },
     gap: {
-      control: { type: 'number', min: 0, max: 100, step: 1 },
+      control: { type: 'select' },
+      options: [0, 4, 8, 12, 16, 24, 32, 48, 64],
       description: 'Space between items in pixels',
       table: { category: 'Layout' }
     },
     padding: {
-      control: { type: 'number', min: 0, max: 50, step: 2 },
+      control: { type: 'select' },
+      options: [0, 4, 8, 12, 16, 24, 32],
       description: 'Internal padding in pixels',
       table: { category: 'Layout' }
     },
     width: {
-      control: { type: 'number', min: 100, max: 600, step: 10 },
+      control: { type: 'select' },
+      options: ['hug', 'fill-container', 200, 300, 400, 500, 600],
       description: 'Frame width',
       table: { category: 'Layout' }
     },
     height: {
-      control: { type: 'number', min: 100, max: 600, step: 10 },
+      control: { type: 'select' },
+      options: ['hug', 'fill-container', 150, 200, 250, 300, 400, 500, 600],
       description: 'Frame height',
       table: { category: 'Layout' }
     },
     childWidth: {
-      control: { type: 'number', min: 8, max: 128, step: 4 },
+      control: { type: 'select' },
+      options: ['hug', 'fill-container', 24, 32, 40, 48, 56, 64, 80, 96, 112, 128],
       description: 'Child width',
       table: { category: 'Children' }
     },
     childHeight: {
-      control: { type: 'number', min: 8, max: 128, step: 4 },
+      control: { type: 'select' },
+      options: ['hug', 'fill-container', 24, 32, 40, 48, 56, 64, 80, 96, 112, 128],
       description: 'Child height',
       table: { category: 'Children' }
     },
@@ -194,18 +249,21 @@ export const Layout: LayoutStory = {
           <Frame
             key={i}
             stroke={{ type: 'none' }}
-            fill={{ type: 'solid', color: i === 1 ? 'gray6' : i === 2 ? 'tomato6' : i === 3 ? 'grass6' : i === 4 ? 'blue6' : 'warning6' }}
+            fill={{ type: 'solid', color: i === 1 ? 'gray3' : i === 2 ? 'gray4' : i === 3 ? 'gray5' : i === 4 ? 'gray6' : 'gray7' }}
             autoLayout={{
+              flow: 'vertical',
               width: args.childWidth,
               height: args.childHeight,
-              alignment: args.childAlignment
+              alignment: args.childAlignment,
+              gap: 12
             }}
             appearance={{ radius: 4 }}
+            typography={{type: 'h6'}}
           >
             <Frame
               stroke={{ type: 'none' }}
-              typography={{ color: 'gray10', fontSize: 10, textAlign: 'center' }}
-              autoLayout={{ padding: 8 }}
+              typography={{ fontSize: 9, color: 'white4', wrap: 'nowrap', textAlign: 'center' }}
+              autoLayout={{ flow: 'grid', alignment: 'center', padding: 8, width: 'hug', height: 'hug' }}
             >
               {`Item ${i}`}
             </Frame>
@@ -228,8 +286,8 @@ export const Layout: LayoutStory = {
 
 export const CurvedLayout: LayoutStory = {
   args: {
-    fill: { type: 'solid', color: 'neutral2' },
-    stroke: { type: 'none' },
+    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
+    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
     appearance: { radius: 8 },
     flow: 'curved',
     path: { d: 'M 40 200 Q 120 40 200 200 T 360 200' }, // random curve
@@ -245,13 +303,14 @@ export const CurvedLayout: LayoutStory = {
     children: Array.from({ length: 10 }).map((_, i) => (
       <Frame
         key={i}
-        fill={{ type: 'solid', color: `primary12` }}
-        appearance={{ radius: 16 }}
+        fill={{ type: 'solid', color: 'white2', opacity: 0.9 }}
+        stroke={{ type: 'solid', color: 'white4', weight: 1, opacity: 0 }}
+        appearance={{ radius: 8 }}
         autoLayout={{ width: 'hug', height: 'hug', alignment: 'center' }}
       >
         <Frame
           autoLayout={{ padding: 4 }}
-          typography={{ color: 'gray12', fontSize: 12, textAlign: 'center' }}
+          typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
         >
           {i + 1}
         </Frame>
@@ -357,19 +416,20 @@ export const CurvedLayout: LayoutStory = {
           width: 'hug',
           height: 'hug'
         }}
-        fill={{ type: 'solid', color: 'black8' }}
+        fill={{ type: 'solid', color: 'white2', opacity: 0.9 }}
+        stroke={{ type: 'solid', color: 'white4', weight: 1, opacity: 0 }}
         appearance={{ radius: 8 }}
       >
         {Array.from({ length: 8 }).map((_, i) => (
           <Frame
             key={i}
             fill={{ type: 'solid', color: 'blue6' }}
-            appearance={{ radius: 16 }}
+            appearance={{ radius: 8 }}
             autoLayout={{ width: 32, height: 32, alignment: 'center' }}
           >
             <Frame
               autoLayout={{ padding: 4 }}
-              typography={{ color: 'gray12', fontSize: 12, textAlign: 'center' }}
+              typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
             >
               {i + 1}
             </Frame>
@@ -385,19 +445,20 @@ export const CurvedLayout: LayoutStory = {
           width: 'hug',
           height: 'hug'
         }}
-        fill={{ type: 'solid', color: 'black8' }}
+        fill={{ type: 'solid', color: 'white2', opacity: 0.9 }}
+        stroke={{ type: 'solid', color: 'white4', weight: 1, opacity: 0 }}
         appearance={{ radius: 8 }}
       >
         {Array.from({ length: 10 }).map((_, i) => (
           <Frame
             key={i}
             fill={{ type: 'solid', color: 'tomato6' }}
-            appearance={{ radius: 16 }}
+            appearance={{ radius: 8 }}
             autoLayout={{ width: 32, height: 32, alignment: 'center' }}
           >
             <Frame
               autoLayout={{ padding: 4 }}
-              typography={{ color: 'gray12', fontSize: 12, textAlign: 'center' }}
+              typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
             >
               {i + 1}
             </Frame>
@@ -414,6 +475,93 @@ export const CurvedLayout: LayoutStory = {
     },
     controls: {
       exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave']
+    }
+  }
+};
+
+export const WrapAndClip: LayoutStory = {
+  args: {
+    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
+    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
+    appearance: { radius: 8 },
+    width: 120,
+    height: 'hug',
+    gap: 8,
+    padding: 8,
+    wrap: 'nowrap',
+    clipContent: false,
+    childWidth: 50,
+    childHeight: 30,
+  },
+  argTypes: {
+    wrap: {
+      control: { type: 'select' },
+      options: ['nowrap', 'wrap', 'wrap-reverse'],
+      description: 'Flex wrap behavior - nowrap keeps in one line, wrap brings children below',
+      table: { category: 'Layout' }
+    },
+    clipContent: {
+      control: { type: 'boolean' },
+      description: 'Clip content that overflows - hides children outside bounds',
+      table: { category: 'Layout' }
+    },
+    width: {
+      control: { type: 'number', min: 80, max: 200, step: 10 },
+      description: 'Fixed container width to demonstrate wrapping/clipping',
+      table: { category: 'Layout' }
+    },
+    childWidth: {
+      control: { type: 'number', min: 30, max: 80, step: 5 },
+      description: 'Child width - make larger than container width to see overflow',
+      table: { category: 'Children' }
+    },
+  },
+  render: (args: LayoutArgs) => (
+    <Frame
+      autoLayout={{
+        flow: 'horizontal',
+        gap: args.gap,
+        padding: args.padding,
+        wrap: args.wrap,
+        clipContent: args.clipContent,
+        width: args.width,
+        height: args.height
+      }}
+      fill={args.fill}
+      stroke={args.stroke}
+      appearance={args.appearance}
+    >
+      {[1, 2, 3, 4, 5].map((i) => (
+        <Frame
+          key={i}
+          stroke={{ type: 'none' }}
+          fill={{ type: 'solid', color: i === 1 ? 'blue6' : i === 2 ? 'tomato6' : i === 3 ? 'grass6' : i === 4 ? 'warning6' : 'purple6' }}
+          autoLayout={{
+            width: args.childWidth,
+            height: args.childHeight,
+            alignment: 'center'
+          }}
+          appearance={{ radius: 4 }}
+        >
+          <Frame
+            stroke={{ type: 'none' }}
+            typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
+            autoLayout={{ padding: 4 }}
+          >
+            {`Item ${i}`}
+          </Frame>
+        </Frame>
+      ))}
+    </Frame>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates wrapping (children flow to next line) and clipping (overflow hidden) with fixed width container.'
+      }
+    },
+    controls: {
+      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave', 'flow', 'alignment', 'padding', 'gap', 'height', 'childHeight', 'childAlignment', 'path']
     }
   }
 };

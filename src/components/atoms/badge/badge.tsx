@@ -1,30 +1,24 @@
 import React from 'react';
 import { Frame } from '../../frame/Frame';
-import { useAnimateVariant } from '../../frame/frame-properties/animation/animate.props';
-import { BADGE_VARIANTS, BadgeVariant } from './badge.variants';
-import { AnimateProps } from '../../frame/frame-properties/animation/animate.props';
+import BadgeVariants from './badge.variants';
 
 export interface BadgeProps {
   children: React.ReactNode;
   color?: string;
   size?: number;
   style?: React.CSSProperties;
-  variant?: BadgeVariant;
-  animate?: AnimateProps;
+  variant?: string;
 }
 
-export const Badge: React.FC<BadgeProps> = ({ children, color, size = 20, style, variant = 'neutral', animate }) => {
-  const baseVariant = BADGE_VARIANTS[variant];
-  const { currentVariant } = useAnimateVariant({ animate });
-  const currentVariantConfig = currentVariant ? BADGE_VARIANTS[currentVariant as BadgeVariant] : baseVariant;
-
+export const Badge: React.FC<BadgeProps> = ({ children, color, size = 20, style, variant = 'neutral' }) => {
   return (
     <Frame
+      variant={variant}
+      variants={BadgeVariants as any}
       autoLayout={{ width: 'hug', height: size, paddingHorizontal: 8, alignment: 'center' }}
-      fill={color ? { type: 'solid', color } : currentVariantConfig.fill}
+      fill={color ? { type: 'solid', color } : undefined}
       appearance={{ radius: size / 2 }}
-      typography={currentVariantConfig.typography}
-      style={{ border: currentVariantConfig.border, ...style }}
+      style={style}
     >
       {children}
     </Frame>

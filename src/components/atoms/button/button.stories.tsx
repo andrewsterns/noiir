@@ -5,7 +5,6 @@ export const Animate: Story = {
   args: {
     children: 'Animate Button',
     variant: 'primary',
-    animate: { hover: 'primary-hover', click: 'active' },
   },
 };
 
@@ -16,13 +15,14 @@ export const AnimateWithHandlers: Story = {
     const addNumber = () => setCount((c) => c + 5);
     const hoverCounter = () => setHoverCount((h) => h + 1);
     return (
-      <Frame autoLayout={{ flow: 'vertical', gap: 12, alignment: 'center' }}>
+      <Frame autoLayout={{ flow: 'vertical', gap: 22, alignment: 'center' }}>
         <div>Click count: {count}</div>
         <div>Hover count: {hoverCount}</div>
         <Button
           variant="primary"
           onClick={addNumber}
           onMouseEnter={hoverCounter}
+          autoLayout={{ width: 'hug' }}
         >
           Primary
         </Button>
@@ -40,8 +40,9 @@ export const AnimateWithHandlers: Story = {
 // --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './button';
-import { ButtonVariant } from './button.variants';
 import { Frame } from '../..';
+import { ArrowUp } from '../../../theme/icons/arrows';
+import { HappyFace } from '../../../theme/icons/fun';
 
 const meta: Meta<typeof Button> = {
   title: 'Atoms/Button',
@@ -57,7 +58,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'outline', 'active', 'hovered', 'disabled', 'ghost', 'surface', 'glass'] as ButtonVariant[],
+      options: ['primary', 'secondary', 'disabled'],
     },
     size: {
       control: { type: 'select' },
@@ -95,8 +96,6 @@ export const WithIcons: Story = {
     children: 'Button with Icons',
     iconStart: '←',
     iconEnd: '→',
-    iconStartActive: '⭐',
-    iconEndActive: '✨',
   },
   parameters: {
     docs: {
@@ -123,7 +122,7 @@ export const StateDemo: Story = {
       </Frame>
       
       <Frame autoLayout={{flow: 'horizontal', gap: 12, alignment: 'center'}}>
-        <Button variant="primary" iconStart="🎯" iconStartActive="✅">With Icons</Button>
+        <Button variant="primary" iconStart="🎯">With Icons</Button>
 
       </Frame>
     </Frame>

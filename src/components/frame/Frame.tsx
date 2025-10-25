@@ -10,7 +10,7 @@ import { CursorProps } from './frame-properties/appearance/cursor.props';
 import { EffectProps } from './frame-properties/effects/effects.props';
 import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
-import { mergeSizeProps } from './frame-properties/variants/variants.props';
+import { mergeSizeProps, FrameVariantConfig } from './frame-properties/variants/variants.props';
 import {
   applyChildStates,
   injectVariant,
@@ -50,10 +50,17 @@ export interface FrameProps {
   onMouseDown?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseUp?: (event: React.MouseEvent<HTMLElement>) => void;
   onHover?: string;
+  iconStart?: React.ReactNode;
+  iconEnd?: React.ReactNode;
+  iconStartColor?: string;
+  iconEndColor?: string;
   size?: any;
   sizeKey?: string;
-  variant?: any;
-  variants?: Record<string, any>;
+  variant?: FrameVariantConfig | string;
+  variants?: Record<string, FrameVariantConfig>;
+  pointerEvents?: string;
+  transform?: string;
+  display?: string;
   [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
@@ -82,10 +89,17 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onMouseDown,
     onMouseUp,
     onHover,
+    iconStart,
+    iconEnd,
+    iconStartColor,
+    iconEndColor,
     size,
     sizeKey,
     variant,
     variants: variantsProp,
+    pointerEvents,
+    transform,
+    display,
     ...otherProps
   } = props;
 
@@ -100,13 +114,16 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
 
   // Get animate prop from variant if it exists, otherwise use explicit animate
   const variantProps = typeof variant === 'string' ? (variants[variant] || {}) : (variant || {});
-  const effectiveAnimate = variantProps.animate || animate;
+  const effectiveAnimate = animate !== undefined ? animate : variantProps.animate;
 
   // Use the animation logic hook
   const { currentVariant, eventHandlers } = useAnimateVariant({ animate: effectiveAnimate, onHover, variants });
 
   // Get the current variant props based on currentVariant
   const currentVariantProps = currentVariant ? variants[currentVariant] : {};
+
+  // Use current variant props if animating, otherwise base variant props
+  const effectiveVariantProps = currentVariant ? currentVariantProps : variantProps;
 
   // Merge variant props with explicit props, explicit props take precedence
   const explicitProps: Record<string, any> = {};
@@ -130,12 +147,39 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (onMouseUp !== undefined) explicitProps.onMouseUp = onMouseUp;
   if (onHover !== undefined) explicitProps.onHover = onHover;
   if (animate !== undefined) explicitProps.animate = animate;
+  if (iconStart !== undefined) explicitProps.iconStart = iconStart;
+  if (iconEnd !== undefined) explicitProps.iconEnd = iconEnd;
+  if (iconStartColor !== undefined) explicitProps.iconStartColor = iconStartColor;
+  if (iconEndColor !== undefined) explicitProps.iconEndColor = iconEndColor;
+  if (pointerEvents !== undefined) explicitProps.pointerEvents = pointerEvents;
+  if (transform !== undefined) explicitProps.transform = transform;
+  if (display !== undefined) explicitProps.display = display;
 
-  const mergedProps = {
-    ...variantProps,
-    ...explicitProps,
-    ...currentVariantProps,
-  };
+  // Create effective variant props without animate if it's explicitly provided
+  const filteredVariantProps = { ...effectiveVariantProps };
+  if (animate !== undefined) {
+    delete filteredVariantProps.animate;
+  }
+
+  // Extract important props from variant
+  const importantProps = filteredVariantProps.important || [];
+  const variantPropsWithoutImportant = { ...filteredVariantProps };
+  delete variantPropsWithoutImportant.important;
+
+  // Merge props: explicit props override variant props, unless marked as important
+  const mergedProps = { ...variantPropsWithoutImportant, ...explicitProps };
+  
+  // Special handling for autoLayout - merge objects instead of replacing
+  if (explicitProps.autoLayout && variantPropsWithoutImportant.autoLayout) {
+    mergedProps.autoLayout = { ...variantPropsWithoutImportant.autoLayout, ...explicitProps.autoLayout };
+  }
+
+  // For important props, variant wins over explicit
+  importantProps.forEach((propName: string) => {
+    if (variantPropsWithoutImportant[propName] !== undefined) {
+      mergedProps[propName] = variantPropsWithoutImportant[propName];
+    }
+  });
 
   // Merge size properties into mergedProps and get size's autoLayout
   const sizeAutoLayout = mergeSizeProps(mergedProps);  // Extract merged props for use
@@ -156,6 +200,13 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onMouseUp: finalOnMouseUp,
     onHover: finalOnHover,
     animate: finalAnimate,
+    iconStart: finalIconStart,
+    iconEnd: finalIconEnd,
+    iconStartColor: finalIconStartColor,
+    iconEndColor: finalIconEndColor,
+    pointerEvents: finalPointerEvents,
+    transform: finalTransform,
+    display: finalDisplay,
   } = mergedProps;
 
   // Merge size's autoLayout into finalAutoLayout if present
@@ -178,13 +229,33 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   // If currentVariant is set, inject it as a prop to children (if they accept 'variant')
   const finalChildren = injectVariant(processedChildren, childCurrentVariant);
 
+  // Add icons as children if defined
+  let childrenWithIcons = finalChildren;
+  if (finalIconStart || finalIconEnd) {
+    const iconChildren = [];
+    if (finalIconStart) {
+      iconChildren.push(React.createElement('div', { 
+        key: 'iconStart', 
+        style: { display: 'flex', alignItems: 'center', flexShrink: 0 } 
+      }, finalIconStart));
+    }
+    iconChildren.push(...React.Children.toArray(finalChildren));
+    if (finalIconEnd) {
+      iconChildren.push(React.createElement('div', { 
+        key: 'iconEnd', 
+        style: { display: 'flex', alignItems: 'center', flexShrink: 0 } 
+      }, finalIconEnd));
+    }
+    childrenWithIcons = iconChildren;
+  }
+
   // Determine if this frame uses auto layout
   const hasAutoLayout = !!mergedAutoLayout && (mergedAutoLayout.flow === 'horizontal' || mergedAutoLayout.flow === 'vertical' || mergedAutoLayout.flow === 'grid');
 
   // Curved auto layout: distribute children along SVG path
-  let curvedChildren = finalChildren;
-  if (mergedAutoLayout?.flow === 'curved' && Array.isArray(finalChildren)) {
-    curvedChildren = getCurvedLayoutChildren(finalChildren, mergedAutoLayout).filter((c): c is React.ReactElement => !!c);
+  let curvedChildren = childrenWithIcons;
+  if (mergedAutoLayout?.flow === 'curved' && Array.isArray(childrenWithIcons)) {
+    curvedChildren = getCurvedLayoutChildren(childrenWithIcons, mergedAutoLayout).filter((c): c is React.ReactElement => !!c);
   }
 
   // Convert all frame props to CSS styles
@@ -200,15 +271,57 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     style: overrideStyle
   }, hasAutoLayout);
 
+
+
   // Add cursor to styles
   if (finalCursor) {
     finalStyles.cursor = finalCursor;
+  }
+
+  // Add pointerEvents to styles
+  if (finalPointerEvents) {
+    finalStyles.pointerEvents = finalPointerEvents;
+  }
+
+  // Add transform to styles
+  if (finalTransform) {
+    finalStyles.transform = finalTransform;
+  }
+
+  // Add display to styles
+  if (finalDisplay) {
+    finalStyles.display = finalDisplay;
   }
 
   // Add size to styles if it's an object and doesn't have autoLayout
   const finalSize = mergedProps.size;
   if (finalSize && typeof finalSize === 'object' && !finalSize.autoLayout) {
     Object.assign(finalStyles, finalSize);
+  }
+
+  // Add transition for animations - apply when any animate configuration exists
+  const hasAnimateConfig = animate || Object.values(variants).some(v => v.animate);
+  if (hasAnimateConfig) {
+    let transitionDuration = '0.2s';
+    let transitionCurve = 'ease-in-out';
+
+    // Use explicit animate duration/curve if provided
+    if (animate) {
+      transitionDuration = animate.duration || transitionDuration;
+      transitionCurve = animate.curve || transitionCurve;
+    }
+
+    // Check if current variant matches a destination and use its duration/curve
+    if (currentVariant) {
+      const currentVariantProps = variants[currentVariant];
+      if (currentVariantProps?.animate) {
+        const variantAnimate = currentVariantProps.animate;
+        transitionDuration = variantAnimate.duration || transitionDuration;
+        transitionCurve = variantAnimate.curve || transitionCurve;
+      }
+    }
+
+    finalStyles.transition = `all ${transitionDuration} ${transitionCurve}`;
   }
 
   // Compose event handlers: Frame's animation handlers take precedence but call original handlers too
@@ -227,7 +340,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
 
   // For freeform, wrap children in a relative container to anchor absolutely positioned children
   if (mergedAutoLayout?.flow === 'freeform') {
-    const hugDimensions = calculateHugDimensions(finalChildren, mergedAutoLayout);
+    const hugDimensions = calculateHugDimensions(childrenWithIcons, mergedAutoLayout);
     return React.createElement(
       as,
       {
@@ -236,7 +349,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
         className,
         style: {
           ...finalStyles,
-          position: 'relative',
+          // Only set position relative if not already absolutely positioned
+          ...((!finalPosition?.x && !finalPosition?.y) && { position: 'relative' }),
           ...hugDimensions,
         },
         onClick: handleClick,
@@ -245,7 +359,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
       },
-      finalChildren
+      childrenWithIcons
     );
   }
   return React.createElement(
@@ -261,7 +375,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
     },
-    mergedAutoLayout?.flow === 'curved' ? curvedChildren : finalChildren
+    mergedAutoLayout?.flow === 'curved' ? curvedChildren : childrenWithIcons
   );
 });
 

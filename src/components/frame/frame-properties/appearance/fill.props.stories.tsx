@@ -54,16 +54,16 @@ type FillStory = StoryObj<FillArgs>;
 export const Fill: FillStory = {
   args: {
     children: 'Fill Demo',
-    appearance: { radius: 16 },
+    appearance: { radius: 8 },
     // Fill controls
     fillType: 'solid',
-    fillOpacity: 1,
+    fillOpacity: 0.9,
     // Solid defaults
     solidColorType: 'theme',
     solidColorHex: '#3B82F6',
-    solidColorTheme: 'primary',
-    solidColorShade: 6,
-    solidColorOpacity: 1,
+    solidColorTheme: 'white',
+    solidColorShade: 2,
+    solidColorOpacity: 0.9,
     // Gradient defaults
     gradientType: 'linear',
     gradientAngle: 45,
@@ -332,7 +332,7 @@ export const Fill: FillStory = {
 
         <Frame
           fill={fillProps}
-          
+          stroke={{ type: 'solid', color: 'white4', weight: 1, opacity: 0 }}
           appearance={args.appearance}
           autoLayout={{
             flow: 'vertical',
@@ -344,11 +344,11 @@ export const Fill: FillStory = {
           }}
         >
           <Frame
-fill={{color: 'primary4'}}
+fill={{type: 'none'}}
             typography={{
-              color: 'neutral9',
-              fontSize: 18,
-              fontWeight: 500,
+              type: 'h3',
+              color: 'gray5',
+              wrap: 'nowrap',
               textAlign: 'center'
             }}
           >
@@ -357,8 +357,9 @@ fill={{color: 'primary4'}}
 
           <Frame
             typography={{
-              color: hasNoFill || isLightFill ? 'neutral6' : 'neutral2',
-              fontSize: 14,
+              type: 'h6',
+              color: hasNoFill || isLightFill ? 'gray7' : 'neutral2',
+              wrap: 'nowrap',
               textAlign: 'center'
             }}
           >

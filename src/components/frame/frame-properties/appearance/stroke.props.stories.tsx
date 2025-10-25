@@ -2,6 +2,7 @@
 import { Frame, FrameProps } from '../../Frame';
 
 interface StrokeArgs extends Partial<FrameProps> {
+  children?: React.ReactNode;
   strokeType: 'none' | 'solid' | 'gradient';
   // Solid stroke controls
   solidColorType: 'hex' | 'theme';
@@ -55,10 +56,10 @@ export const Stroke: StrokeStory = {
     // Solid stroke defaults
     solidColorType: 'theme',
     solidColorHex: '#3B82F6',
-    solidColorTheme: 'primary',
-    solidColorShade: 6,
-    solidOpacity: 1,
-    strokeWeight: 3,
+    solidColorTheme: 'white4',
+    solidColorShade: 4,
+    solidOpacity: 0,
+    strokeWeight: 1,
     strokePosition: 'inside',
     // Gradient stroke defaults
     gradientStop1ColorType: 'theme',
@@ -291,9 +292,22 @@ export const Stroke: StrokeStory = {
 
     return (
       <Frame
-        appearance={{ radius: 16 }}
-        autoLayout={{ width: 320, height: 200, alignment: 'center', flow: 'horizontal' }}
-        fill={{ type: 'solid', color: 'neutral2' }}
+        appearance={{ radius: 8 }}
+        autoLayout={{
+          flow: 'vertical',
+          alignment: 'center',
+          gap: 16,
+          padding: 24,
+          width: 280,
+          height: 200
+        }}
+        fill={{ type: 'solid', color: 'white2', opacity: 0.9 }}
+        typography={{
+          type: 'h6',
+          color: 'gray7',
+          wrap: 'nowrap',
+          textAlign: 'center'
+        }}
         {...args}
         stroke={strokeProps}
       />

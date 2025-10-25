@@ -6,6 +6,7 @@ import { typographyPresets } from '../../../../theme/typography';
  * Typography Properties
  */
 export interface TypographyProps {
+  type?: string;
   fontFamily?: string;
   fontSize?: number;
   fontWeight?: number | string;
@@ -16,6 +17,8 @@ export interface TypographyProps {
   textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
   color?: string;
   opacity?: number;
+  whiteSpace?: string;
+  wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
 }
 
 /**
@@ -51,20 +54,34 @@ export interface RectangleProps extends TypographyProps {
  */
 export function convertTypographyProps(props: TypographyProps): React.CSSProperties {
   // Always merge Frame defaults with provided props, so variant props override but missing values fall back to Frame defaults
-  const frameDefaults = typographyPresets?.Frame || {};
-  const merged = { ...frameDefaults, ...props } as TypographyProps;
+  let merged = { ...typographyPresets?.Frame || {}, ...props } as TypographyProps;
+
+  // If type is specified, merge the preset
+  if (merged.type && merged.type in typographyPresets) {
+    const preset = typographyPresets[merged.type as keyof typeof typographyPresets];
+    merged = { ...merged, ...preset };
+  }
+
+  // Remove type from merged as it's not a CSS property
+  const { type, ...styleProps } = merged;
 
   const styles: React.CSSProperties = {};
-  if (merged.fontFamily !== undefined) styles.fontFamily = merged.fontFamily;
-  if (merged.fontSize !== undefined) styles.fontSize = typeof merged.fontSize === 'number' ? `${merged.fontSize}px` : merged.fontSize;
-  if (merged.fontWeight !== undefined) styles.fontWeight = merged.fontWeight;
-  if (merged.lineHeight !== undefined) styles.lineHeight = merged.lineHeight;
-  if (merged.letterSpacing !== undefined) styles.letterSpacing = typeof merged.letterSpacing === 'number' ? `${merged.letterSpacing}px` : merged.letterSpacing;
-  if (merged.textAlign !== undefined) styles.textAlign = merged.textAlign;
-  if (merged.textDecoration !== undefined) styles.textDecoration = merged.textDecoration;
-  if (merged.textTransform !== undefined) styles.textTransform = merged.textTransform;
-  if (merged.color !== undefined) styles.color = resolveColor(merged.color);
-  if (merged.opacity !== undefined) styles.opacity = merged.opacity;
+  if (styleProps.fontFamily !== undefined) styles.fontFamily = styleProps.fontFamily;
+  if (styleProps.fontSize !== undefined) styles.fontSize = typeof styleProps.fontSize === 'number' ? `${styleProps.fontSize}px` : styleProps.fontSize;
+  if (styleProps.fontWeight !== undefined) styles.fontWeight = styleProps.fontWeight;
+  if (styleProps.lineHeight !== undefined) styles.lineHeight = styleProps.lineHeight;
+  if (styleProps.letterSpacing !== undefined) styles.letterSpacing = typeof styleProps.letterSpacing === 'number' ? `${styleProps.letterSpacing}px` : styleProps.letterSpacing;
+  if (styleProps.textAlign !== undefined) styles.textAlign = styleProps.textAlign;
+  if (styleProps.textDecoration !== undefined) styles.textDecoration = styleProps.textDecoration;
+  if (styleProps.textTransform !== undefined) styles.textTransform = styleProps.textTransform;
+  if (styleProps.color !== undefined) styles.color = resolveColor(styleProps.color);
+  if (styleProps.opacity !== undefined) styles.opacity = styleProps.opacity;
+  if (styleProps.whiteSpace !== undefined) styles.whiteSpace = styleProps.whiteSpace;
+  if (styleProps.wrap !== undefined) {
+    if (styleProps.wrap === 'nowrap') styles.whiteSpace = 'nowrap';
+    else if (styleProps.wrap === 'wrap') styles.whiteSpace = 'normal';
+    else if (styleProps.wrap === 'wrap-reverse') styles.whiteSpace = 'pre-wrap';
+  }
   return styles;
 }
 

@@ -1,63 +1,36 @@
 import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { ButtonVariant, BUTTON_VARIANTS, BUTTON_SIZES } from './button.variants';
+import { BUTTON_VARIANTS as ButtonVariants } from './button.variants';
+
 
 export interface ButtonProps extends FrameProps {
   children: ReactNode;
-  variant?: ButtonVariant;
-  size?: 'sm' | 'md' | 'lg';
-  iconStart?: ReactNode;
-  iconStartActive?: ReactNode;
-  iconEnd?: ReactNode;
-  iconEndActive?: ReactNode;
+  variant?: 'primary' | 'secondary' | 'disabled';
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   variant = 'primary',
-  size = 'md',
+  variants = ButtonVariants,
+  size,
   iconStart,
-  iconStartActive,
   iconEnd,
-  iconEndActive,
   as,
-  ...frameProps
+  ...buttonProps
 }, ref) => {
-  // Get variant styles
-  const baseVariant = BUTTON_VARIANTS[variant];
-
-  // Determine which icons to show (simplified - just use active versions if provided)
-  const showIconStart = iconStartActive || iconStart;
-  const showIconEnd = iconEndActive || iconEnd;
-
   return (
     <Frame
       ref={ref}
       as={as || "button"}
-      size={BUTTON_SIZES[size]}
-      variant={baseVariant}
-      variants={BUTTON_VARIANTS}
+      variant={variant}
+      variants={variants}
       cursor="pointer"
-      {...frameProps}
-    >
-      {showIconStart && (
-        <Frame
-          autoLayout={{ flow: 'grid' }}
-        >
-          {showIconStart}
-        </Frame>
-      )}
-    <Frame
-      autoLayout={{ flow: 'grid' }}
+      iconStart={iconStart}
+      iconEnd={iconEnd}
+      size={size}
+      {...buttonProps}
     >
       {children}
-    </Frame>      {showIconEnd && (
-        <Frame
-          autoLayout={{ flow: 'grid' }}
-        >
-          {showIconEnd}
-        </Frame>
-      )}
     </Frame>
   );
 });

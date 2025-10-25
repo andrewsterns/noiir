@@ -6,13 +6,13 @@ link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400
 link.rel = 'stylesheet';
 document.head.appendChild(link);
 
-// Add global styles for Geist font and SpaceX dark theme
+// Add global styles for Geist font and light theme
 const style = document.createElement('style');
 style.textContent = `
   body, html {
     font-family: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background-color: #0A0A0A !important;
-    color: #FFFFFF;
+    background-color: #FFFFFF !important;
+    color: #000000;
   }
   
   code, pre, .font-mono {
@@ -21,17 +21,17 @@ style.textContent = `
 
   /* Storybook canvas background */
   #storybook-root {
-    background-color: #0A0A0A !important;
+    background-color: #FFFFFF !important;
   }
 
   /* Storybook docs background */
   .sbdocs-wrapper {
-    background-color: #0A0A0A !important;
+    background-color: #FFFFFF !important;
   }
 
   /* Storybook preview area */
   .sb-show-main {
-    background-color: #0A0A0A !important;
+    background-color: #FFFFFF !important;
   }
 `;
 document.head.appendChild(style);
