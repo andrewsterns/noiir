@@ -18,6 +18,10 @@ const meta: Meta<typeof Label> = {
       control: { type: 'select' },
       options: ['primary', 'primary-hover', 'primary-active', 'primary-active-hover', 'disabled'],
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg'],
+    },
     disabled: {
       control: { type: 'boolean' },
     },
@@ -84,6 +88,23 @@ export const AnimationCycle: Story = {
 
 
 export const Sizes: Story = {
+  render: () => (
+    <Frame autoLayout={{ flow: 'horizontal', gap: 20, alignment: 'center' }}>
+      <Label size="sm" variant="primary">Small</Label>
+      <Label size="md" variant="primary">Medium</Label>
+      <Label size="lg" variant="primary">Large</Label>
+    </Frame>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Labels with different sizes (sm, md, lg) showing varying padding and typography applied in addition to the primary variant styling.',
+      },
+    },
+  },
+};
+
+export const Variants: Story = {
   render: () => (
     <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
       <Label variant="primary">Primary</Label>

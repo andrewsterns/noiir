@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
-import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT } from './dropdown.variants';
+import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES } from './dropdown.variants';
 import { LIST_VARIANTS } from '../list/list.variants';
 import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
+import Label from '../../atoms/label/label';
+import { LABEL_VARIANTS } from '../../atoms/label/label.variants';
 
 export interface DropdownProps extends Omit<FrameProps, 'onClick'> {
   items: ListItem[];
@@ -118,6 +120,8 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
       ref={dropdownRef}
       variants={DROPDOWN_VARIANT}
       variant="default"
+      size={size}
+      sizes={DROPDOWN_SIZES}
       {...frameProps}
     >
       <Button

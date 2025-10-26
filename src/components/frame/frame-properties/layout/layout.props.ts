@@ -20,6 +20,12 @@ export interface AutoLayoutProps {
 
   // Margin (new)
   margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
+  marginHorizontal?: number | string;
+  marginVertical?: number | string;
+  marginTop?: number | string;
+  marginBottom?: number | string;
+  marginLeft?: number | string;
+  marginRight?: number | string;
   
   // Padding
   padding?: number | { top?: number; right?: number; bottom?: number; left?: number };
@@ -97,6 +103,32 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
       const { top, right, bottom, left } = props.margin;
       styles.margin = `${top || 0}px ${right || 0}px ${bottom || 0}px ${left || 0}px`;
     }
+  }
+  
+  // Horizontal and vertical margin shortcuts (applied before individual controls)
+  if (props.marginHorizontal !== undefined) {
+    const hMargin = typeof props.marginHorizontal === 'number' ? `${props.marginHorizontal}px` : props.marginHorizontal;
+    styles.marginLeft = hMargin;
+    styles.marginRight = hMargin;
+  }
+  if (props.marginVertical !== undefined) {
+    const vMargin = typeof props.marginVertical === 'number' ? `${props.marginVertical}px` : props.marginVertical;
+    styles.marginTop = vMargin;
+    styles.marginBottom = vMargin;
+  }
+  
+  // Individual margin controls (override shortcuts and general margin)
+  if (props.marginTop !== undefined) {
+    styles.marginTop = typeof props.marginTop === 'number' ? `${props.marginTop}px` : props.marginTop;
+  }
+  if (props.marginRight !== undefined) {
+    styles.marginRight = typeof props.marginRight === 'number' ? `${props.marginRight}px` : props.marginRight;
+  }
+  if (props.marginBottom !== undefined) {
+    styles.marginBottom = typeof props.marginBottom === 'number' ? `${props.marginBottom}px` : props.marginBottom;
+  }
+  if (props.marginLeft !== undefined) {
+    styles.marginLeft = typeof props.marginLeft === 'number' ? `${props.marginLeft}px` : props.marginLeft;
   }
   
   // Handle flow (layout direction) - like Figma's auto layout direction

@@ -2,6 +2,19 @@ import { VariantDocument } from '../../frame/frame-properties/variants/variants.
 import { ArrowDown, ArrowUp } from '../../../theme/icons/arrows';
 import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
+// Dropdown sizes for the parent frame
+export const DROPDOWN_SIZES = {
+  sm: {
+    autoLayout: { width: 200 },
+  },
+  md: {
+    autoLayout: { width: 400 },
+  },
+  lg: {
+    autoLayout: { width: 600 },
+  },
+} satisfies VariantDocument;
+
 // Dropdown container variant
 export const DROPDOWN_VARIANT = {
   default: {

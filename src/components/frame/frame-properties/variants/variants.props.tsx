@@ -105,43 +105,6 @@ export function mergeSizeWithAnimation(sizeProps: any, currentVariantProps: any)
 }
 
 /**
- * Extends base variants with overrides using deep merging for object properties
- * @param base - The base variant document
- * @param overrides - The overrides to apply
- * @returns The extended variant document
- */
-export function extendVariants(base: VariantDocument, overrides: Partial<VariantDocument>): VariantDocument {
-  const result = { ...base };
-  for (const key in overrides) {
-    if (result[key]) {
-      // Deep merge existing variant
-      const merged = { ...result[key], ...overrides[key] };
-      // Deep merge autoLayout
-      if (overrides[key]!.autoLayout && result[key].autoLayout) {
-        merged.autoLayout = { ...result[key].autoLayout, ...overrides[key]!.autoLayout };
-      }
-      // Deep merge typography
-      if (overrides[key]!.typography && result[key].typography) {
-        merged.typography = { ...result[key].typography, ...overrides[key]!.typography };
-      }
-      // Deep merge effects
-      if (overrides[key]!.effects && result[key].effects) {
-        merged.effects = { ...result[key].effects, ...overrides[key]!.effects };
-      }
-      // Deep merge appearance
-      if (overrides[key]!.appearance && result[key].appearance) {
-        merged.appearance = { ...result[key].appearance, ...overrides[key]!.appearance };
-      }
-      result[key] = merged;
-    } else {
-      // Add new variant
-      result[key] = overrides[key]!
-    }
-  }
-  return result;
-}
-
-/**
  * Default variants for Frame components, acting like CSS modules for state management
  */
 export default {
