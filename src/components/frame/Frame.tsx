@@ -10,7 +10,8 @@ import { CursorProps } from './frame-properties/appearance/cursor.props';
 import { EffectProps } from './frame-properties/effects/effects.props';
 import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
-import { mergeSizeProps, FrameVariantConfig } from './frame-properties/variants/variants.props';
+import { mergeSizeProps } from './frame-properties/variants/size.props';
+import { mergeVariantAndSize, mergeSizeWithAnimation, FrameVariantConfig } from './frame-properties/variants/variants.props';
 import {
   applyChildStates,
   injectVariant,
@@ -54,10 +55,11 @@ export interface FrameProps {
   iconEnd?: React.ReactNode;
   iconStartColor?: string;
   iconEndColor?: string;
-  size?: any;
+  size?: FrameVariantConfig | string;
   sizeKey?: string;
   variant?: FrameVariantConfig | string;
   variants?: Record<string, FrameVariantConfig>;
+  sizes?: Record<string, any>;
   pointerEvents?: string;
   transform?: string;
   display?: string;
@@ -97,6 +99,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     sizeKey,
     variant,
     variants: variantsProp,
+    sizes: sizesProp,
     pointerEvents,
     transform,
     display,
@@ -112,18 +115,29 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     }
   });
 
+  const sizes: Record<string, any> = { ...(sizesProp || {}) };
+
   // Get animate prop from variant if it exists, otherwise use explicit animate
   const variantProps = typeof variant === 'string' ? (variants[variant] || {}) : (variant || {});
-  const effectiveAnimate = animate !== undefined ? animate : variantProps.animate;
+  const sizeProps = typeof size === 'string' ? (sizes[size] || {}) : (size || {});
+  
+  // Deep merge variant and size props
+  const effectiveVariantProps = mergeVariantAndSize(variantProps, sizeProps);
+  
+  const effectiveAnimate = animate !== undefined ? animate : effectiveVariantProps.animate;
 
   // Use the animation logic hook
-  const { currentVariant, eventHandlers } = useAnimateVariant({ animate: effectiveAnimate, onHover, variants });
+  const allVariants = { ...variants, ...sizes };
+  const { currentVariant, eventHandlers } = useAnimateVariant({ animate: effectiveAnimate, onHover, variants: allVariants });
 
   // Get the current variant props based on currentVariant
-  const currentVariantProps = currentVariant ? variants[currentVariant] : {};
+  const currentVariantProps = currentVariant ? allVariants[currentVariant] : {};
 
   // Use current variant props if animating, otherwise base variant props
-  const effectiveVariantProps = currentVariant ? currentVariantProps : variantProps;
+  let finalEffectiveVariantProps = effectiveVariantProps;
+  if (currentVariant) {
+    finalEffectiveVariantProps = mergeSizeWithAnimation(sizeProps, currentVariantProps);
+  }
 
   // Merge variant props with explicit props, explicit props take precedence
   const explicitProps: Record<string, any> = {};
@@ -156,7 +170,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (display !== undefined) explicitProps.display = display;
 
   // Create effective variant props without animate if it's explicitly provided
-  const filteredVariantProps = { ...effectiveVariantProps };
+  const filteredVariantProps = { ...finalEffectiveVariantProps };
   if (animate !== undefined) {
     delete filteredVariantProps.animate;
   }
@@ -300,20 +314,20 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   }
 
   // Add transition for animations - apply when any animate configuration exists
-  const hasAnimateConfig = animate || Object.values(variants).some(v => v.animate);
+  const hasAnimateConfig = effectiveAnimate || Object.values(allVariants).some(v => v.animate);
   if (hasAnimateConfig) {
     let transitionDuration = '0.2s';
     let transitionCurve = 'ease-in-out';
 
     // Use explicit animate duration/curve if provided
-    if (animate) {
-      transitionDuration = animate.duration || transitionDuration;
-      transitionCurve = animate.curve || transitionCurve;
+    if (effectiveAnimate) {
+      transitionDuration = effectiveAnimate.duration || transitionDuration;
+      transitionCurve = effectiveAnimate.curve || transitionCurve;
     }
 
     // Check if current variant matches a destination and use its duration/curve
     if (currentVariant) {
-      const currentVariantProps = variants[currentVariant];
+      const currentVariantProps = allVariants[currentVariant];
       if (currentVariantProps?.animate) {
         const variantAnimate = currentVariantProps.animate;
         transitionDuration = variantAnimate.duration || transitionDuration;

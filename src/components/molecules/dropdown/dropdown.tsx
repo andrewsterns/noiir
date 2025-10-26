@@ -4,6 +4,7 @@ import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT } from './dropdown.variants';
 import { LIST_VARIANTS } from '../list/list.variants';
+import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
 export interface DropdownProps extends Omit<FrameProps, 'onClick'> {
   items: ListItem[];
@@ -125,7 +126,8 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         size={buttonSize}
         onClick={disabled ? undefined : handleButtonClick}
         autoLayout={{alignment: 'left', width: 'fill', gap: 'fill', paddingRight: 18}}
-        stroke={{ type: 'solid', color: 'gray4' }}
+
+        
         {...buttonProps}
       >
         {getSelectedLabel()}

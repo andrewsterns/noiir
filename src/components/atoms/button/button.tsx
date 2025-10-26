@@ -1,18 +1,21 @@
 import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { BUTTON_VARIANTS as ButtonVariants } from './button.variants';
+import { BUTTON_VARIANTS as ButtonVariants, BUTTON_SIZES } from './button.variants';
+import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
 
 
 export interface ButtonProps extends FrameProps {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'disabled';
+  variant?: string;
+  size?: FrameVariantConfig | string;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   variant = 'primary',
   variants = ButtonVariants,
-  size,
+  size = 'md',
+  sizes = BUTTON_SIZES,
   iconStart,
   iconEnd,
   as,
@@ -24,10 +27,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
       as={as || "button"}
       variant={variant}
       variants={variants}
+      sizes={sizes}
+      size={size}
       cursor="pointer"
       iconStart={iconStart}
       iconEnd={iconEnd}
-      size={size}
       {...buttonProps}
     >
       {children}

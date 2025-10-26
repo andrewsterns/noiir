@@ -215,3 +215,53 @@ export const Disabled: Story = {
     },
   },
 };
+
+export const ButtonSizes: Story = {
+  render: () => {
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+
+    const handleChange = (index: number, item: any) => {
+      setSelectedIndex(index);
+      console.log('Selected:', index, item);
+    };
+
+    return (
+      <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 400 }}>
+        <h3>Dropdown Button Sizes</h3>
+        <Frame autoLayout={{ flow: 'vertical', gap: 12 }}>
+          <Dropdown
+            items={sampleItems}
+            selectedIndex={selectedIndex}
+            placeholder="Small dropdown..."
+            onChange={handleChange}
+            variant="primary"
+            buttonSize="sm"
+          />
+          <Dropdown
+            items={sampleItems}
+            selectedIndex={selectedIndex}
+            placeholder="Medium dropdown..."
+            onChange={handleChange}
+            variant="primary"
+            buttonSize="md"
+          />
+          <Dropdown
+            items={sampleItems}
+            selectedIndex={selectedIndex}
+            placeholder="Large dropdown..."
+            onChange={handleChange}
+            variant="primary"
+            buttonSize="lg"
+          />
+        </Frame>
+      </Frame>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Dropdown buttons with different sizes (sm, md, lg) showing varying padding and dimensions.',
+      },
+    },
+  },
+};

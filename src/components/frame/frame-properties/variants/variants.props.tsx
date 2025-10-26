@@ -10,6 +10,7 @@ import {
   PositionProps,
   ConstraintProps
 } from '../';
+import { mergeSizeProps } from './size.props';
 
 /**
  * Configuration for a Frame variant, defining style and behavior properties
@@ -47,29 +48,97 @@ export type VariantDocument = Record<string, FrameVariantConfig>;
  * @param mergedProps - The props object to merge size into
  * @returns The merged autoLayout from size
  */
-export function mergeSizeProps(mergedProps: Record<string, any>): any {
-  // Extract finalSize and sizeKey
-  const finalSize = mergedProps.size;
-  const sizeKey = mergedProps.sizeKey;
+export { mergeSizeProps } from './size.props';
 
-  // If size is a map and sizeKey is provided, select the specific size
-  const effectiveSize = (typeof finalSize === 'object' && sizeKey && finalSize[sizeKey]) ? finalSize[sizeKey] : finalSize;
-
-  // Merge size properties (excluding autoLayout) into mergedProps
-  if (effectiveSize && typeof effectiveSize === 'object') {
-    const sizeProps = { ...effectiveSize };
-    delete sizeProps.autoLayout;
-
-    // Special handling for typography - merge instead of replace
-    if (sizeProps.typography && mergedProps.typography) {
-      sizeProps.typography = { ...mergedProps.typography, ...sizeProps.typography };
-    }
-
-    Object.assign(mergedProps, sizeProps);
+/**
+ * Merges variant and size props with deep merging for object properties
+ * @param variantProps - The variant configuration
+ * @param sizeProps - The size configuration
+ * @returns The merged configuration
+ */
+export function mergeVariantAndSize(variantProps: any, sizeProps: any): any {
+  const merged = { ...variantProps, ...sizeProps };
+  // Deep merge autoLayout
+  if (sizeProps.autoLayout && variantProps.autoLayout) {
+    merged.autoLayout = { ...variantProps.autoLayout, ...sizeProps.autoLayout };
   }
+  // Deep merge typography
+  if (sizeProps.typography && variantProps.typography) {
+    merged.typography = { ...variantProps.typography, ...sizeProps.typography };
+  }
+  // Deep merge effects
+  if (sizeProps.effects && variantProps.effects) {
+    merged.effects = { ...variantProps.effects, ...sizeProps.effects };
+  }
+  // Deep merge appearance
+  if (sizeProps.appearance && variantProps.appearance) {
+    merged.appearance = { ...variantProps.appearance, ...sizeProps.appearance };
+  }
+  return merged;
+}
 
-  // Return the size's autoLayout for separate merging
-  return effectiveSize?.autoLayout;
+/**
+ * Merges size props with animation variant props
+ * @param sizeProps - The size configuration
+ * @param currentVariantProps - The current animation variant configuration
+ * @returns The merged configuration
+ */
+export function mergeSizeWithAnimation(sizeProps: any, currentVariantProps: any): any {
+  const merged = { ...sizeProps, ...currentVariantProps };
+  // Deep merge autoLayout
+  if (currentVariantProps.autoLayout && sizeProps.autoLayout) {
+    merged.autoLayout = { ...sizeProps.autoLayout, ...currentVariantProps.autoLayout };
+  }
+  // Deep merge typography
+  if (currentVariantProps.typography && sizeProps.typography) {
+    merged.typography = { ...sizeProps.typography, ...currentVariantProps.typography };
+  }
+  // Deep merge effects
+  if (currentVariantProps.effects && sizeProps.effects) {
+    merged.effects = { ...sizeProps.effects, ...currentVariantProps.effects };
+  }
+  // Deep merge appearance
+  if (currentVariantProps.appearance && sizeProps.appearance) {
+    merged.appearance = { ...sizeProps.appearance, ...currentVariantProps.appearance };
+  }
+  return merged;
+}
+
+/**
+ * Extends base variants with overrides using deep merging for object properties
+ * @param base - The base variant document
+ * @param overrides - The overrides to apply
+ * @returns The extended variant document
+ */
+export function extendVariants(base: VariantDocument, overrides: Partial<VariantDocument>): VariantDocument {
+  const result = { ...base };
+  for (const key in overrides) {
+    if (result[key]) {
+      // Deep merge existing variant
+      const merged = { ...result[key], ...overrides[key] };
+      // Deep merge autoLayout
+      if (overrides[key]!.autoLayout && result[key].autoLayout) {
+        merged.autoLayout = { ...result[key].autoLayout, ...overrides[key]!.autoLayout };
+      }
+      // Deep merge typography
+      if (overrides[key]!.typography && result[key].typography) {
+        merged.typography = { ...result[key].typography, ...overrides[key]!.typography };
+      }
+      // Deep merge effects
+      if (overrides[key]!.effects && result[key].effects) {
+        merged.effects = { ...result[key].effects, ...overrides[key]!.effects };
+      }
+      // Deep merge appearance
+      if (overrides[key]!.appearance && result[key].appearance) {
+        merged.appearance = { ...result[key].appearance, ...overrides[key]!.appearance };
+      }
+      result[key] = merged;
+    } else {
+      // Add new variant
+      result[key] = overrides[key]!
+    }
+  }
+  return result;
 }
 
 /**

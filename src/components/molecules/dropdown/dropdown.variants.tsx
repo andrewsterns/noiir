@@ -1,5 +1,6 @@
 import { VariantDocument } from '../../frame/frame-properties/variants/variants.props';
 import { ArrowDown, ArrowUp } from '../../../theme/icons/arrows';
+import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
 // Dropdown container variant
 export const DROPDOWN_VARIANT = {
@@ -27,7 +28,7 @@ export const DROPDOWN_BUTTON_VARIANTS = {
       wrap: 'nowrap',
     },
     iconEnd: <ArrowDown />,
-    animate: { hover: 'primary-hover', duration: '4s', curve: 'ease-in-out' },
+    animate: { hover: 'primary-hover', duration: '.25s', curve: 'ease-in-out' },
   },
 
   'primary-hover': {
@@ -41,12 +42,11 @@ export const DROPDOWN_BUTTON_VARIANTS = {
       color: 'white7',
       wrap: 'nowrap',
     },
-    iconEnd: <ArrowDown style={{ transform: 'translateY(12px)' }} />,
-    animate: { click: 'primary-open', duration: '4s', curve: 'ease-in-out' },
+    iconEnd: <ArrowDown />,
+    animate: { click: 'primary-open', duration: '.25s', curve: 'ease-in-out' },
   },
 
   'primary-open': {
-    position: { y: 200 },
     fill: { type: 'solid', color: 'white2', opacity: 0.9 },
     autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
     stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },

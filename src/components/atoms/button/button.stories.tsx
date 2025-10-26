@@ -76,7 +76,7 @@ type Story = StoryObj<typeof Button>;
 export const Primary: Story = {
   args: {
     variant: 'primary',
-    size: 'md',
+    size: 'sm',
     children: 'Primary Button',
   },
 };
@@ -92,7 +92,7 @@ export const Secondary: Story = {
 export const WithIcons: Story = {
   args: {
     variant: 'primary',
-    size: 'md',
+    size: 'lg',
     children: 'Button with Icons',
     iconStart: '←',
     iconEnd: '→',
@@ -108,23 +108,25 @@ export const WithIcons: Story = {
 
 export const StateDemo: Story = {
   render: () => (
-    <Frame autoLayout={{flow: 'grid'}}>
-      <h3>Interactive State Demo</h3>
-      <p>Buttons have persistent toggle states:</p>
-      <p>• <strong>Hover</strong> → surface variant (neutral background)</p>
-      <p>• <strong>Click</strong> → toggles active variant (darker blue, persists)</p>
-      <p>• <strong>Click & hold</strong> → active variant during press</p>
-      
-      <Frame autoLayout={{flow: 'grid'}}>
+    <Frame autoLayout={{ flow: 'vertical', gap: 20 }}>
+      <Frame autoLayout={{ flow: 'vertical', gap: 5, paddingBottom: 20 }}>
+        <h3>Interactive State Demo</h3>
+        <p>Buttons have persistent toggle states:</p>
+        <p>• <strong>Hover</strong> → surface variant (neutral background)</p>
+        <p>• <strong>Click</strong> → toggles active variant (darker blue, persists)</p>
+        <p>• <strong>Click & hold</strong> → active variant during press</p>
+      </Frame>
+      <Frame autoLayout={{ flow: 'grid', gap: 20, alignment: 'center', width: 'fill' }}>
         <Button variant="primary" >Primary</Button>
         <Button variant="secondary">Secondary</Button>
-       
+        <Button variant="primary" autoLayout={{ width: 120 }} iconStart="🎯">With Icons</Button>
       </Frame>
-      
-      <Frame autoLayout={{flow: 'horizontal', gap: 12, alignment: 'center'}}>
-        <Button variant="primary" iconStart="🎯">With Icons</Button>
+
+      <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
+
 
       </Frame>
+
     </Frame>
   ),
   parameters: {
@@ -138,7 +140,7 @@ export const StateDemo: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
+    <Frame autoLayout={{ flow: 'horizontal', gap: 20, alignment: 'center' }}>
       <Button size="sm" variant="primary">Small</Button>
       <Button size="md" variant="primary">Medium</Button>
       <Button size="lg" variant="primary">Large</Button>
