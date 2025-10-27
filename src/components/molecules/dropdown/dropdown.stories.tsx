@@ -232,25 +232,28 @@ export const ButtonSizes: Story = {
           <Dropdown
             items={sampleItems}
             selectedIndex={selectedIndex}
-            placeholder="Small button..."
+            placeholder="Small dropdown..."
             onChange={handleChange}
             variant="primary"
+            size="sm"
             buttonSize="sm"
           />
           <Dropdown
             items={sampleItems}
             selectedIndex={selectedIndex}
-            placeholder="Medium button..."
+            placeholder="Medium dropdown..."
             onChange={handleChange}
             variant="primary"
+            size='md'
             buttonSize="md"
           />
           <Dropdown
             items={sampleItems}
             selectedIndex={selectedIndex}
-            placeholder="Large button..."
+            placeholder="Large dropdown..."
             onChange={handleChange}
             variant="primary"
+            size="lg"
             buttonSize="lg"
           />
         </Frame>
@@ -261,56 +264,6 @@ export const ButtonSizes: Story = {
     docs: {
       description: {
         story: 'Dropdown buttons with different sizes (sm, md, lg) showing varying padding and dimensions.',
-      },
-    },
-  },
-};
-
-export const Sizes: Story = {
-  render: () => {
-    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
-
-    const handleChange = (index: number, item: any) => {
-      setSelectedIndex(index);
-      console.log('Selected:', index, item);
-    };
-
-    return (
-      <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 500 }}>
-        <h3>Dropdown Container Sizes</h3>
-        <Frame autoLayout={{ flow: 'vertical', gap: 12 }}>
-          <Dropdown
-            items={sampleItems}
-            selectedIndex={selectedIndex}
-            placeholder="Small container..."
-            onChange={handleChange}
-            variant="primary"
-            size="sm"
-          />
-          <Dropdown
-            items={sampleItems}
-            selectedIndex={selectedIndex}
-            placeholder="Medium container..."
-            onChange={handleChange}
-            variant="primary"
-            size="md"
-          />
-          <Dropdown
-            items={sampleItems}
-            selectedIndex={selectedIndex}
-            placeholder="Large container..."
-            onChange={handleChange}
-            variant="primary"
-            size="lg"
-          />
-        </Frame>
-      </Frame>
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Dropdown containers with different sizes (sm, md, lg) showing varying widths and dimensions.',
       },
     },
   },

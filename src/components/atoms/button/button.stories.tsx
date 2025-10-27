@@ -120,7 +120,6 @@ export const StateDemo: Story = {
         <Button variant="primary" >Primary</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="primary" autoLayout={{ width: 120 }} iconStart="🎯">With Icons</Button>
-        <Button variant="disabled">Disabled</Button>
       </Frame>
 
       <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>

@@ -1,4 +1,4 @@
-import { VariantDocument } from '../../frame/frame-properties/variants/variants.props';
+import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 import { HappyFace, HappyWink } from '../../../theme/icons/fun';
 
 
@@ -18,7 +18,7 @@ export const BUTTON_SIZES = {
 };
 
 export const BUTTON_VARIANTS = {
-    'primary': {
+    primary: {
         fill: { type: 'solid', color: 'white2', opacity: .9 },
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
@@ -30,10 +30,10 @@ export const BUTTON_VARIANTS = {
             wrap: 'nowrap',
         },
         iconStart: <HappyFace />,
-        animate: { hover: 'primary-hover', click: 'primary-active', duration: '.3s', curve: 'ease-in-out' },
+        animate: { hover: 'primaryHover', click: 'primaryActive', duration: '.3s', curve: 'ease-in-out' },
 
     },
-    'primary-hover': {
+    primaryHover: {
         fill: { type: 'solid', color: 'white1', opacity: .9 },
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
@@ -47,47 +47,60 @@ export const BUTTON_VARIANTS = {
 
 
     },
-    'primary-active': {
+    primaryActive: {
         fill: { type: 'solid', color: 'black7', opacity: .1 },
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         stroke: { type: 'solid', color: 'black4', weight: 1 },
         appearance: { radius: 8 },
         effects: { dropShadow: [{ x: 1, y: 3, blur: 8, color: 'rgba(0, 0, 0, 0.25)', spread: -3 }] },
-         typography: {
-            type: 'h6',
+        typography: {
             color: 'white9',
             wrap: 'nowrap',
-            
+
         },
         iconStart: <HappyFace />,
-        animate: { hover: 'secondary', click: 'primary', duration: '.3s', curve: 'ease-in-out' },
+        animate: { hover: 'primaryActiveHover', click: 'primary', duration: '.3s', curve: 'ease-in-out' },
     },
-    secondary: {
-        fill: { type: 'solid', color: 'black6', opacity: .9,  },
-                        autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
-        stroke: { type: 'none' },
+
+    primaryActiveHover: {
+        fill: { type: 'solid', color: 'black6', opacity: .2 },
+        autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
+        stroke: { type: 'solid', color: 'black4', weight: 1 },
         appearance: { radius: 8 },
-         typography: {
-            type: 'h6',
-            color: 'white2',
+        effects: { dropShadow: [{ x: 1, y: 3, blur: 8, color: 'rgba(0, 0, 0, 0.25)', spread: -3 }] },
+        typography: {
+            color: 'gray7',
             wrap: 'nowrap',
-            
+
         },
         iconStart: <HappyFace />,
-        animate: { click: 'primary', duration: '0.2s', curve: 'ease-in-out' },
     },
 
-    disabled: {
-        fill: { type: 'none', color: 'transparent' },
-        autoLayout: { flow: 'grid', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
-        stroke: { type: 'solid', color: 'gray8', weight: 4 },
-        appearance: { radius: 6 },
-        typography: {
-            fontSize: 16,
-            fontWeight: 500,
-            textAlign: 'center',
-            color: 'gray7'
+        secondary: {
+            fill: { type: 'solid', color: 'black6', opacity: .9, },
+            autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
+            stroke: { type: 'none' },
+            appearance: { radius: 8 },
+            typography: {
+                color: 'white2',
+                wrap: 'nowrap',
+
+            },
+            iconStart: <HappyFace />,
+            animate: { click: 'primary', duration: '0.2s', curve: 'ease-in-out' },
         },
-    },
 
-} satisfies VariantDocument;
+        disabled: {
+            fill: { type: 'none', color: 'transparent' },
+            autoLayout: { flow: 'grid', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
+            stroke: { type: 'solid', color: 'gray8', weight: 4 },
+            appearance: { radius: 6 },
+            typography: {
+
+                fontWeight: 500,
+                textAlign: 'center',
+                color: 'gray7'
+            },
+        },
+
+    } satisfies ExtendVariant;

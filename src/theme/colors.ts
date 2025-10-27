@@ -31,9 +31,18 @@ export const colors = {
     "5": "#1C1C1C",  // Near black
     "6": "#0E0E0E",  // Almost full black
     "7": "#000000"   // Pure black
-  }
-}
+  },
 
+  "tomato": {
+    "1": "#f8f5f4ff",  // Tomato red
+    "2": "#f0dbd4ff",  // Coral
+    "3": "#d48e79ff",  // Light tomato
+    "4": "#d3663bff",  // Light salmon
+    "5": "#f06221ff",  // Light pink
+    "6": "#FF4500",  // Orange red
+    "7": "#ff3c00ff"   // Pure red
+  }
+};
 
 /**
  * Color utility functions

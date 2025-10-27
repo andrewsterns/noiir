@@ -1,13 +1,12 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
+import { LABEL_VARIANTS } from './label.variants';
 
 export interface LabelProps extends FrameProps {
   children: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
   variant?: 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled';
-  size?: 'sm' | 'md' | 'lg' | 'none' | 'fill';
 }
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
@@ -15,7 +14,6 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   onClick,
   disabled = false,
   variant = 'primary',
-  size = 'md',
   ...frameProps
 }, ref) => {
   // Determine effective variant based on disabled state
@@ -24,10 +22,8 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   return (
     <Frame
       ref={ref}
-      variants={LABEL_VARIANTS as any}
       variant={effectiveVariant}
-      size={size}
-      sizes={LABEL_SIZES}
+      variants={LABEL_VARIANTS}
       cursor={onClick && !disabled ? 'pointer' : undefined}
       onClick={disabled ? undefined : onClick}
       {...frameProps}

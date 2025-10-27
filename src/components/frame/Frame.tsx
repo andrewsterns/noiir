@@ -44,7 +44,6 @@ export interface FrameProps {
   cursor?: CursorProps | CursorProps['type'];
   children?: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseEnter?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseLeave?: (event: React.MouseEvent<HTMLElement>) => void;
@@ -84,7 +83,6 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     cursor,
     children,
     className,
-    style: overrideStyle,
     onClick,
     onMouseEnter,
     onMouseLeave,
@@ -281,8 +279,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     typography: finalTypography,
     fill: finalFill,
     stroke: finalStroke,
-    effects: finalEffects,
-    style: overrideStyle
+    effects: finalEffects
   }, hasAutoLayout);
 
 

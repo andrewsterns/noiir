@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
-import { LABEL_SIZES, LABEL_VARIANTS } from '../../atoms/label/label.variants';
+import { LABEL_VARIANTS } from '../../atoms/label/label.variants';
 
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
@@ -13,7 +13,7 @@ export interface ListProps extends FrameProps {
   onItemClick?: (index: number, item: ListItem) => void;
   itemVariant?: 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled';
   selectedVariant?: 'primary' | 'primary-active';
-  labelVariant?: keyof typeof LABEL_VARIANTS;
+  disabledVariant?: 'disabled';
 }
 
 export const List = React.forwardRef<HTMLDivElement, ListProps>(({
@@ -23,8 +23,8 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   multiSelect = false,
   onItemClick,
   itemVariant = 'primary',
-  selectedVariant = 'primary-active',
-  labelVariant,
+  selectedVariant = 'primary',
+  disabledVariant = 'disabled',
   as,
   ...frameProps
 }, ref) => {
@@ -37,7 +37,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
 
   const getItemVariant = (index: number, item: ListItem): 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled' => {
     if (typeof item === 'object' && item.disabled) {
-      return 'disabled';
+      return disabledVariant;
     }
 
     if (multiSelect) {
@@ -74,8 +74,6 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
             variants={LABEL_VARIANTS}
             disabled={disabled}
             onClick={() => handleItemClick(index, item)}
-            size="fill"
-            sizes={LABEL_SIZES}
           >
             {getItemLabel(item)}
           </Label>

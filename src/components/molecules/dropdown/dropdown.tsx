@@ -5,10 +5,8 @@ import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES } from './dropdown.variants';
 import { LIST_VARIANTS } from '../list/list.variants';
 import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
-import Label from '../../atoms/label/label';
-import { LABEL_VARIANTS } from '../../atoms/label/label.variants';
 
-export interface DropdownProps extends Omit<FrameProps, 'onClick'> {
+export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant'> {
   items: ListItem[];
   selectedIndex?: number;
   selectedIndices?: number[];
@@ -17,7 +15,7 @@ export interface DropdownProps extends Omit<FrameProps, 'onClick'> {
   onChange?: (selectedIndex: number, item: ListItem) => void;
   onMultiChange?: (selectedIndices: number[], items: ListItem[]) => void;
   disabled?: boolean;
-  variant?: keyof typeof DROPDOWN_BUTTON_VARIANTS;
+  variant?: string | keyof typeof DROPDOWN_VARIANT;
   size?: 'sm' | 'md' | 'lg';
   buttonSize?: 'sm' | 'md' | 'lg';
   buttonProps?: Partial<React.ComponentProps<typeof Button>>;
@@ -125,7 +123,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
       {...frameProps}
     >
       <Button
-        variant={isOpen ? 'primary-open' : 'primary' as any}
+        variant={isOpen ? 'primaryActive' : 'primary' as any}
         variants={DROPDOWN_BUTTON_VARIANTS}
         size={buttonSize}
         onClick={disabled ? undefined : handleButtonClick}

@@ -18,10 +18,6 @@ const meta: Meta<typeof Label> = {
       control: { type: 'select' },
       options: ['primary', 'primary-hover', 'primary-active', 'primary-active-hover', 'disabled'],
     },
-    size: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
-    },
     disabled: {
       control: { type: 'boolean' },
     },
@@ -89,23 +85,6 @@ export const AnimationCycle: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <Frame autoLayout={{ flow: 'horizontal', gap: 20, alignment: 'center' }}>
-      <Label size="sm" variant="primary">Small</Label>
-      <Label size="md" variant="primary">Medium</Label>
-      <Label size="lg" variant="primary">Large</Label>
-    </Frame>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Labels with different sizes (sm, md, lg) showing varying padding and typography applied in addition to the primary variant styling.',
-      },
-    },
-  },
-};
-
-export const Variants: Story = {
-  render: () => (
     <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
       <Label variant="primary">Primary</Label>
       <Label variant="primary-active">Active</Label>
@@ -131,7 +110,7 @@ export const InteractiveDemo: Story = {
       <p>• <strong>Hover</strong> → hover variant animation</p>
       <p>• <strong>Click</strong> → onClick handler (if provided)</p>
 
-      <Frame autoLayout={{ flow: 'horizontal', gap: 12 }} style={{ alignItems: 'center' }}>
+      <Frame autoLayout={{ flow: 'horizontal', gap: 12 }}>
         <Label variant="primary">Primary</Label>
         <Label variant="primary-active">Active</Label>
         <Label variant="primary-hover">Hover</Label>
@@ -139,7 +118,7 @@ export const InteractiveDemo: Story = {
         <Label variant="disabled" disabled>Disabled</Label>
       </Frame>
 
-      <Frame autoLayout={{ flow: 'freeform' }} style={{ alignItems: 'center', marginTop: 20 }}>
+      <Frame autoLayout={{ flow: 'freeform' }}>
         <Label
           variant="primary"
           fill={{ type: 'solid', color: 'primary3' }}

@@ -1,4 +1,4 @@
-import { VariantDocument } from '../../frame/frame-properties/variants/variants.props';
+import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 
 export default {
   neutral: {
@@ -34,4 +34,4 @@ export default {
     fill: { type: 'solid', color: 'gray2' },
     typography: { color: 'gray1', fontSize: 12, fontWeight: 600 }
   },
-} satisfies VariantDocument;
+} satisfies ExtendVariant;

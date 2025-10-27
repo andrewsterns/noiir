@@ -41,7 +41,8 @@ export interface FrameVariantConfig {
 /**
  * Type for a variant document, a collection of named variants
  */
-export type VariantDocument = Record<string, FrameVariantConfig>;
+export type ExtendVariant = Record<string, FrameVariantConfig>;
+
 
 /**
  * Merges size properties into the provided props object with special handling for typography
@@ -84,40 +85,24 @@ export function mergeVariantAndSize(variantProps: any, sizeProps: any): any {
  * @returns The merged configuration
  */
 export function mergeSizeWithAnimation(sizeProps: any, currentVariantProps: any): any {
-  const merged = { ...sizeProps, ...currentVariantProps };
+  const safeSize = sizeProps || {};
+  const safeVariant = currentVariantProps || {};
+  const merged = { ...safeSize, ...safeVariant };
   // Deep merge autoLayout
-  if (currentVariantProps.autoLayout && sizeProps.autoLayout) {
-    merged.autoLayout = { ...sizeProps.autoLayout, ...currentVariantProps.autoLayout };
+  if (safeVariant.autoLayout && safeSize.autoLayout) {
+    merged.autoLayout = { ...safeSize.autoLayout, ...safeVariant.autoLayout };
   }
   // Deep merge typography
-  if (currentVariantProps.typography && sizeProps.typography) {
-    merged.typography = { ...sizeProps.typography, ...currentVariantProps.typography };
+  if (safeVariant.typography && safeSize.typography) {
+    merged.typography = { ...safeSize.typography, ...safeVariant.typography };
   }
   // Deep merge effects
-  if (currentVariantProps.effects && sizeProps.effects) {
-    merged.effects = { ...sizeProps.effects, ...currentVariantProps.effects };
+  if (safeVariant.effects && safeSize.effects) {
+    merged.effects = { ...safeSize.effects, ...safeVariant.effects };
   }
   // Deep merge appearance
-  if (currentVariantProps.appearance && sizeProps.appearance) {
-    merged.appearance = { ...sizeProps.appearance, ...currentVariantProps.appearance };
+  if (safeVariant.appearance && safeSize.appearance) {
+    merged.appearance = { ...safeSize.appearance, ...safeVariant.appearance };
   }
   return merged;
 }
-
-/**
- * Default variants for Frame components, acting like CSS modules for state management
- */
-export default {
-  default: {
-    // Basic default variant - can be extended or overridden
-  },
-  button: {
-    cursor: { type: 'pointer' },
-    appearance: { radius: 4 },
-  },
-  card: {
-    fill: { type: 'solid', color: 'white' },
-    stroke: { type: 'solid', color: 'gray1', weight: 1 },
-    appearance: { radius: 8 },
-  },
-} satisfies Record<string, FrameVariantConfig>;

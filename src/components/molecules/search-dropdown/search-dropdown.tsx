@@ -106,11 +106,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
           stroke={{ type: 'solid', color: 'gray4', weight: 1 }}
           appearance={{ radius: 12 }}
           effects={{ dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.1)' }] }}
-          style={{
-            maxHeight: size === 'sm' ? 160 : size === 'md' ? 200 : 280,
-            width: '100%',
-            overflow: 'hidden'
-          }}
         >
           {/* Search input */}
           <Frame
@@ -124,25 +119,13 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
               value={searchQuery}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder={searchPlaceholder}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: 'none',
-                outline: 'none',
-                background: 'transparent',
-                fontSize: '14px',
-                color: 'var(--color-gray7)'
-              }}
+           
             />
           </Frame>
 
           {/* Results list */}
           <Frame
             autoLayout={{ flow: 'vertical', paddingVertical: 4, paddingHorizontal: 0, gap: 0 }}
-            style={{
-              maxHeight: size === 'sm' ? 120 : size === 'md' ? 160 : 240,
-              overflow: 'auto'
-            }}
           >
             {filteredItems.length > 0 ? (
               filteredItems.map((item, index) => {
@@ -155,7 +138,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
                     autoLayout={{ paddingHorizontal: 12, paddingVertical: 8 }}
                     fill={isSelected ? { type: 'solid', color: 'blue6', opacity: 0.1 } : undefined}
                     onClick={() => handleItemClick(originalIndex, item)}
-                    style={{ cursor: 'pointer' }}
                     onMouseEnter={(e: React.MouseEvent) => {
                       (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-gray3)';
                     }}

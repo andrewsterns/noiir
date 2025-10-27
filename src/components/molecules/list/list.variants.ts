@@ -1,4 +1,4 @@
-import { VariantDocument } from "../../frame/frame-properties/variants/variants.props";
+import { ExtendVariant } from "../../frame/frame-properties/variants/variants.props";
 
 export type ListVariant = 'default';
 
@@ -29,10 +29,10 @@ export const LIST_VARIANTS = {
     display: 'none',
   },
   disabled: {
-    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 8, maxHeight: 200, overflow: 'auto', width: 'fill', margin: 20 },
+    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 8, maxHeight: 200, overflow: 'auto', width: 'fill' },
     fill: { type: 'none', color: 'transparent' },
     stroke: { type: 'solid', color: 'gray8', weight: 1 },
     appearance: { radius: 8 },
     cursor: { type: 'not-allowed' }
   },
-} satisfies VariantDocument;
+} satisfies ExtendVariant;
