@@ -119,7 +119,7 @@ export const Typography: TypographyStory = {
       autoLayout={{
         ...args.autoLayout,
         flow: 'vertical',
-        alignment: 'top-left',
+        alignment: 'topLeft',
         padding: 20
       }}
     >

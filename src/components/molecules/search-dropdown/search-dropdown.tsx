@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Frame } from '../../frame/Frame';
-import { Button } from '../../atoms/button/button';
-import { Label } from '../../atoms/label/label';
+import { InputField } from '../../atoms/input-field/input';
 
 export type SearchItem = string | { label: string; value?: any; searchableText?: string };
 
@@ -90,14 +89,12 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
       autoLayout={{ flow: 'vertical' }}
       {...frameProps}
     >
-      <Frame
-        variant={disabled ? 'disabled' : 'secondary'}
-        size={buttonSize}
-        onClick={handleButtonClick}
-        fill={{type: 'linear-gradient', stops: [{color: '#ffffff', position: 0}, {color: 'gray2', position: 1}], angle: 6}}
-      >
-        {getSelectedLabel()} <span style={{ float: 'right', marginLeft: 8 }}>{isOpen ? '▲' : '▼'}</span>
-      </Frame>
+ <InputField
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={searchPlaceholder}
+              variant="primaryFocus"
+            />
 
       {isOpen && (
         <Frame
@@ -107,21 +104,9 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
           appearance={{ radius: 12 }}
           effects={{ dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.1)' }] }}
         >
-          {/* Search input */}
-          <Frame
-            autoLayout={{ paddingHorizontal: 12, paddingVertical: 8 }}
-            fill={{ type: 'solid', color: 'gray2' }}
-            stroke={{ type: 'solid', color: 'gray5', weight: 1 }}
-            appearance={{ radiusTopLeft: 12, radiusTopRight: 12 }}
-          >
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-              placeholder={searchPlaceholder}
+
            
-            />
-          </Frame>
+
 
           {/* Results list */}
           <Frame
@@ -144,33 +129,25 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
                     onMouseLeave={(e: React.MouseEvent) => {
                       (e.currentTarget as HTMLElement).style.backgroundColor = isSelected ? 'var(--color-blue6-10)' : 'transparent';
                     }}
+                    typography={{
+                      fontSize: 14,
+                      color: isSelected ? 'blue7' : 'gray7'
+                    }}
                   >
-                    <Label
-                      variant={isSelected ? 'primary-active' : 'primary'}
-                      typography={{
-                        fontSize: 14,
-                        color: isSelected ? 'blue7' : 'gray7'
-                      }}
-                    >
-                      {getItemLabel(item)}
-                    </Label>
+                    {getItemLabel(item)}
                   </Frame>
                 );
               })
             ) : (
               <Frame
                 autoLayout={{ paddingHorizontal: 12, paddingVertical: 16, alignment: 'center' }}
+                typography={{
+                  fontSize: 14,
+                  color: 'gray6',
+                  textAlign: 'center'
+                }}
               >
-                <Label
-                  variant="primary"
-                  typography={{
-                    fontSize: 14,
-                    color: 'gray6',
-                    textAlign: 'center'
-                  }}
-                >
-                  No results found
-                </Label>
+                No results found
               </Frame>
             )}
           </Frame>

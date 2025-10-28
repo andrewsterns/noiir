@@ -36,11 +36,20 @@ export const colors = {
   "tomato": {
     "1": "#f8f5f4ff",  // Tomato red
     "2": "#f0dbd4ff",  // Coral
-    "3": "#d48e79ff",  // Light tomato
-    "4": "#d3663bff",  // Light salmon
-    "5": "#f06221ff",  // Light pink
-    "6": "#FF4500",  // Orange red
-    "7": "#ff3c00ff"   // Pure red
+    "3": "#f3c1b2ff",  // Light tomato
+    "4": "#eea68aff",  // Light salmon
+    "5": "#ee8d60ff",  // Light pink
+    "6": "#f06d3dff",  // Orange red
+    "7": "#f0642dff"   // Pure red
+  },
+  "blue": {
+    "1": "#E0F2FF",  // Very light blue
+    "2": "#B3E0FF",  // Light blue
+    "3": "#80CCFF",  // Soft blue
+    "4": "#4DB8FF",  // Bright blue
+    "5": "#1AA3FF",  // Vivid blue
+    "6": "#008AE6",  // Strong blue
+    "7": "#0066B3"   // Deep blue
   }
 };
 

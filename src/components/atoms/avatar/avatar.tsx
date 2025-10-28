@@ -13,11 +13,11 @@ export interface AvatarProps {
   variant?: AvatarVariant;
 }
 
-const AVATAR_VARIANTS: Record<AvatarVariant, { fill: string; border?: string }> = {
+const AVATAR_VARIANTS = {
   default: { fill: 'gray4' },
   softDark: { fill: 'gray10' },
   softLight: { fill: 'gray2' },
-  outline: { fill: 'white', border: '1px solid #e5e7eb' },
+  outline: { fill: 'white', stroke: { type: 'solid', color: '#e5e7eb', weight: 1 } },
 };
 
 export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 40, fallback, style, variant = 'default' }) => {
@@ -26,8 +26,6 @@ export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 40, fallback, s
     <Frame
       autoLayout={{ width: size, height: size, alignment: 'center' }}
       appearance={{ radius: 'full' }}
-      fill={{ type: 'solid', color: v.fill }}
-      style={{ overflow: 'hidden', border: v.border, ...style }}
     >
       {src ? (
         <img src={src} alt={alt} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />

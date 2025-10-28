@@ -1,9 +1,27 @@
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 
+export const LABEL_SIZES = {
+  fill: {
+    autoLayout: { width: 'fill', height: 'fill' },
+  },
+  sm:{
+    typography: { type: 'body' },
+    autoLayout: { width: '1rem', height: 'fill' },
+  },
+  md:{
+    typography: { type: 'h6' },
+    autoLayout: { width: '2rem', height: 'fill' },
+  },
+  lg:{
+    typography: { type: 'h5' },
+    autoLayout: { width: '3rem', height: 'fill' },
+  },
+} satisfies ExtendVariant;
+
 export const LABEL_VARIANTS = {
   primary: {
     fill: { type: 'solid', color: 'white2', opacity: 0.9 },
-    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, width: 'fill', height: 'fill' },
+    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
     stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
     appearance: { radius: 0 },
     typography: {
@@ -16,7 +34,7 @@ export const LABEL_VARIANTS = {
 
  primaryHover: {
     fill: { type: 'solid', color: 'tomato6', opacity: 0.9 },
-    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, width: 'fill', height: 'fill' },
+    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
     stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
     appearance: { radius: 0 },
     typography: {
@@ -28,26 +46,26 @@ export const LABEL_VARIANTS = {
   },
 
   primaryActive: {
-    fill: { type: 'solid', color: 'black2', opacity: 1 },
-    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, width: 'fill', height: 'fill' },
-    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
-    appearance: { radius: 0 },
-    typography: {
-      type: 'h6',
-      color: 'gray2',
-      wrap: 'nowrap',
-    },
+     fill: { type: 'solid', color: 'black7', opacity: .8 },
+        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
+        stroke: { type: 'solid', color: 'black4', weight: 1 },
+        typography: {
+          type: 'h6',
+            color: 'white6',
+            wrap: 'nowrap',
+
+        },
     animate: { hover: 'primaryActiveHover', click: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' },
   },
 
   primaryActiveHover: {
-    fill: { type: 'solid', color: '#0000ff', opacity: .9 },
-    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8, width: 'fill', height: 'fill' },
-    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
+    fill: { type: 'solid', color: 'black6', opacity: .2 },
+    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
+    stroke: { type: 'solid', color: 'black4', weight: 1, opacity: 0 },
     appearance: { radius: 0 },
     typography: {
       type: 'h6',
-      color: 'white2',
+      color: 'black6',
       wrap: 'nowrap',
     },
     animate: { hover: 'primaryActiveHover', click: 'primary', duration: '0.2s', curve: 'ease-in-out' },
@@ -55,7 +73,7 @@ export const LABEL_VARIANTS = {
 
   disabled: {
     fill: { type: 'solid', color: 'gray1' },
-    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 2, width: 'fill', height: 'fill' },
+    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 2 },
     stroke: { type: 'solid', color: 'gray5', weight: 1 },
     appearance: { opacity: 0.3 },
     typography: {

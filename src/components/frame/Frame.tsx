@@ -49,6 +49,11 @@ export interface FrameProps {
   onMouseLeave?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseDown?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseUp?: (event: React.MouseEvent<HTMLElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  onKeyPress?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
   onHover?: string;
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
@@ -62,6 +67,7 @@ export interface FrameProps {
   pointerEvents?: string;
   transform?: string;
   display?: string;
+  tabIndex?: number;
   [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
@@ -88,6 +94,11 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onMouseLeave,
     onMouseDown,
     onMouseUp,
+    onKeyDown,
+    onKeyUp,
+    onKeyPress,
+    onFocus,
+    onBlur,
     onHover,
     iconStart,
     iconEnd,
@@ -101,6 +112,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     pointerEvents,
     transform,
     display,
+    tabIndex,
     ...otherProps
   } = props;
 
@@ -157,6 +169,11 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (onMouseLeave !== undefined) explicitProps.onMouseLeave = onMouseLeave;
   if (onMouseDown !== undefined) explicitProps.onMouseDown = onMouseDown;
   if (onMouseUp !== undefined) explicitProps.onMouseUp = onMouseUp;
+  if (onKeyDown !== undefined) explicitProps.onKeyDown = onKeyDown;
+  if (onKeyUp !== undefined) explicitProps.onKeyUp = onKeyUp;
+  if (onKeyPress !== undefined) explicitProps.onKeyPress = onKeyPress;
+  if (onFocus !== undefined) explicitProps.onFocus = onFocus;
+  if (onBlur !== undefined) explicitProps.onBlur = onBlur;
   if (onHover !== undefined) explicitProps.onHover = onHover;
   if (animate !== undefined) explicitProps.animate = animate;
   if (iconStart !== undefined) explicitProps.iconStart = iconStart;
@@ -166,6 +183,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (pointerEvents !== undefined) explicitProps.pointerEvents = pointerEvents;
   if (transform !== undefined) explicitProps.transform = transform;
   if (display !== undefined) explicitProps.display = display;
+  if (tabIndex !== undefined) explicitProps.tabIndex = tabIndex;
 
   // Create effective variant props without animate if it's explicitly provided
   const filteredVariantProps = { ...finalEffectiveVariantProps };
@@ -210,6 +228,11 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onMouseLeave: finalOnMouseLeave,
     onMouseDown: finalOnMouseDown,
     onMouseUp: finalOnMouseUp,
+    onKeyDown: finalOnKeyDown,
+    onKeyUp: finalOnKeyUp,
+    onKeyPress: finalOnKeyPress,
+    onFocus: finalOnFocus,
+    onBlur: finalOnBlur,
     onHover: finalOnHover,
     animate: finalAnimate,
     iconStart: finalIconStart,
@@ -219,6 +242,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     pointerEvents: finalPointerEvents,
     transform: finalTransform,
     display: finalDisplay,
+    tabIndex: finalTabIndex,
   } = mergedProps;
 
   // Merge size's autoLayout into finalAutoLayout if present
@@ -279,7 +303,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     typography: finalTypography,
     fill: finalFill,
     stroke: finalStroke,
-    effects: finalEffects
+    effects: finalEffects,
   }, hasAutoLayout);
 
 
@@ -369,6 +393,12 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
         onMouseLeave: handleMouseLeave,
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
+        onKeyDown: finalOnKeyDown,
+        onKeyUp: finalOnKeyUp,
+        onKeyPress: finalOnKeyPress,
+        onFocus: finalOnFocus,
+        onBlur: finalOnBlur,
+        tabIndex: finalTabIndex,
       },
       childrenWithIcons
     );
@@ -385,6 +415,12 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
       onMouseLeave: handleMouseLeave,
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
+      onKeyDown: finalOnKeyDown,
+      onKeyUp: finalOnKeyUp,
+      onKeyPress: finalOnKeyPress,
+      onFocus: finalOnFocus,
+      onBlur: finalOnBlur,
+      tabIndex: finalTabIndex,
     },
     mergedAutoLayout?.flow === 'curved' ? curvedChildren : childrenWithIcons
   );

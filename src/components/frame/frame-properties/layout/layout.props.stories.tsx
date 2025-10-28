@@ -11,12 +11,11 @@ export const HorizontalVsFreeform: LayoutStory = {
     childHeight: 40,
   },
   render: (args: LayoutArgs) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-      <>
+
         <Frame
           autoLayout={{ flow: 'vertical', gap: 32 }}
         >
-          <Frame typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'left' }} style={{ marginBottom: 4 }}>Horizontal Layout (gap, shifting)</Frame>
+          <Frame typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'left' }} >Horizontal Layout (gap, shifting)</Frame>
           <Frame
             autoLayout={{ flow: 'horizontal', gap: 16, padding: 8, width: 'hug', height: 60 }}
             fill={{ type: 'solid', color: 'white2', opacity: 0.9 }}
@@ -85,8 +84,6 @@ export const HorizontalVsFreeform: LayoutStory = {
             </Frame>
           </Frame>
         </Frame>
-      </>
-    </div>
   ),
   parameters: {
     docs: {
@@ -104,7 +101,7 @@ import { Frame, FrameProps } from '../../Frame';
 interface LayoutArgs extends Partial<FrameProps> {
   children?: React.ReactNode;
   flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';
-  alignment?: 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+  alignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'top' | 'center' | 'bottom' | 'left' | 'right';
   gap: number;
   padding: number;
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
@@ -114,7 +111,7 @@ interface LayoutArgs extends Partial<FrameProps> {
   // Child frame controls
   childWidth: number;
   childHeight: number;
-  childAlignment?: 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+  childAlignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight';
   path?: { d: string };
 }
 
@@ -165,7 +162,7 @@ export const Layout: LayoutStory = {
     },
     alignment: {
       control: { type: 'select' },
-      options: [undefined, 'top-left', 'top-center', 'top-right', 'center-left', 'center', 'center-right', 'bottom-left', 'bottom-center', 'bottom-right'],
+      options: [undefined, 'topLeft', 'topCenter', 'topRight', 'centerLeft', 'center', 'centerRight', 'bottomLeft', 'bottomCenter', 'bottomRight'],
       description: 'Container alignment',
       table: { category: 'Layout' }
     },
@@ -218,7 +215,7 @@ export const Layout: LayoutStory = {
     },
     childAlignment: {
       control: { type: 'select' },
-      options: [undefined, 'top-left', 'top-center', 'top-right', 'center-left', 'center', 'center-right', 'bottom-left', 'bottom-center', 'bottom-right'],
+      options: [undefined, 'topLeft', 'topCenter', 'topRight', 'centerLeft', 'center', 'centerRight', 'bottomLeft', 'bottomCenter', 'bottomRight'],
       description: 'Child alignment',
       table: { category: 'Children' }
     },

@@ -67,7 +67,7 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
       ref={ref}
       autoLayout={{ flow: 'vertical', gap: 24, padding: 24 }}
       fill={{ type: 'solid', color: 'gray1' }}
-      style={{ minHeight: '100vh' }}
+
       {...frameProps}
     >
       {/* Header Section */}
@@ -93,10 +93,10 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
         {/* Search and Filters Row */}
         <Frame
           autoLayout={{ flow: 'horizontal', gap: 16, alignment: 'center' }}
-          style={{ flexWrap: 'wrap' }}
+
         >
           {/* Search Dropdown */}
-          <Frame style={{ flex: 1, minWidth: '200px' }}>
+          <Frame >
             <SearchDropdown
               items={categories}
               placeholder="Search categories..."
@@ -150,7 +150,6 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
       {/* Content Area */}
       <Frame
         autoLayout={{ flow: 'vertical', gap: 16 }}
-        style={{ flex: 1 }}
       >
         {/* Status Bar */}
         <Frame
@@ -177,7 +176,7 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
           >
             {selectedFilter ? `Sort: ${selectedFilter}` : 'Default Sort'}
           </Label>
-          <Frame style={{ flex: 1 }} />
+          <Frame></Frame>
           <Label
             variant="primary"
             typography={{
@@ -192,9 +191,6 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
         {/* Main Content Grid */}
         <Frame
           autoLayout={{ flow: 'grid', gap: 16 }}
-          style={{
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))'
-          }}
         >
           {/* Sample Content Cards */}
           {[1, 2, 3, 4, 5, 6].map((item) => (
@@ -251,7 +247,7 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
                 >
                   Edit
                 </Button>
-                <Frame style={{ flex: 1 }} />
+                <Frame />
                 <Label
                   variant="primary"
                   typography={{
@@ -283,7 +279,7 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
         >
           © 2025 Noiir Design System
         </Label>
-        <Frame style={{ flex: 1 }} />
+        <Frame />
         <Button
           variant="secondary"
           size="sm"

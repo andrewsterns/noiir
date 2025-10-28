@@ -75,15 +75,23 @@ export const typographyPresets = {
   },
 
   // Body text
+  body: {
+      fontFamily: fonts.geist.family,
+      fontWeight: 200,
+      fontSize: 14,
+      lineHeight: 1.5,
+      letterSpacing: .45,
+  },
+  
   body1: {
-    fontFamily: fonts.inter.family,
-    fontWeight: 400,
-    fontSize: 16,
+    fontFamily: fonts.geist.family,
+    fontWeight: 900,
+    fontSize: 14,
     lineHeight: 1.5,
-    letterSpacing: 0,
+    letterSpacing: .45,
   },
   body2: {
-    fontFamily: fonts.inter.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 400,
     fontSize: 14,
     lineHeight: 1.5,
@@ -92,7 +100,7 @@ export const typographyPresets = {
 
   // Labels and UI text
   label: {
-    fontFamily: fonts.inter.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 500,
     fontSize: 12,
     lineHeight: 1.4,
@@ -100,7 +108,7 @@ export const typographyPresets = {
     textTransform: 'uppercase' as const,
   },
   caption: {
-    fontFamily: fonts.inter.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 400,
     fontSize: 12,
     lineHeight: 1.4,

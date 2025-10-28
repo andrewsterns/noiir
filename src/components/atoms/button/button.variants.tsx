@@ -48,13 +48,13 @@ export const BUTTON_VARIANTS = {
 
     },
     primaryActive: {
-        fill: { type: 'solid', color: 'black7', opacity: .1 },
+        fill: { type: 'solid', color: 'black7', opacity: .8 },
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         stroke: { type: 'solid', color: 'black4', weight: 1 },
         appearance: { radius: 8 },
         effects: { dropShadow: [{ x: 1, y: 3, blur: 8, color: 'rgba(0, 0, 0, 0.25)', spread: -3 }] },
         typography: {
-            color: 'white9',
+            color: 'white6',
             wrap: 'nowrap',
 
         },

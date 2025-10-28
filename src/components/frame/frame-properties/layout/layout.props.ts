@@ -3,7 +3,7 @@ import React from 'react';
 export interface AutoLayoutProps {
   // Flow and alignment
   flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';
-  alignment?: 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top' | 'center' | 'bottom' | 'left' | 'right';
+  alignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'top' | 'center' | 'bottom' | 'left' | 'right';
   path?: { d: string };
   // Dimensions
   width?: string | number | 'hug' | 'fill-container';
@@ -138,10 +138,11 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
   // Alignment based on flow type and alignment value
   // Note: Freeform layout doesn't use alignment - children are positioned absolutely
   if (props.alignment && props.flow !== 'freeform') {
-    // Handle both compound values (e.g., 'top-center') and single values (e.g., 'center')
-    const alignmentParts = props.alignment.split('-');
-    const vertical = alignmentParts[0];
-    const horizontal = alignmentParts.length > 1 ? alignmentParts[1] : vertical; // If single value, use same for both axes
+    // Handle both compound values (e.g., 'topCenter') and single values (e.g., 'center')
+    // Split camelCase: topCenter -> ['top', 'Center'], center -> ['center']
+    const camelCaseSplit = props.alignment.match(/^[a-z]+|[A-Z][a-z]*/g) || [props.alignment];
+    const vertical = camelCaseSplit[0].toLowerCase();
+    const horizontal = camelCaseSplit.length > 1 ? camelCaseSplit[1].toLowerCase() : vertical; // If single value, use same for both axes
     
     if (props.flow === 'horizontal') {
       // For horizontal flow (flex-direction: row)
