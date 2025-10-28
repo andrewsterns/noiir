@@ -7,14 +7,17 @@ export interface ListVariantConfig {
 }
 
 export const LIST_SIZES = {
-  sm: {
+  '1': {
     autoLayout: { width: 150, height: 'hug' },
   },
-  md: {
+  '2': {
     autoLayout: { width: 250, height: 'hug' },
   },
-  lg: {
+  '3': {
     autoLayout: { width: 350, height: 'hug' },
+  },
+  'fill': {
+    autoLayout: { width: 'fill-container', height: 'hug' },
   },
 } satisfies ExtendVariant;
 

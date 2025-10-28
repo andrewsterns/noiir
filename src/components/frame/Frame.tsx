@@ -138,7 +138,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
 
   // Use the animation logic hook
   const allVariants = { ...variants, ...sizes };
-  const { currentVariant, eventHandlers } = useAnimateVariant({ animate: effectiveAnimate, onHover, variants: allVariants });
+  const { currentVariant, eventHandlers } = useAnimateVariant({ animate: effectiveAnimate, onHover, variants: allVariants, variant: typeof variant === 'string' ? variant : undefined });
 
   // Get the current variant props based on currentVariant
   const currentVariantProps = currentVariant ? allVariants[currentVariant] : {};

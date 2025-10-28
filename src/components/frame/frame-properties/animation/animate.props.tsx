@@ -4,6 +4,8 @@ export interface AnimationConfig {
   destination: string;
   duration?: string;
   curve?: string;
+  afterDelay?: string;
+  delay?: string;
 }
 
 export interface AnimateProps {
@@ -13,6 +15,8 @@ export interface AnimateProps {
   event?: string | 'none';
   duration?: string;
   curve?: string;
+  afterDelay?: string;
+  delay?: string;
   [key: string]: any;
 }
 
@@ -21,6 +25,7 @@ export interface UseAnimateVariantOptions {
   onHover?: string;
   onClickVariant?: string;
   variants?: Record<string, any>;
+  variant?: string;
 }
 
 /**
@@ -28,36 +33,83 @@ export interface UseAnimateVariantOptions {
  * Returns: [currentVariant, eventHandlers]
  */
 export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
-  const { animate, onHover, onClickVariant, variants } = options;
+  // console.log('useAnimateVariant called with options:', options);
+  const { animate, onHover, onClickVariant, variants, variant } = options;
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [permanentClickVariant, setPermanentClickVariant] = useState<string | undefined>(undefined);
   const [currentAnimate, setCurrentAnimate] = useState<AnimateProps | undefined>(animate);
+  const [delayedVariant, setDelayedVariant] = useState<string | undefined>(undefined);
+  const [currentVariant, setCurrentVariant] = useState<string | undefined>(variant);
 
   // Update currentAnimate when animate prop changes
   useEffect(() => {
     setCurrentAnimate(animate);
     // Reset permanent click variant when animate changes, as the selection state may have changed externally
     setPermanentClickVariant(undefined);
+    setDelayedVariant(undefined);
   }, [animate]);
 
-  // Compute current variant
-  let currentVariant: string | undefined;
-  if (currentAnimate) {
-    if (isActive && currentAnimate.clickHold && currentAnimate.clickHold !== 'none') {
-      currentVariant = typeof currentAnimate.clickHold === 'string' ? currentAnimate.clickHold : currentAnimate.clickHold.destination;
-    } else if (isHovered && currentAnimate.hover && currentAnimate.hover !== 'none') {
-      currentVariant = typeof currentAnimate.hover === 'string' ? currentAnimate.hover : currentAnimate.hover.destination;
-    } else if (permanentClickVariant) {
-      currentVariant = permanentClickVariant;
-    } else if (currentAnimate.event && currentAnimate.event !== 'none') {
-      currentVariant = currentAnimate.event;
+  // Update currentVariant when dependencies change
+  useEffect(() => {
+    let newVariant: string | undefined = delayedVariant || variant;
+    if (currentAnimate) {
+      if (isActive && currentAnimate.clickHold && currentAnimate.clickHold !== 'none') {
+        newVariant = typeof currentAnimate.clickHold === 'string' ? currentAnimate.clickHold : currentAnimate.clickHold.destination;
+      } else if (isHovered && currentAnimate.hover && currentAnimate.hover !== 'none') {
+        newVariant = typeof currentAnimate.hover === 'string' ? currentAnimate.hover : currentAnimate.hover.destination;
+      } else if (permanentClickVariant) {
+        newVariant = permanentClickVariant;
+      } else if (currentAnimate.event && currentAnimate.event !== 'none') {
+        newVariant = currentAnimate.event;
+      }
+    } else if (isActive && onClickVariant) {
+      newVariant = onClickVariant;
+    } else if (isHovered && onHover) {
+      newVariant = onHover;
     }
-  } else if (isActive && onClickVariant) {
-    currentVariant = onClickVariant;
-  } else if (isHovered && onHover) {
-    currentVariant = onHover;
-  }
+    setCurrentVariant(newVariant);
+  }, [variant, delayedVariant, currentAnimate, isHovered, isActive, permanentClickVariant, onClickVariant, onHover]);
+
+  // Handle afterDelay animation
+  useEffect(() => {
+    // console.log('afterDelay useEffect running, currentVariant:', currentVariant, 'currentAnimate:', currentAnimate, 'variants:', variants);
+    if (currentVariant) {
+      const hasAfterDelay = variants?.[currentVariant]?.animate?.afterDelay || currentAnimate?.afterDelay;
+      const delayStr = variants?.[currentVariant]?.animate?.delay || currentAnimate?.delay;
+      if (hasAfterDelay && delayStr) {
+        const afterDelay = hasAfterDelay;
+        const delayStrValue = (currentAnimate?.delay || variants?.[currentVariant]?.animate?.delay)!;
+        let delayMs: number;
+        if (!delayStrValue || delayStrValue.trim() === '') {
+          delayMs = 0; // Default to 0 if blank
+        } else if (delayStrValue.endsWith('ms')) {
+          delayMs = parseFloat(delayStrValue.slice(0, -2)) || 0;
+        } else if (delayStrValue.endsWith('s')) {
+          delayMs = (parseFloat(delayStrValue.slice(0, -1)) || 0) * 1000;
+        } else {
+          // Assume seconds if no unit
+          delayMs = (parseFloat(delayStrValue) || 0) * 1000;
+        }
+        if (delayMs > 0) {
+          // console.log(`Setting afterDelay timeout for ${currentVariant} to ${afterDelay} in ${delayMs}ms`);
+          const timeoutId = setTimeout(() => {
+            // console.log(`Switching from ${currentVariant} to ${afterDelay} via afterDelay`);
+            setDelayedVariant(afterDelay);
+          }, delayMs);
+          return () => clearTimeout(timeoutId);
+        } else {
+          // If delay is 0, switch immediately
+          // console.log(`Switching immediately from ${currentVariant} to ${afterDelay} (delay 0)`);
+          setDelayedVariant(afterDelay);
+        }
+      } else {
+        setDelayedVariant(undefined);
+      }
+    } else {
+      setDelayedVariant(undefined);
+    }
+  }, [currentVariant, currentAnimate, variants]);
   // Event handlers to update state
   const handleMouseEnter = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setIsHovered(true);

@@ -85,8 +85,8 @@ export const injectVariant = (
 
   const injectToChild = (child: React.ReactNode): React.ReactNode => {
     if (!React.isValidElement(child)) return child;
-    // Only inject if child accepts 'variant' prop
-    if ('variant' in (child.props || {})) {
+    // Only inject if child accepts 'variant' prop and doesn't already have one
+    if ('variant' in (child.props || {}) && !child.props.variant) {
       return React.cloneElement(child, { ...child.props, variant: currentVariant });
     }
     return child;

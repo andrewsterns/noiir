@@ -1,17 +1,19 @@
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 import { HappyFace, HappyWink } from '../../../theme/icons/fun';
+import { SIZE_VARIANTS } from '../../../theme/size.variants';
 
 
 export const BUTTON_SIZES = {
-    sm: {
+
+    1: {
         typography: { type: 'h6' },
         autoLayout: { paddingHorizontal: 12, paddingVertical: 4 },
     },
-    md: {
+    2: {
         typography: { type: 'h5' },
         autoLayout: { paddingHorizontal: 16, paddingVertical: 8 },
     },
-    lg: {
+    3: {
         typography: { type: 'h3' },
         autoLayout: { paddingHorizontal: 20, paddingVertical: 12 },
     }

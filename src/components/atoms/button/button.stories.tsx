@@ -62,7 +62,7 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      options: ['1', '2', '3'],
     },
     children: {
       control: { type: 'text' },
@@ -76,7 +76,7 @@ type Story = StoryObj<typeof Button>;
 export const Primary: Story = {
   args: {
     variant: 'primary',
-    size: 'sm',
+    size: '1',
     children: 'Primary Button',
   },
 };
@@ -84,7 +84,7 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
-    size: 'md',
+    size: '2',
     children: 'Secondary Button',
   },
 };
@@ -92,7 +92,7 @@ export const Secondary: Story = {
 export const WithIcons: Story = {
   args: {
     variant: 'primary',
-    size: 'lg',
+    size: '3',
     children: 'Button with Icons',
     iconStart: '←',
     iconEnd: '→',
@@ -119,7 +119,7 @@ export const StateDemo: Story = {
       <Frame autoLayout={{ flow: 'grid', gap: 20, alignment: 'center', width: 'fill' }}>
         <Button variant="primary" >Primary</Button>
         <Button variant="secondary">Secondary</Button>
-        <Button variant="primary" autoLayout={{ width: 120 }} iconStart="🎯">With Icons</Button>
+        <Button variant="primary" autoLayout={{ width: 220, height: 220 }} iconStart="🎯">With Icons</Button>
       </Frame>
 
       <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
@@ -141,15 +141,15 @@ export const StateDemo: Story = {
 export const Sizes: Story = {
   render: () => (
     <Frame autoLayout={{ flow: 'horizontal', gap: 20, alignment: 'center' }}>
-      <Button size="sm" variant="primary">Small</Button>
-      <Button size="md" variant="primary">Medium</Button>
-      <Button size="lg" variant="primary">Large</Button>
-    </Frame>
+      <Button size="1" variant="primary">Small</Button>
+      <Button size="2" variant="primary">Medium</Button>
+      <Button size= '3' variant="primary">Large</Button>
+    </Frame>  
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Buttons with different sizes (sm, md, lg) showing varying padding applied in addition to the primary variant styling.',
+        story: 'Buttons with different sizes (1, 2, 3) showing varying padding applied in addition to the primary variant styling.',
       },
     },
   },

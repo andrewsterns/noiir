@@ -39,11 +39,11 @@ const meta: Meta<typeof Dropdown> = {
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      options: ['1', '2', '3', 'fill'],
     },
     buttonSize: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      options: ['1', '2', '3', 'fill'],
     },
   },
 };
@@ -117,6 +117,7 @@ export const MultiSelect: Story = {
           multiSelect={true}
           placeholder="Choose fruits..."
           onMultiChange={handleMultiChange}
+          size= '1'
           variant="primary"
         />
         <p>Selected indices: [{selectedIndices.join(', ')}]</p>
@@ -164,37 +165,6 @@ export const WithDisabledItems: Story = {
   },
 };
 
-export const SecondaryVariant: Story = {
-  render: () => {
-    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
-
-    const handleChange = (index: number, item: any) => {
-      setSelectedIndex(index);
-      console.log('Selected:', index, item);
-    };
-
-    return (
-      <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 300 }}>
-        <h3>Secondary Variant Dropdown</h3>
-        <Dropdown
-          items={sampleItems}
-          selectedIndex={selectedIndex}
-          placeholder="Choose a fruit..."
-          onChange={handleChange}
-          variant="secondary"
-        />
-      </Frame>
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Dropdown with secondary styling variant.',
-      },
-    },
-  },
-};
-
 export const Disabled: Story = {
   render: () => (
     <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 300 }}>
@@ -216,7 +186,7 @@ export const Disabled: Story = {
   },
 };
 
-export const ButtonSizes: Story = {
+export const Sizes: Story = {
   render: () => {
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
 
@@ -227,7 +197,7 @@ export const ButtonSizes: Story = {
 
     return (
       <Frame autoLayout={{ flow: 'vertical', gap: 16, width: 400 }}>
-        <h3>Dropdown Button Sizes</h3>
+        <h3>Dropdown Sizes</h3>
         <Frame autoLayout={{ flow: 'vertical', gap: 12 }}>
           <Dropdown
             items={sampleItems}
@@ -235,8 +205,7 @@ export const ButtonSizes: Story = {
             placeholder="Small dropdown..."
             onChange={handleChange}
             variant="primary"
-            size="sm"
-            buttonSize="sm"
+            size="1"
           />
           <Dropdown
             items={sampleItems}
@@ -244,8 +213,7 @@ export const ButtonSizes: Story = {
             placeholder="Medium dropdown..."
             onChange={handleChange}
             variant="primary"
-            size='md'
-            buttonSize="md"
+            size="2"
           />
           <Dropdown
             items={sampleItems}
@@ -253,8 +221,15 @@ export const ButtonSizes: Story = {
             placeholder="Large dropdown..."
             onChange={handleChange}
             variant="primary"
-            size="lg"
-            buttonSize="lg"
+            size="3"
+          />
+          <Dropdown
+            items={sampleItems}
+            selectedIndex={selectedIndex}
+            placeholder="Fill dropdown..."
+            onChange={handleChange}
+            variant="primary"
+            size="fill"
           />
         </Frame>
       </Frame>
@@ -263,7 +238,7 @@ export const ButtonSizes: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Dropdown buttons with different sizes (sm, md, lg) showing varying padding and dimensions.',
+        story: 'Dropdown buttons with different sizes (1, 2, 3) showing varying padding and dimensions.',
       },
     },
   },

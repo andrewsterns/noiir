@@ -4,14 +4,17 @@ import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
 
 export const DROPDOWN_SIZES = {
-  sm: {
-    autoLayout: { width: 150, height: 'hug' },
+  '1': {
+    autoLayout: { width: 150, height: 'hug', clipContent: true },
   },
-  md: {
+  '2': {
     autoLayout: { width: 250, height: 'hug' },
   },
-  lg: {
+  '3': {
     autoLayout: { width: 350, height: 'hug' },
+  },
+  'fill': {
+    autoLayout: { width: 'fill-container', height: 'hug' },
   },
 } satisfies ExtendVariant;
 
@@ -20,10 +23,8 @@ export const DROPDOWN_VARIANT = {
   default: {
     autoLayout: { 
       flow: 'vertical', 
-      width: 'fill',  // Forces dropdown to fill parent
       gap: 0 
     },
-    important: ['autoLayout'], // Prevents explicit autoLayout from overriding width
   },
 } satisfies ExtendVariant;
 

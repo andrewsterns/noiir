@@ -7,7 +7,7 @@ import { LIST_SIZES } from './list.variants';
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
 export interface ListProps extends FrameProps {
-  size?: 'sm' | 'md' | 'lg' | 'fill';
+  size?: '1' | '2' | '3' |'fill';
   items: ListItem[];
   selectedIndex?: number;
   selectedIndices?: number[];

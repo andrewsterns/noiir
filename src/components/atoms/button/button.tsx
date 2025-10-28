@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { BUTTON_VARIANTS as ButtonVariants, BUTTON_SIZES } from './button.variants';
+import { BUTTON_SIZES, BUTTON_VARIANTS } from './button.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
 
 
@@ -13,8 +13,8 @@ export interface ButtonProps extends FrameProps {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   variant = 'primary',
-  variants = ButtonVariants,
-  size = 'md',
+  variants = BUTTON_VARIANTS,
+  size = '2',
   sizes = BUTTON_SIZES,
   iconStart,
   iconEnd,

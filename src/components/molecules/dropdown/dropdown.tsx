@@ -4,7 +4,7 @@ import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES } from './dropdown.variants';
 import { LIST_SIZES, LIST_VARIANTS } from '../list/list.variants';
-import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
+import { BUTTON_SIZES, BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
 export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant'> {
   items: ListItem[];
@@ -16,8 +16,8 @@ export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant'> {
   onMultiChange?: (selectedIndices: number[], items: ListItem[]) => void;
   disabled?: boolean;
   variant?: string | keyof typeof DROPDOWN_VARIANT;
-  size?: 'sm' | 'md' | 'lg';
-  buttonSize?: 'sm' | 'md' | 'lg';
+  size?: '1' | '2' | '3' |'fill';
+  buttonSize?: '1' | '2' | '3' |'fill';
   buttonProps?: Partial<React.ComponentProps<typeof Button>>;
   listProps?: Partial<React.ComponentProps<typeof List>>;
 }
@@ -32,8 +32,8 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   onMultiChange,
   disabled = false,
   variant = 'default',
-  size = 'md',
-  buttonSize = 'md',
+  size = '2',
+  buttonSize = '2',
   buttonProps,
   listProps,
   ...frameProps
@@ -126,8 +126,9 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         variant={isOpen ? 'primaryActive' : 'primary' as any}
         variants={DROPDOWN_BUTTON_VARIANTS}
         size={buttonSize}
+        sizes={BUTTON_SIZES}
         onClick={disabled ? undefined : handleButtonClick}
-        autoLayout={{alignment: 'left', width: 'fill', gap: 'fill', paddingRight: 18}}
+        autoLayout={{alignment: 'left', gap: 'fill', paddingRight: 18}}
 
         
         {...buttonProps}
