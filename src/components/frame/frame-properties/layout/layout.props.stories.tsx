@@ -15,7 +15,6 @@ export const HorizontalVsFreeform: LayoutStory = {
       <>
         <Frame
           autoLayout={{ flow: 'vertical', gap: 32 }}
-          style={{ width: 640 }}
         >
           <Frame typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'left' }} style={{ marginBottom: 4 }}>Horizontal Layout (gap, shifting)</Frame>
           <Frame
@@ -28,7 +27,6 @@ export const HorizontalVsFreeform: LayoutStory = {
               fill={{ type: 'solid', color: 'white7' }}
               autoLayout={{ width: 140, height: 40 }}
               appearance={{ radius: 4 }}
-              style={{ transition: 'width 0.3s', cursor: 'pointer' }}
               onMouseEnter={e => e.currentTarget.style.width = '260px'}
               onMouseLeave={e => e.currentTarget.style.width = '140px'}
             >
@@ -49,7 +47,6 @@ export const HorizontalVsFreeform: LayoutStory = {
               autoLayout={{ width: 140, height: 40 }}
               appearance={{ radius: 4 }}
               position={{ x: 0, y: 0 }}
-              style={{ transition: 'width 0.3s', cursor: 'pointer' }}
               onMouseEnter={e => e.currentTarget.style.width = '260px'}
               onMouseLeave={e => e.currentTarget.style.width = '140px'}
             >

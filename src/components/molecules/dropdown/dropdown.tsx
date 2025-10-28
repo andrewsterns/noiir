@@ -3,7 +3,7 @@ import { Frame, FrameProps } from '../../frame/Frame';
 import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES } from './dropdown.variants';
-import { LIST_VARIANTS } from '../list/list.variants';
+import { LIST_SIZES, LIST_VARIANTS } from '../list/list.variants';
 import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
 export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant'> {
@@ -135,6 +135,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         {getSelectedLabel()}
       </Button>
       <List
+      position={{x:0, y:50}}
         items={items}
         selectedIndex={multiSelect ? undefined : currentSelectedIndex}
         selectedIndices={multiSelect ? currentSelectedIndices : undefined}
@@ -142,6 +143,8 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         onItemClick={handleItemClick}
         variant={isOpen ? 'active' : 'hidden'}
         variants={LIST_VARIANTS}
+        size={size}
+        sizes={LIST_SIZES}
         animate={{ duration: '0.3s', curve: 'ease-in-out' }}
         {...listProps}
       />

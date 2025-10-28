@@ -38,29 +38,40 @@ export interface AutoLayoutProps {
 export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.ReactNode): React.CSSProperties => {
   if (!props) return {};
   const styles: React.CSSProperties = {};
+
+  // Utility to normalize units
+  const normalizeUnit = (value: any) => {
+    if (typeof value === 'number') return `${value}px`;
+    if (typeof value === 'string') {
+      if (/^(\d+)$/.test(value)) return `${value}px`;
+      if (/^(\d+(px|%|em|rem))$/.test(value)) return value;
+      return value; // fallback for other valid CSS units
+    }
+    return value;
+  };
   // Special: For freeform flow, if width or height is 'hug', calculate bounding box of children
   // Padding - like Figma's padding controls (always apply for freeform)
   let padLeft = 0, padRight = 0, padTop = 0, padBottom = 0;
   if (props.padding !== undefined) {
-    if (typeof props.padding === 'number') {
-      padLeft = padRight = padTop = padBottom = props.padding;
+    if (typeof props.padding === 'number' || typeof props.padding === 'string') {
+      padLeft = padRight = padTop = padBottom = normalizeUnit(props.padding);
     } else {
-      padTop = props.padding.top || 0;
-      padRight = props.padding.right || 0;
-      padBottom = props.padding.bottom || 0;
-      padLeft = props.padding.left || 0;
+      padTop = normalizeUnit(props.padding.top || 0);
+      padRight = normalizeUnit(props.padding.right || 0);
+      padBottom = normalizeUnit(props.padding.bottom || 0);
+      padLeft = normalizeUnit(props.padding.left || 0);
     }
   }
-  if (props.paddingLeft !== undefined) padLeft = typeof props.paddingLeft === 'number' ? props.paddingLeft : parseInt(props.paddingLeft, 10) || 0;
-  if (props.paddingRight !== undefined) padRight = typeof props.paddingRight === 'number' ? props.paddingRight : parseInt(props.paddingRight, 10) || 0;
-  if (props.paddingTop !== undefined) padTop = typeof props.paddingTop === 'number' ? props.paddingTop : parseInt(props.paddingTop, 10) || 0;
-  if (props.paddingBottom !== undefined) padBottom = typeof props.paddingBottom === 'number' ? props.paddingBottom : parseInt(props.paddingBottom, 10) || 0;
+  if (props.paddingLeft !== undefined) padLeft = normalizeUnit(props.paddingLeft);
+  if (props.paddingRight !== undefined) padRight = normalizeUnit(props.paddingRight);
+  if (props.paddingTop !== undefined) padTop = normalizeUnit(props.paddingTop);
+  if (props.paddingBottom !== undefined) padBottom = normalizeUnit(props.paddingBottom);
   if (props.paddingHorizontal !== undefined) {
-    const hPad = typeof props.paddingHorizontal === 'number' ? props.paddingHorizontal : parseInt(props.paddingHorizontal, 10) || 0;
+    const hPad = normalizeUnit(props.paddingHorizontal);
     padLeft = padRight = hPad;
   }
   if (props.paddingVertical !== undefined) {
-    const vPad = typeof props.paddingVertical === 'number' ? props.paddingVertical : parseInt(props.paddingVertical, 10) || 0;
+    const vPad = normalizeUnit(props.paddingVertical);
     padTop = padBottom = vPad;
   }
   if (props.flow === 'freeform' && (props.width === 'hug' || props.height === 'hug') && children) {
@@ -81,21 +92,21 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
         maxBottom = Math.max(maxBottom, y + h);
       }
     });
-    if (props.width === 'hug') styles.width = maxRight + padLeft + padRight;
-    if (props.height === 'hug') styles.height = maxBottom + padTop + padBottom;
+    if (props.width === 'hug') styles.width = normalizeUnit(maxRight + padLeft + padRight);
+    if (props.height === 'hug') styles.height = normalizeUnit(maxBottom + padTop + padBottom);
     // Always apply padding for freeform
-    styles.paddingTop = `${padTop}px`;
-    styles.paddingRight = `${padRight}px`;
-    styles.paddingBottom = `${padBottom}px`;
-    styles.paddingLeft = `${padLeft}px`;
+    styles.paddingTop = padTop;
+    styles.paddingRight = padRight;
+    styles.paddingBottom = padBottom;
+    styles.paddingLeft = padLeft;
   }
   // Margin - like Figma's margin controls
   if (props.margin !== undefined) {
-    if (typeof props.margin === 'number') {
-      styles.margin = `${props.margin}px`;
+    if (typeof props.margin === 'number' || typeof props.margin === 'string') {
+      styles.margin = normalizeUnit(props.margin);
     } else {
       const { top, right, bottom, left } = props.margin;
-      styles.margin = `${top || 0}px ${right || 0}px ${bottom || 0}px ${left || 0}px`;
+      styles.margin = `${normalizeUnit(top || 0)} ${normalizeUnit(right || 0)} ${normalizeUnit(bottom || 0)} ${normalizeUnit(left || 0)}`;
     }
   }
   
@@ -234,15 +245,11 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
         styles.width = '100%';
         break;
       default:
-        if (typeof props.width === 'number') {
-          styles.width = `${props.width}px`;
-        } else {
-          styles.width = props.width;
-        }
+        styles.width = normalizeUnit(props.width);
         break;
     }
   }
-  
+
   if (props.height !== undefined) {
     switch (props.height) {
       case 'hug':
@@ -252,45 +259,25 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
         styles.height = '100%';
         break;
       default:
-        if (typeof props.height === 'number') {
-          styles.height = `${props.height}px`;
-        } else {
-          styles.height = props.height;
-        }
+        styles.height = normalizeUnit(props.height);
         break;
     }
   }
-  
+
   if (props.maxHeight !== undefined) {
-    if (typeof props.maxHeight === 'number') {
-      styles.maxHeight = `${props.maxHeight}px`;
-    } else {
-      styles.maxHeight = props.maxHeight;
-    }
+    styles.maxHeight = normalizeUnit(props.maxHeight);
   }
-  
+
   if (props.minWidth !== undefined) {
-    if (typeof props.minWidth === 'number') {
-      styles.minWidth = `${props.minWidth}px`;
-    } else {
-      styles.minWidth = props.minWidth;
-    }
+    styles.minWidth = normalizeUnit(props.minWidth);
   }
-  
+
   if (props.maxWidth !== undefined) {
-    if (typeof props.maxWidth === 'number') {
-      styles.maxWidth = `${props.maxWidth}px`;
-    } else {
-      styles.maxWidth = props.maxWidth;
-    }
+    styles.maxWidth = normalizeUnit(props.maxWidth);
   }
-  
+
   if (props.minHeight !== undefined) {
-    if (typeof props.minHeight === 'number') {
-      styles.minHeight = `${props.minHeight}px`;
-    } else {
-      styles.minHeight = props.minHeight;
-    }
+    styles.minHeight = normalizeUnit(props.minHeight);
   }
   
   if (props.overflow !== undefined) {

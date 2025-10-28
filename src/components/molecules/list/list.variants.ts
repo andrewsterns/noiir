@@ -6,6 +6,18 @@ export interface ListVariantConfig {
   // List-specific styling can be added here if needed
 }
 
+export const LIST_SIZES = {
+  sm: {
+    autoLayout: { width: 150, height: 'hug' },
+  },
+  md: {
+    autoLayout: { width: 250, height: 'hug' },
+  },
+  lg: {
+    autoLayout: { width: 350, height: 'hug' },
+  },
+} satisfies ExtendVariant;
+
 export const LIST_VARIANTS = {
   default: {
     autoLayout: { flow: 'vertical' },

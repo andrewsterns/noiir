@@ -20,16 +20,27 @@ export const convertPositionProps = (
   
   const styles: React.CSSProperties = {};
   
+  // Utility to normalize units
+  const normalizeUnit = (value: any) => {
+    if (typeof value === 'number') return `${value}px`;
+    if (typeof value === 'string') {
+      if (/^(\d+)$/.test(value)) return `${value}px`;
+      if (/^(\d+(px|%|em|rem))$/.test(value)) return value;
+      return value; // fallback for other valid CSS units
+    }
+    return value;
+  };
+
   // Absolute positioning (x, y coordinates) - works regardless of autolayout
   if (props.x !== undefined || props.y !== undefined) {
     styles.position = 'absolute';
     
     if (props.x !== undefined) {
-      styles.left = `${props.x}px`;
+      styles.left = normalizeUnit(props.x);
     }
     
     if (props.y !== undefined) {
-      styles.top = `${props.y}px`;
+      styles.top = normalizeUnit(props.y);
     }
   }
   

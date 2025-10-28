@@ -8,10 +8,10 @@ export const DROPDOWN_SIZES = {
     autoLayout: { width: 150, height: 'hug' },
   },
   md: {
-    autoLayout: { width: 200, height: 'hug' },
+    autoLayout: { width: 250, height: 'hug' },
   },
   lg: {
-    autoLayout: { width: 250, height: 'hug' },
+    autoLayout: { width: 350, height: 'hug' },
   },
 } satisfies ExtendVariant;
 
@@ -32,15 +32,6 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
   ...BUTTON_VARIANTS,
   primary: {
     ...BUTTON_VARIANTS.primary,
-    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
-    autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8,  width: 'hug' },
-    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
-    appearance: { radius: 8 },
-    effects: { dropShadow: [{ x: 1, y: 3, blur: 8, color: 'rgba(0, 0, 0, 0.25)', spread: -3 }] },
-    typography: {
-      color: 'gray7',
-      wrap: 'nowrap',
-    },
     iconStart: null,
     iconEnd: <ArrowDown />,
     animate: { hover: 'primaryHover', duration: '.25s', curve: 'ease-in-out' },
@@ -48,15 +39,6 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
 
   primaryHover: {
     ...BUTTON_VARIANTS.primaryHover,
-    fill: { type: 'solid', color: 'white1', opacity: 0.9 },
-    autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
-    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
-    appearance: { radius: 8 },
-    effects: { dropShadow: [{ x: 1, y: 3, blur: 8, color: 'rgba(0, 0, 0, 0.1)', spread: -5 }] },
-    typography: {
-      color: 'white7',
-      wrap: 'nowrap',
-    },
     iconStart: null,
     iconEnd: <ArrowDown />,
     animate: { hover: 'primaryActiveHover', click: 'primaryOpen', duration: '.25s', curve: 'ease-in-out' },
@@ -64,27 +46,12 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
 
   primaryActive: {
     ...BUTTON_VARIANTS.primaryActive,
-    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
-    autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
-    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
-    appearance: { radius: 8 },
-    effects: { dropShadow: [{ x: 1, y: 3, blur: 8, color: 'rgba(0, 0, 0, 0.25)', spread: -3 }] },
-    typography: {
-      color: 'gray7',
-      wrap: 'nowrap',
-    },
     iconStart: null,
     iconEnd: <ArrowUp />,
   },
 
   primaryActiveHover: {
      ...BUTTON_VARIANTS.primaryActiveHover,
-     autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
-     fill: { type: 'solid', color: 'white1', opacity: 0.9 },
-     typography: {
-      color: 'white7',
-      wrap: 'nowrap',
-     },
      iconStart: null,
      iconEnd: <ArrowUp />,
   },

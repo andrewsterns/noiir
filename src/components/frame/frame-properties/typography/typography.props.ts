@@ -19,6 +19,7 @@ export interface TypographyProps {
   opacity?: number;
   whiteSpace?: string;
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
+  clipContent?: boolean;
 }
 
 /**
@@ -81,6 +82,9 @@ export function convertTypographyProps(props: TypographyProps): React.CSSPropert
     if (styleProps.wrap === 'nowrap') styles.whiteSpace = 'nowrap';
     else if (styleProps.wrap === 'wrap') styles.whiteSpace = 'normal';
     else if (styleProps.wrap === 'wrap-reverse') styles.whiteSpace = 'pre-wrap';
+  }
+  if (styleProps.clipContent === true) {
+    styles.overflow = 'hidden';
   }
   return styles;
 }
