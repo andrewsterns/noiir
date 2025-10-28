@@ -2,10 +2,12 @@ import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
 import { LABEL_VARIANTS } from '../../atoms/label/label.variants';
+import { LIST_SIZES } from './list.variants';
 
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
 export interface ListProps extends FrameProps {
+  size?: 'sm' | 'md' | 'lg' | 'fill';
   items: ListItem[];
   selectedIndex?: number;
   selectedIndices?: number[];
@@ -25,6 +27,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   itemVariant = 'primary',
   selectedVariant = 'primary',
   disabledVariant = 'disabled',
+  size = 'fill',
   as,
   ...frameProps
 }, ref) => {
@@ -61,6 +64,8 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
       ref={ref}
       as={as || "div"}
       autoLayout={{ flow: 'vertical' }}
+      size={size}
+      sizes={LIST_SIZES}
       {...frameProps}
     >
       {items.map((item, index) => {

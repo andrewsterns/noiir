@@ -85,7 +85,7 @@ export const typographyPresets = {
   
   body1: {
     fontFamily: fonts.geist.family,
-    fontWeight: 900,
+    fontWeight: 700,
     fontSize: 14,
     lineHeight: 1.5,
     letterSpacing: .45,
