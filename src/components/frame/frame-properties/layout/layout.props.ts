@@ -74,7 +74,13 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     const vPad = normalizeUnit(props.paddingVertical);
     padTop = padBottom = vPad;
   }
-  if (props.flow === 'freeform' && (props.width === 'hug' || props.height === 'hug') && children) {
+  // Special: For freeform flow, if width or height is 'hug', calculate bounding box of children
+  // Also for any flow with positioned children, include them in size calculation
+  const hasPositionedChildren = children && React.Children.toArray(children).some((child) => 
+    React.isValidElement(child) && child.props?.position && (child.props.position.x !== undefined || child.props.position.y !== undefined)
+  );
+  
+  if ((props.flow === 'freeform' || hasPositionedChildren) && (props.width === 'hug' || props.height === 'hug') && children) {
     let maxRight = 0;
     let maxBottom = 0;
     React.Children.forEach(children, (child) => {
@@ -94,11 +100,13 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     });
     if (props.width === 'hug') styles.width = normalizeUnit(maxRight + padLeft + padRight);
     if (props.height === 'hug') styles.height = normalizeUnit(maxBottom + padTop + padBottom);
-    // Always apply padding for freeform
-    styles.paddingTop = padTop;
-    styles.paddingRight = padRight;
-    styles.paddingBottom = padBottom;
-    styles.paddingLeft = padLeft;
+    // Always apply padding for freeform or when there are positioned children
+    if (props.flow === 'freeform' || hasPositionedChildren) {
+      styles.paddingTop = padTop;
+      styles.paddingRight = padRight;
+      styles.paddingBottom = padBottom;
+      styles.paddingLeft = padLeft;
+    }
   }
   // Margin - like Figma's margin controls
   if (props.margin !== undefined) {
@@ -115,13 +123,16 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     case 'horizontal':
       styles.display = 'flex';
       styles.flexDirection = 'row';
+      if (hasPositionedChildren) styles.position = 'relative';
       break;
     case 'vertical':
       styles.display = 'flex';
       styles.flexDirection = 'column';
+      if (hasPositionedChildren) styles.position = 'relative';
       break;
     case 'grid':
       styles.display = 'grid';
+      if (hasPositionedChildren) styles.position = 'relative';
       break;
     case 'curved':
       // Curved layout handled in Frame, not here
@@ -132,6 +143,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
       // Don't set position: relative for frames that might be absolutely positioned
       // Only containers with specific flow types need relative positioning
       // width/height for hug handled above
+      if (hasPositionedChildren) styles.position = 'relative';
       break;
   }
   

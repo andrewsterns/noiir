@@ -136,7 +136,6 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         {getSelectedLabel()}
       </Button>
       <List
-      position={{x:0, y:50}}
         items={items}
         selectedIndex={multiSelect ? undefined : currentSelectedIndex}
         selectedIndices={multiSelect ? currentSelectedIndices : undefined}

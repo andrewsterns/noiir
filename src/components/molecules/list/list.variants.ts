@@ -29,22 +29,22 @@ export const LIST_VARIANTS = {
     appearance: { radius: 0 },
   },
   secondary: {
-    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 8, maxHeight: 200, overflow: 'auto', width: 'fill' },
+    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 0, maxHeight: 200, overflow: 'auto', width: 'fill' },
     fill: { type: 'solid', color: 'white6', opacity: 0.9 },
     stroke: { type: 'none' },
     appearance: { radius: 30 },
   },
   active: {
-    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 8, maxHeight: 200, overflow: 'auto', width: 'fill' },
+    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 0, maxHeight: 200, overflow: 'auto', width: 'fill' },
     fill: { type: 'solid', color: 'white6', opacity: 0.9 },
     stroke: { type: 'none' },
     appearance: { radius: 8 },
   },
   hidden: {
-    display: 'none',
+    autoLayout: { height: 0, overflow: 'hidden', paddingVertical: 0 },
   },
   disabled: {
-    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 8, maxHeight: 200, overflow: 'auto', width: 'fill' },
+    autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 0, maxHeight: 200, overflow: 'auto', width: 'fill' },
     fill: { type: 'none', color: 'transparent' },
     stroke: { type: 'solid', color: 'gray8', weight: 1 },
     appearance: { radius: 8 },
