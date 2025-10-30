@@ -14,7 +14,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   variant = 'primary',
   variants = BUTTON_VARIANTS,
-  size = '2',
+  size = 'fill',
   sizes = BUTTON_SIZES,
   iconStart,
   iconEnd,
@@ -24,7 +24,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   return (
     <Frame
       ref={ref}
-      as={as || "button"}
       variant={variant}
       variants={variants}
       sizes={sizes}

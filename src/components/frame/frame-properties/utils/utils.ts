@@ -1,16 +1,15 @@
 import React from 'react';
-import { PositionProps, ConstraintProps, convertPositionProps } from './position/position.props';
-import { AutoLayoutProps, convertAutoLayoutProps } from './layout/layout.props';
-import { AppearanceProps, convertAppearanceProps } from './appearance/appearance.props';
-import { TypographyProps, convertTypographyProps } from './typography/typography.props';
-import { FillProps, convertFillProps } from './appearance/fill.props';
-import { StrokeProps, convertStrokeProps } from './appearance/stroke.props';
-import { EffectProps, convertEffectProps } from './effects/effects.props';
-import { resolveColor, colorUtils } from '../../../theme/colors';
+import { PositionProps, convertPositionProps } from '../position/position.props';
+import { AutoLayoutProps, convertAutoLayoutProps } from '../layout/layout.props';
+import { AppearanceProps, convertAppearanceProps } from '../appearance/appearance.props';
+import { TypographyProps, convertTypographyProps } from '../typography/typography.props';
+import { FillProps, convertFillProps } from '../appearance/fill.props';
+import { StrokeProps, convertStrokeProps } from '../appearance/stroke.props';
+import { EffectProps, convertEffectProps } from '../effects/effects.props';
+import { resolveColor, colorUtils } from '../../../../theme/colors';
 
 export interface FramePropsBase {
   position?: PositionProps;
-  constraints?: ConstraintProps;
   autoLayout?: AutoLayoutProps;
   appearance?: AppearanceProps;
   typography?: TypographyProps;
@@ -161,7 +160,7 @@ export const convertFramePropsToStyles = (
   const baseStyles: React.CSSProperties = {
     boxSizing: 'border-box',
     // Only set position: relative if not using absolute positioning
-    ...((!position?.x && !position?.y && !props.constraints) && { position: 'relative' })
+    ...((!position?.x && !position?.y) && { position: 'relative' })
   };
 
   // For gradient strokes, combine fill and stroke backgrounds using CSS background-clip technique

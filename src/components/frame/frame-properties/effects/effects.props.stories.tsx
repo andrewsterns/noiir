@@ -294,7 +294,7 @@ export const Effects: EffectsStory = {
         fill={args.backgroundBlurEnabled ? {
           type: 'image',
           image: {
-            url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+            src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
             scaleMode: 'crop'
           }
         } : { type: 'solid', color: '#F9FAFB' }}

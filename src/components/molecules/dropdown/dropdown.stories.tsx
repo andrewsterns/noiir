@@ -33,14 +33,6 @@ const meta: Meta<typeof Dropdown> = {
     disabled: {
       control: { type: 'boolean' },
     },
-    variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary'],
-    },
-    size: {
-      control: { type: 'select' },
-      options: ['1', '2', '3', 'fill'],
-    },
     buttonSize: {
       control: { type: 'select' },
       options: ['1', '2', '3', 'fill'],
@@ -117,7 +109,6 @@ export const MultiSelect: Story = {
           multiSelect={true}
           placeholder="Choose fruits..."
           onMultiChange={handleMultiChange}
-          size= '1'
           variant="primary"
         />
         <p>Selected indices: [{selectedIndices.join(', ')}]</p>
@@ -205,7 +196,6 @@ export const Sizes: Story = {
             placeholder="Small dropdown..."
             onChange={handleChange}
             variant="primary"
-            size="1"
           />
           <Dropdown
             items={sampleItems}
@@ -213,7 +203,6 @@ export const Sizes: Story = {
             placeholder="Medium dropdown..."
             onChange={handleChange}
             variant="primary"
-            size="2"
           />
           <Dropdown
             items={sampleItems}
@@ -221,7 +210,6 @@ export const Sizes: Story = {
             placeholder="Large dropdown..."
             onChange={handleChange}
             variant="primary"
-            size="3"
           />
           <Dropdown
             items={sampleItems}
@@ -229,7 +217,6 @@ export const Sizes: Story = {
             placeholder="Fill dropdown..."
             onChange={handleChange}
             variant="primary"
-            size="fill"
           />
         </Frame>
       </Frame>

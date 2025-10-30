@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 
-export interface AnimationConfig {
-  destination: string;
+export interface AnimationAction {
+  id?: string;
+  variant?: string;
   duration?: string;
   curve?: string;
   afterDelay?: string;
@@ -9,9 +10,9 @@ export interface AnimationConfig {
 }
 
 export interface AnimateProps {
-  hover?: string | AnimationConfig | 'none';
-  click?: string | AnimationConfig | 'none';
-  clickHold?: string | AnimationConfig | 'none';
+  hover?: AnimationAction | 'none';
+  click?: AnimationAction | 'none';
+  clickHold?: AnimationAction | 'none';
   event?: string | 'none';
   duration?: string;
   curve?: string;
@@ -55,9 +56,15 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
     let newVariant: string | undefined = delayedVariant || variant;
     if (currentAnimate) {
       if (isActive && currentAnimate.clickHold && currentAnimate.clickHold !== 'none') {
-        newVariant = typeof currentAnimate.clickHold === 'string' ? currentAnimate.clickHold : currentAnimate.clickHold.destination;
+        const action = typeof currentAnimate.clickHold === 'string' ? { variant: currentAnimate.clickHold } : currentAnimate.clickHold;
+        if (action.variant) {
+          newVariant = action.variant;
+        }
       } else if (isHovered && currentAnimate.hover && currentAnimate.hover !== 'none') {
-        newVariant = typeof currentAnimate.hover === 'string' ? currentAnimate.hover : currentAnimate.hover.destination;
+        const action = typeof currentAnimate.hover === 'string' ? { variant: currentAnimate.hover } : currentAnimate.hover;
+        if (action.variant) {
+          newVariant = action.variant;
+        }
       } else if (permanentClickVariant) {
         newVariant = permanentClickVariant;
       } else if (currentAnimate.event && currentAnimate.event !== 'none') {
@@ -123,15 +130,17 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
   }, []);
   const handleMouseUp = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setIsActive(false);
-    // Toggle permanent click variant if animate.click is defined and not 'none'
+    // Toggle permanent click variant if animate.click is defined and not 'none' and has variant
     if (currentAnimate?.click && currentAnimate.click !== 'none') {
-      const clickConfig = typeof currentAnimate.click === 'string' ? { destination: currentAnimate.click } : currentAnimate.click;
-      const newVariant = permanentClickVariant === clickConfig.destination ? undefined : clickConfig.destination;
-      setPermanentClickVariant(newVariant);
-      if (newVariant && variants?.[newVariant]?.animate) {
-        setCurrentAnimate(variants[newVariant].animate);
-      } else {
-        setCurrentAnimate(animate);
+      const clickConfig = typeof currentAnimate.click === 'string' ? { variant: currentAnimate.click } : currentAnimate.click;
+      if (clickConfig.variant) {
+        const newVariant = permanentClickVariant === clickConfig.variant ? undefined : clickConfig.variant;
+        setPermanentClickVariant(newVariant);
+        if (newVariant && variants?.[newVariant]?.animate) {
+          setCurrentAnimate(variants[newVariant].animate);
+        } else {
+          setCurrentAnimate(animate);
+        }
       }
     }
   }, [currentAnimate?.click, permanentClickVariant, variants, animate]);

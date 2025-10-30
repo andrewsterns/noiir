@@ -6,6 +6,7 @@ import { colors, colorUtils, resolveColor, type ColorKey, type ColorShade } from
  * Examples:
  * - <Frame fill={{type: 'solid', color: 'primary3'}} />
  * - <Frame fill={{type: 'linear-gradient', angle: 45, stops: [{color: 'primary3', position: 0}, {color: 'primary8', position: 1}]}} />
+ * - <Frame fill={{type: 'image', image: {src: 'https://example.com/image.jpg', scaleMode: 'fill'}}} />
  */
 export interface FillProps {
   type?: 'none' | 'solid' | 'linear-gradient' | 'radial-gradient' | 'conic-gradient' | 'image';
@@ -18,7 +19,9 @@ export interface FillProps {
   
   // Image properties (when type is 'image')
   image?: {
-    url: string;
+    src: string;
+    alt?: string;
+    size?: number;
     scaleMode?: 'fill' | 'fit' | 'crop' | 'tile';
   };
 }
@@ -157,10 +160,10 @@ const createGradientString = (
  * Create image fill styles
  */
 const createImageFillStyles = (image: FillProps['image']): React.CSSProperties => {
-  if (!image?.url) return {};
+  if (!image?.src) return {};
   
   const styles: React.CSSProperties = {
-    backgroundImage: `url(${image.url})`
+    backgroundImage: `url(${image.src})`
   };
   
   // Scale mode

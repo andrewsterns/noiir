@@ -1,4 +1,5 @@
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
+import { VARIANT_STYLES } from '../../../theme/variant';
 
 export const LABEL_SIZES = {
   fill: {
@@ -20,42 +21,42 @@ export const LABEL_SIZES = {
 
 export const LABEL_VARIANTS = {
   primary: {
-    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
+    fill: { type: 'solid', color: 'black6', opacity: 1 },
+    stroke: { type: 'none' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
     appearance: { radius: 0 },
     typography: {
       type: 'h6',
-      color: 'gray7',
+      color: 'white2',
       wrap: 'nowrap',
     },
-    animate: { hover: 'primaryHover', click: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' },
+    animate: { hover: { variant: 'primaryHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
  primaryHover: {
-    fill: { type: 'solid', color: 'tomato6', opacity: 0.9 },
+    fill: { type: 'solid', color: 'black7', opacity: 1 },
+    stroke: { type: 'none' },
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
     appearance: { radius: 0 },
     typography: {
       type: 'h6',
-      color: 'white7',
+      color: 'white1',
       wrap: 'nowrap',
     },
-    animate: { hover: 'primaryHover', click: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' },
+    animate: { hover: { variant: 'primaryHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
   primaryActive: {
-     fill: { type: 'solid', color: 'black7', opacity: .8 },
-        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
+     fill: { type: 'solid', color: 'black7', opacity: 1 },
         stroke: { type: 'solid', color: 'black4', weight: 1 },
+        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
         typography: {
           type: 'h6',
             color: 'white6',
             wrap: 'nowrap',
 
         },
-    animate: { hover: 'primaryActiveHover', click: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' },
+    animate: { hover: { variant: 'primaryActiveHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
   primaryActiveHover: {
@@ -68,7 +69,7 @@ export const LABEL_VARIANTS = {
       color: 'black6',
       wrap: 'nowrap',
     },
-    animate: { hover: 'primaryActiveHover', click: 'primary', duration: '0.2s', curve: 'ease-in-out' },
+    animate: { hover: { variant: 'primaryActiveHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'primary', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
   disabled: {

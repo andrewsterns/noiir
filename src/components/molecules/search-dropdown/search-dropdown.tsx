@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Frame } from '../../frame/Frame';
-import { InputField } from '../../atoms/input-field/input';
+import { Input, INPUT_VARIANTS } from '../../atoms/input/input';
 import { List } from '../../molecules/list/list';
-import { SEARCH_VARIANTS } from './search-dropdown.varaint';
 import { SearchIcon } from '../../../theme/icons/search';
-import { INPUT_SIZES } from '../../atoms/input-field/input.variants';
 
 export type SearchItem = string | { label: string; value?: any; searchableText?: string };
 
@@ -15,7 +13,6 @@ export interface SearchDropdownProps {
   searchPlaceholder?: string;
   onChange?: (selectedIndex: number, item: SearchItem) => void;
   disabled?: boolean;
-  size?: 'sm' | 'md' | 'lg' | 'fill';
   buttonSize?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'elevated' | 'minimal' | 'glass';
 }
@@ -27,7 +24,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
   searchPlaceholder = "Type to search...",
   onChange,
   disabled = false,
-  size = 'md',
   buttonSize = 'md',
   variant = 'default',
   ...frameProps
@@ -36,7 +32,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
   const [internalSelectedIndex, setInternalSelectedIndex] = useState<number | undefined>(selectedIndex);
   const [isSearching, setIsSearching] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Use controlled selectedIndex if provided, otherwise use internal state
   const currentSelectedIndex = selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
@@ -57,10 +52,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
     console.log('SearchDropdown: handleFrameClick called', event.target, event.currentTarget);
     event.stopPropagation();
     setIsActive(true);
-    if (inputRef.current) {
-      console.log('SearchDropdown: focusing input');
-      inputRef.current.focus();
-    }
   };
 
   const handleMouseLeave = () => {
@@ -74,10 +65,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
     const displayText = getSearchableText(item);
     setSearchQuery(displayText);
     setIsSearching(false);
-    // Blur the input to return to primary variant
-    if (inputRef.current) {
-      inputRef.current.blur();
-    }
     if (onChange) {
       onChange(index, item);
     }
@@ -102,7 +89,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
   return (
     <Frame
       autoLayout={{ flow: 'vertical' }}
-      sizes={INPUT_SIZES}
       ref={ref}
       onClick={handleFrameClick}
       onMouseLeave={handleMouseLeave}
@@ -110,19 +96,15 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
       tabIndex={-1}
       {...frameProps}
     >
-      <InputField
-        ref={inputRef}
-        size={size}
+      <Input
         value={searchQuery}
         onChange={handleInputChange}
         placeholder={searchPlaceholder}
         variant={isActive ? 'primaryActive' : 'primary'}
-        variants={SEARCH_VARIANTS}
+        variants={INPUT_VARIANTS}
       />
       {isSearching && searchQuery.trim() && (
         <List
-          size='md'
-          sizes={INPUT_SIZES}
           items={filteredItems}
           selectedIndex={currentSelectedIndex}
           onItemClick={handleItemClick}

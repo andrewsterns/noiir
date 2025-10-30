@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame } from '../../frame/Frame';
-import BadgeVariants from './badge.variants';
+import {BADGE_VARIANTS} from './badge.variants';
 
 export interface BadgeProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export const Badge: React.FC<BadgeProps> = ({ children, color, size = 20, varian
   return (
     <Frame
       variant={variant}
-      variants={BadgeVariants as any}
+      variants={BADGE_VARIANTS}
       autoLayout={{ width: 'hug', height: size, paddingHorizontal: 8, alignment: 'center' }}
       fill={color ? { type: 'solid', color } : undefined}
       appearance={{ radius: size / 2 }}

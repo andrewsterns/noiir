@@ -8,12 +8,11 @@
  * @returns The merged autoLayout from size
  */
 export function mergeSizeProps(mergedProps: Record<string, any>): any {
-  // Extract finalSize and sizeKey
+  // Extract finalSize
   const finalSize = mergedProps.size;
-  const sizeKey = mergedProps.sizeKey;
 
-  // If size is a map and sizeKey is provided, select the specific size
-  const effectiveSize = (typeof finalSize === 'object' && sizeKey && finalSize[sizeKey]) ? finalSize[sizeKey] : finalSize;
+  // Use the size directly (no sizeKey selection needed)
+  const effectiveSize = finalSize;
 
   // Merge size properties (excluding autoLayout) into mergedProps
   if (effectiveSize && typeof effectiveSize === 'object') {

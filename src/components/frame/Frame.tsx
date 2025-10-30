@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAnimateVariant, AnimateProps } from './frame-properties/animation/animate.props';
-import { PositionProps, ConstraintProps } from './frame-properties/position/position.props';
+import { PositionProps } from './frame-properties/position/position.props';
 import { AutoLayoutProps } from './frame-properties/layout/layout.props';
 import { AppearanceProps } from './frame-properties/appearance/appearance.props';
 import { TypographyProps } from './frame-properties/typography/typography.props';
@@ -33,7 +33,6 @@ export interface FrameProps {
   as?: keyof JSX.IntrinsicElements;
   childStates?: { [childId: string]: string };
   position?: PositionProps;
-  constraints?: ConstraintProps;
   autoLayout?: AutoLayoutProps;
   appearance?: AppearanceProps;
   typography?: TypographyProps;
@@ -54,13 +53,18 @@ export interface FrameProps {
   onKeyPress?: (event: React.KeyboardEvent<HTMLElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
+  onInput?: (event: React.FormEvent<HTMLElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLElement>) => void;
+  value?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  autoFocus?: boolean;
   onHover?: string;
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
   iconStartColor?: string;
   iconEndColor?: string;
   size?: FrameVariantConfig | string;
-  sizeKey?: string;
   variant?: FrameVariantConfig | string;
   variants?: Record<string, FrameVariantConfig>;
   sizes?: Record<string, any>;
@@ -68,6 +72,8 @@ export interface FrameProps {
   transform?: string;
   display?: string;
   tabIndex?: number;
+  contentEditable?: boolean;
+  suppressContentEditableWarning?: boolean;
   [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
@@ -78,7 +84,6 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     id,
     childStates,
     position,
-    constraints,
     autoLayout,
     appearance,
     typography,
@@ -99,13 +104,18 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onKeyPress,
     onFocus,
     onBlur,
+    onInput,
+    onChange,
+    value,
+    placeholder,
+    disabled,
+    autoFocus,
     onHover,
     iconStart,
     iconEnd,
     iconStartColor,
     iconEndColor,
     size,
-    sizeKey,
     variant,
     variants: variantsProp,
     sizes: sizesProp,
@@ -113,6 +123,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     transform,
     display,
     tabIndex,
+    contentEditable,
+    suppressContentEditableWarning,
     ...otherProps
   } = props;
 
@@ -154,7 +166,6 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   
   // Only include explicit props that are actually defined
   if (position !== undefined) explicitProps.position = position;
-  if (constraints !== undefined) explicitProps.constraints = constraints;
   if (autoLayout !== undefined) explicitProps.autoLayout = autoLayout;
   if (appearance !== undefined) explicitProps.appearance = appearance;
   if (typography !== undefined) explicitProps.typography = typography;
@@ -163,7 +174,6 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (effects !== undefined) explicitProps.effects = effects;
   if (cursor !== undefined) explicitProps.cursor = cursor;
   if (size !== undefined) explicitProps.size = size;
-  if (sizeKey !== undefined) explicitProps.sizeKey = sizeKey;
   if (onClick !== undefined) explicitProps.onClick = onClick;
   if (onMouseEnter !== undefined) explicitProps.onMouseEnter = onMouseEnter;
   if (onMouseLeave !== undefined) explicitProps.onMouseLeave = onMouseLeave;
@@ -174,6 +184,12 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (onKeyPress !== undefined) explicitProps.onKeyPress = onKeyPress;
   if (onFocus !== undefined) explicitProps.onFocus = onFocus;
   if (onBlur !== undefined) explicitProps.onBlur = onBlur;
+  if (onInput !== undefined) explicitProps.onInput = onInput;
+  if (onChange !== undefined) explicitProps.onChange = onChange;
+  if (value !== undefined) explicitProps.value = value;
+  if (placeholder !== undefined) explicitProps.placeholder = placeholder;
+  if (disabled !== undefined) explicitProps.disabled = disabled;
+  if (autoFocus !== undefined) explicitProps.autoFocus = autoFocus;
   if (onHover !== undefined) explicitProps.onHover = onHover;
   if (animate !== undefined) explicitProps.animate = animate;
   if (iconStart !== undefined) explicitProps.iconStart = iconStart;
@@ -215,7 +231,6 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   const sizeAutoLayout = mergeSizeProps(mergedProps);  // Extract merged props for use
   const {
     position: finalPosition,
-    constraints: finalConstraints,
     autoLayout: finalAutoLayout,
     appearance: finalAppearance,
     typography: finalTypography,
@@ -233,6 +248,12 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onKeyPress: finalOnKeyPress,
     onFocus: finalOnFocus,
     onBlur: finalOnBlur,
+    onInput: finalOnInput,
+    onChange: finalOnChange,
+    value: finalValue,
+    placeholder: finalPlaceholder,
+    disabled: finalDisabled,
+    autoFocus: finalAutoFocus,
     onHover: finalOnHover,
     animate: finalAnimate,
     iconStart: finalIconStart,
@@ -243,6 +264,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     transform: finalTransform,
     display: finalDisplay,
     tabIndex: finalTabIndex,
+    contentEditable: finalContentEditable,
+    suppressContentEditableWarning: finalSuppressContentEditableWarning,
   } = mergedProps;
 
   // Merge size's autoLayout into finalAutoLayout if present
@@ -297,7 +320,6 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   // Convert all frame props to CSS styles
   const finalStyles = convertFramePropsToStyles({
     position: finalPosition,
-    constraints: finalConstraints,
     autoLayout: mergedAutoLayout,
     appearance: finalAppearance,
     typography: finalTypography,
@@ -398,7 +420,14 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
         onKeyPress: finalOnKeyPress,
         onFocus: finalOnFocus,
         onBlur: finalOnBlur,
+        onInput: finalOnInput,
+        onChange: finalOnChange,
+        value: finalValue,
+        placeholder: finalPlaceholder,
+        disabled: finalDisabled,
         tabIndex: finalTabIndex,
+        contentEditable: finalContentEditable,
+        suppressContentEditableWarning: finalSuppressContentEditableWarning,
       },
       childrenWithIcons
     );
@@ -420,7 +449,14 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
       onKeyPress: finalOnKeyPress,
       onFocus: finalOnFocus,
       onBlur: finalOnBlur,
+      onInput: finalOnInput,
+      onChange: finalOnChange,
+      value: finalValue,
+      placeholder: finalPlaceholder,
+      disabled: finalDisabled,
       tabIndex: finalTabIndex,
+      contentEditable: finalContentEditable,
+      suppressContentEditableWarning: finalSuppressContentEditableWarning,
     },
     mergedAutoLayout?.flow === 'curved' ? curvedChildren : childrenWithIcons
   );

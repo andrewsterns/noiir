@@ -29,7 +29,7 @@ export const AllAnimations: Story = {
         cursor={'pointer'}
         variants={{
           default: {
-            animate: { hover: 'hover' },
+            animate: { hover: { variant: 'hover' } },
             fill: { type: 'solid', color: 'gray1' },
             stroke: { type: 'solid', color: 'gray5' },
             typography: { color: 'black12', fontSize: 16, fontWeight: 400, textAlign: 'center' }
@@ -45,7 +45,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="primary"
-        animate={{ click: 'active' }}
+        animate={{ click: { variant: 'active' } }}
         cursor={'pointer'}
         variants={{
           primary: {
@@ -64,7 +64,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ click: 'clicked' }}
+        animate={{ click: { variant: 'clicked' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: 'gray5' },
@@ -83,7 +83,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ clickHold: 'pressed' }}
+        animate={{ clickHold: { variant: 'pressed' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: 'gray1' },
@@ -102,9 +102,9 @@ export const AllAnimations: Story = {
         appearance={{ radius: 8 }}
         variant="default"
         animate={{
-          hover: 'hover',
-          click: 'clicked',
-          clickHold: 'pressed'
+          hover: { variant: 'hover' },
+          click: { variant: 'clicked' },
+          clickHold: { variant: 'pressed' }
         }}
         variants={{
           default: {
@@ -133,7 +133,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ hover: 'hover', duration: '0.5s', curve: 'ease-in-out' }}
+        animate={{ hover: { variant: 'hover', duration: '0.5s', curve: 'ease-in-out' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: '#cccccc' },
@@ -151,7 +151,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ click: 'click', duration: '1s', curve: 'linear' }}
+        animate={{ click: { variant: 'click', duration: '1s', curve: 'linear' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: '#f0f0f0' },
@@ -169,7 +169,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ click: 'click', duration: '1.2s', curve: 'ease-in' }}
+        animate={{ click: { variant: 'click', duration: '1.2s', curve: 'ease-in' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: '#e8f5e8' },
@@ -187,7 +187,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ click: 'click', duration: '1.2s', curve: 'ease-out' }}
+        animate={{ click: { variant: 'click', duration: '1.2s', curve: 'ease-out' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: '#fff3e0' },
@@ -205,7 +205,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ click: 'click', duration: '1.5s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' }}
+        animate={{ click: { variant: 'click', duration: '1.5s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: '#f3e5f5' },
@@ -223,7 +223,7 @@ export const AllAnimations: Story = {
         autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
         appearance={{ radius: 8 }}
         variant="default"
-        animate={{ click: 'click', duration: '0.8s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' }}
+        animate={{ click: { variant: 'click', duration: '0.8s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' } }}
         variants={{
           default: {
             fill: { type: 'solid', color: '#fce4ec' },
@@ -258,7 +258,7 @@ export const PositionAnimations: Story = {
           variant="default"
           autoLayout={{ width: 50, height: 50 }}
           appearance={{ radius: 4 }}
-          animate={{ click: 'moved', duration: '1s', curve: 'linear' }}
+          animate={{ click: { variant: 'moved', duration: '1s', curve: 'linear' } }}
           variants={{
             default: {
               fill: { type: 'solid', color: '#ff6b6b' },
@@ -284,7 +284,7 @@ export const PositionAnimations: Story = {
           variant="default"
           autoLayout={{ width: 50, height: 50 }}
           appearance={{ radius: 4 }}
-          animate={{ click: 'moved', duration: '1.2s', curve: 'ease-in' }}
+          animate={{ click: { variant: 'moved', duration: '1.2s', curve: 'ease-in' } }}
           variants={{
             default: {
               fill: { type: 'solid', color: '#4caf50' },
@@ -308,7 +308,7 @@ export const PositionAnimations: Story = {
           variant="default"
           autoLayout={{ width: 50, height: 50 }}
           appearance={{ radius: 4 }}
-          animate={{ click: 'moved', duration: '1.2s', curve: 'ease-out' }}
+          animate={{ click: { variant: 'moved', duration: '1.2s', curve: 'ease-out' } }}
           variants={{
             default: {
               fill: { type: 'solid', color: '#ff9800' },
@@ -332,7 +332,7 @@ export const PositionAnimations: Story = {
           variant="default"
           autoLayout={{ width: 50, height: 50 }}
           appearance={{ radius: 4 }}
-          animate={{ click: 'moved', duration: '1s', curve: 'ease-in-out' }}
+          animate={{ click: { variant: 'moved', duration: '1s', curve: 'ease-in-out' } }}
           variants={{
             default: {
               fill: { type: 'solid', color: '#2196f3' },
@@ -356,7 +356,7 @@ export const PositionAnimations: Story = {
           variant="default"
           autoLayout={{ width: 50, height: 50 }}
           appearance={{ radius: 4 }}
-          animate={{ click: 'moved', duration: '1.5s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' }}
+          animate={{ click: { variant: 'moved', duration: '1.5s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' } }}
           variants={{
             default: {
               fill: { type: 'solid', color: '#9c27b0' },
@@ -380,7 +380,7 @@ export const PositionAnimations: Story = {
           variant="default"
           autoLayout={{ width: 50, height: 50 }}
           appearance={{ radius: 4 }}
-          animate={{ click: 'moved', duration: '0.8s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' }}
+          animate={{ click: { variant: 'moved', duration: '0.8s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' } }}
           variants={{
             default: {
               fill: { type: 'solid', color: '#e91e63' },

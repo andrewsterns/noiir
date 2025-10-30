@@ -51,6 +51,43 @@ export const colors = {
     "6": "#008AE6",  // Strong blue
     "7": "#0066B3"   // Deep blue
   }
+  ,
+  "green": {
+    "1": "#E6F9ED",  // Very light green
+    "2": "#B8F2D0",  // Light green
+    "3": "#7FE7B5",  // Soft green
+    "4": "#4DDC99",  // Bright green
+    "5": "#1AC47A",  // Vivid green
+    "6": "#009E5A",  // Strong green
+    "7": "#007A43"   // Deep green
+  },
+  "yellow": {
+    "1": "#FFF9E0",  // Very light yellow
+    "2": "#FFF3B3",  // Light yellow
+    "3": "#FFE980",  // Soft yellow
+    "4": "#FFDD4D",  // Bright yellow
+    "5": "#FFD11A",  // Vivid yellow
+    "6": "#E6B800",  // Strong yellow
+    "7": "#B38F00"   // Deep yellow
+  },
+  "purple": {
+    "1": "#F3E6FF",  // Very light purple
+    "2": "#E0B3FF",  // Light purple
+    "3": "#CC80FF",  // Soft purple
+    "4": "#B84DFF",  // Bright purple
+    "5": "#A31AFF",  // Vivid purple
+    "6": "#8A00E6",  // Strong purple
+    "7": "#6600B3"   // Deep purple
+  },
+  "orange": {
+    "1": "#FFF3E0",  // Very light orange
+    "2": "#FFD9B3",  // Light orange
+    "3": "#FFC080",  // Soft orange
+    "4": "#FFA64D",  // Bright orange
+    "5": "#FF8C1A",  // Vivid orange
+    "6": "#E67300",  // Strong orange
+    "7": "#B35900"   // Deep orange
+  }
 };
 
 /**

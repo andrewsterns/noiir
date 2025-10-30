@@ -82,14 +82,14 @@ export const SingleSelect: Story = {
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
 
     const handleItemClick = (index: number, item: ListItem) => {
-      setSelectedIndex(selectedIndex === index ? undefined : index);
+      setSelectedIndex(index);
     };
 
     return (
       <List
         items={sampleItems}
         selectedIndex={selectedIndex}
-        selectedVariant="primary-active"
+        selectedVariant="primaryActive"
         multiSelect={false}
         onItemClick={handleItemClick}
       />
@@ -98,7 +98,7 @@ export const SingleSelect: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Single-selection list - hover over labels and click to select one item at a time.',
+        story: 'Single-selection list - click to select one item at a time. Only one item can be selected.',
       },
     },
   },
@@ -109,14 +109,14 @@ export const WithDisabled: Story = {
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
 
     const handleItemClick = (index: number, item: ListItem) => {
-      setSelectedIndex(selectedIndex === index ? undefined : index);
+      setSelectedIndex(index);
     };
 
     return (
       <List
         items={sampleItemsWithDisabled}
         selectedIndex={selectedIndex}
-        selectedVariant="primary-active"
+        selectedVariant="primaryActive"
         multiSelect={false}
         onItemClick={handleItemClick}
       />
@@ -125,7 +125,7 @@ export const WithDisabled: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'List with disabled items - some labels are disabled and cannot be selected.',
+        story: 'List with disabled items - disabled items cannot be selected. Click enabled items to select them.',
       },
     },
   },
@@ -137,11 +137,11 @@ export const TwoLists: Story = {
     const [selectedIndex2, setSelectedIndex2] = useState<number | undefined>(undefined);
 
     const handleItemClick1 = (index: number, item: ListItem) => {
-      setSelectedIndex1(selectedIndex1 === index ? undefined : index);
+      setSelectedIndex1(index);
     };
 
     const handleItemClick2 = (index: number, item: ListItem) => {
-      setSelectedIndex2(selectedIndex2 === index ? undefined : index);
+      setSelectedIndex2(index);
     };
 
     return (
@@ -151,7 +151,7 @@ export const TwoLists: Story = {
           <List
             items={sampleItems}
             selectedIndex={selectedIndex1}
-            selectedVariant="primary-active"
+            selectedVariant="primaryActive"
             multiSelect={false}
             onItemClick={handleItemClick1}
           />
@@ -161,7 +161,7 @@ export const TwoLists: Story = {
           <List
             items={sampleItems}
             selectedIndex={selectedIndex2}
-            selectedVariant="primary-active"
+            selectedVariant="primaryActive"
             multiSelect={false}
             onItemClick={handleItemClick2}
           />
@@ -172,7 +172,7 @@ export const TwoLists: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Two separate lists to test if selection state is properly isolated between components.',
+        story: 'Two separate lists to test if selection state is properly isolated between components. Click items to select them.',
       },
     },
   },
@@ -198,7 +198,7 @@ export const ClickOrder: Story = {
     };
 
     const handleSingleClick = (index: number, item: ListItem) => {
-      setSelectedIndex(selectedIndex === index ? undefined : index);
+      setSelectedIndex(index);
       setClickOrder(prev => [...prev, getItemLabel(item)]);
     };
 
@@ -219,7 +219,7 @@ export const ClickOrder: Story = {
             <List
               items={sampleItems}
               selectedIndex={selectedIndex}
-              selectedVariant="primary-active"
+              selectedVariant="primaryActive"
               multiSelect={false}
               onItemClick={handleSingleClick}
             />
@@ -234,7 +234,7 @@ export const ClickOrder: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Two lists (multi-select and single-select) that track and display the order of clicked items.',
+        story: 'Two lists (multi-select and single-select) that track and display the order of clicked items. Single-select list always has exactly one selected item.',
       },
     },
   },

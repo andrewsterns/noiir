@@ -7,13 +7,13 @@ export interface ListVariantConfig {
 }
 
 export const LIST_SIZES = {
-  '1': {
+  1: {
     autoLayout: { width: 150, height: 'hug' },
   },
-  '2': {
+  2: {
     autoLayout: { width: 250, height: 'hug' },
   },
-  '3': {
+  3: {
     autoLayout: { width: 350, height: 'hug' },
   },
   'fill': {
@@ -41,7 +41,7 @@ export const LIST_VARIANTS = {
     appearance: { radius: 8 },
   },
   hidden: {
-    autoLayout: { height: 0, overflow: 'hidden', paddingVertical: 0 },
+    display: 'none',
   },
   disabled: {
     autoLayout: { flow: 'vertical', paddingVertical: 8, paddingHorizontal: 0, maxHeight: 200, overflow: 'auto', width: 'fill' },

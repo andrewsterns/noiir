@@ -102,7 +102,6 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
               placeholder="Search categories..."
               searchPlaceholder="Type to search categories..."
               onChange={handleCategoryChange}
-              size="md"
               buttonSize="md"
             />
           </Frame>
@@ -113,7 +112,6 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
             placeholder="Sort by..."
             searchPlaceholder="Type to search filters..."
             onChange={handleFilterChange}
-            size="md"
             buttonSize="md"
           />
 

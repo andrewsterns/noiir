@@ -7,4 +7,4 @@ export * from './layout/layout.props';
 export * from './position/position.props';
 export * from './typography/typography.props';
 export * from './animation/animate.props';
-export * from './utils';
+export * from './utils/utils';

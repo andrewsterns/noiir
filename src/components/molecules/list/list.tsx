@@ -6,15 +6,14 @@ import { LIST_SIZES } from './list.variants';
 
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
-export interface ListProps extends FrameProps {
-  size?: '1' | '2' | '3' |'fill';
+export interface ListProps extends Omit<FrameProps, 'size'> {
   items: ListItem[];
   selectedIndex?: number;
   selectedIndices?: number[];
   multiSelect?: boolean;
   onItemClick?: (index: number, item: ListItem) => void;
-  itemVariant?: 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled';
-  selectedVariant?: 'primary' | 'primary-active';
+  itemVariant?: 'primary'| 'primaryHover' | 'primaryActive' | 'primaryActiveHover' | 'disabled';
+  selectedVariant?: 'primary' | 'primaryActive';
   disabledVariant?: 'disabled';
 }
 
@@ -27,7 +26,6 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   itemVariant = 'primary',
   selectedVariant = 'primary',
   disabledVariant = 'disabled',
-  size = 'fill',
   as,
   ...frameProps
 }, ref) => {
@@ -38,7 +36,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
     }
   };
 
-  const getItemVariant = (index: number, item: ListItem): 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled' => {
+  const getItemVariant = (index: number, item: ListItem): 'primary'| 'primaryHover' | 'primaryActive' | 'primaryActiveHover' | 'disabled' => {
     if (typeof item === 'object' && item.disabled) {
       return disabledVariant;
     }
@@ -64,7 +62,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
       ref={ref}
       as={as || "div"}
       autoLayout={{ flow: 'vertical' }}
-      size={size}
+      size="fill"
       sizes={LIST_SIZES}
       {...frameProps}
     >
@@ -75,7 +73,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
         return (
           <Label
             key={index}
-            variant={itemVariantValue}
+            variant='primary'
             variants={LABEL_VARIANTS}
             disabled={disabled}
             onClick={() => handleItemClick(index, item)}

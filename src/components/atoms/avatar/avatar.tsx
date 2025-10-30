@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame } from '../../frame/Frame';
-
+import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 
 export type AvatarVariant = 'default' | 'softDark' | 'softLight' | 'outline';
 
@@ -9,29 +9,53 @@ export interface AvatarProps {
   alt?: string;
   size?: number;
   fallback?: React.ReactNode;
-  style?: React.CSSProperties;
   variant?: AvatarVariant;
 }
 
 const AVATAR_VARIANTS = {
-  default: { fill: 'gray4' },
-  softDark: { fill: 'gray10' },
-  softLight: { fill: 'gray2' },
-  outline: { fill: 'white', stroke: { type: 'solid', color: '#e5e7eb', weight: 1 } },
-};
+  default: {
+    fill: { type: 'image' as const,
+    image: {
+      src: 'https://i.pravatar.cc/100',
+    alt: 'User',
+    size: 48,
+      scaleMode: 'fill' as const
+    } },
+    appearance: { radius: '100%' }
+  },
+  softDark: {
+    fill: { type: 'solid' as const, color: 'gray7' },
+    appearance: { radius: '100%' }
+  },
+  softLight: {
+    fill: { type: 'solid' as const, color: 'gray2' },
+    appearance: { radius: '100%' }
+  },
+  outline: {
+    fill: { type: 'solid' as const, color: 'white1' },
+    stroke: { type: 'solid' as const, color: 'gray4', weight: 2 },
+    appearance: { radius: '100%' }
+  }
+} satisfies ExtendVariant;
 
-export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 40, fallback, style, variant = 'default' }) => {
-  const v = AVATAR_VARIANTS[variant];
+export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 40, fallback, variant = 'default' }) => {
+  // Create dynamic fill based on whether we have a src
+  const fill = src ? {
+    type: 'image' as const,
+    image: {
+      src: src,
+      alt: alt,
+      scaleMode: 'fill' as const
+    }
+  } : undefined;
+
   return (
     <Frame
       autoLayout={{ width: size, height: size, alignment: 'center' }}
-      appearance={{ radius: 'full' }}
+      variant={variant}
+      variants={AVATAR_VARIANTS}
+      fill={fill}
     >
-      {src ? (
-        <img src={src} alt={alt} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-      ) : (
-        fallback || <span style={{ color: 'gray10', fontSize: size / 2 }}>?</span>
-      )}
     </Frame>
   );
 };

@@ -4,13 +4,13 @@ import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
 
 export const DROPDOWN_SIZES = {
-  '1': {
+  1: {
     autoLayout: { width: 150, height: 'hug', clipContent: true },
   },
-  '2': {
+  2: {
     autoLayout: { width: 250, height: 'hug' },
   },
-  '3': {
+  3: {
     autoLayout: { width: 350, height: 'hug' },
   },
   'fill': {
@@ -35,14 +35,14 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
     ...BUTTON_VARIANTS.primary,
     iconStart: null,
     iconEnd: <ArrowDown />,
-    animate: { hover: 'primaryHover', duration: '.25s', curve: 'ease-in-out' },
+    animate: { hover: { variant: 'primaryHover', duration: '.25s', curve: 'ease-in-out' } },
   },
 
   primaryHover: {
     ...BUTTON_VARIANTS.primaryHover,
     iconStart: null,
     iconEnd: <ArrowDown />,
-    animate: { hover: 'primaryActiveHover', click: 'primaryOpen', duration: '.25s', curve: 'ease-in-out' },
+    animate: { hover: { variant: 'primaryActiveHover', duration: '.25s', curve: 'ease-in-out' }, click: { variant: 'primaryOpen', duration: '.25s', curve: 'ease-in-out' } },
   },
 
   primaryActive: {
