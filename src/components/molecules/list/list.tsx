@@ -1,8 +1,8 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
-import { LABEL_VARIANTS } from '../../atoms/label/label.variants';
-import { LIST_SIZES } from './list.variants';
+import { LABEL_SIZES, LABEL_VARIANTS } from '../../atoms/label/label.variants';
+import { LIST_SIZES, LIST_VARIANTS } from './list.variants';
 
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
@@ -64,6 +64,8 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
       autoLayout={{ flow: 'vertical' }}
       size="fill"
       sizes={LIST_SIZES}
+      variant='default'
+      variants={LIST_VARIANTS}
       {...frameProps}
     >
       {items.map((item, index) => {
@@ -73,6 +75,9 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
         return (
           <Label
             key={index}
+            size='fill'
+            sizes={LABEL_SIZES}
+            stroke={{ type: 'none' }}
             variant='primary'
             variants={LABEL_VARIANTS}
             disabled={disabled}

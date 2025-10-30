@@ -11,7 +11,7 @@ export const LIST_SIZES = {
     autoLayout: { width: 150, height: 'hug' },
   },
   2: {
-    autoLayout: { width: 250, height: 'hug' },
+    autoLayout: { width: 250, height: 'hug', gap: 0 },
   },
   3: {
     autoLayout: { width: 350, height: 'hug' },
@@ -23,7 +23,7 @@ export const LIST_SIZES = {
 
 export const LIST_VARIANTS = {
   default: {
-    autoLayout: { flow: 'vertical' },
+    autoLayout: { flow: 'vertical', alignment: 'center', gap: 0 },
     fill: { type: 'none' },
     stroke: { type: 'none' },
     appearance: { radius: 0 },

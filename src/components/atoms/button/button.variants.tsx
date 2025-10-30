@@ -44,7 +44,9 @@ export const BUTTON_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'primaryActiveHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'primary', duration: '.3s', curve: 'ease-in-out' } },
+        animate: { 
+            hover: { variant: 'primaryActiveHover', duration: '.3s', curve: 'ease-in-out' },
+        click: { variant: 'primary', duration: '.3s', curve: 'ease-in-out' } },
     },
 
     primaryActiveHover: {
