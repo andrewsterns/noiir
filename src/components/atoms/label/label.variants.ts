@@ -1,6 +1,28 @@
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 import { VARIANT_STYLES } from '../../../theme/variant';
 
+/**
+ * Label Variants Library
+ *
+ * This file contains variant configurations for the Label component.
+ * Variants are imported into components via the 'variants' prop on Frame.
+ *
+ * Variants handle:
+ * - Styling (fill, stroke, appearance, typography, effects)
+ * - Animation states (hover, click, active)
+ * - Layout properties (autoLayout, spacing)
+ * - Interactive behavior (cursor, transitions)
+ *
+ * Instead of handling hover/click states in component logic,
+ * define them as variant transitions using Frame's animate prop.
+ *
+ * Example usage:
+ * <Frame variant="primary" variants={LABEL_VARIANTS} animate={{ hover: { variant: 'primaryHover' } }} />
+ *
+ * @see FrameVariantConfig in variants.props.tsx for available properties
+ * @see ExtendVariant type for variant collection structure
+ */
+
 export const LABEL_SIZES = {
   fill: {
     autoLayout: { width: 'fill-container', height: 'fill' },

@@ -1,6 +1,29 @@
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 import { VARIANT_STYLES } from '../../../theme/variant';
 
+/**
+ * Slider Variants Library
+ *
+ * This file contains variant configurations for the Slider component.
+ * Variants are imported into components via the 'variants' prop on Frame.
+ *
+ * Variants handle:
+ * - Styling (fill, stroke, appearance, typography, effects)
+ * - Animation states (hover, click, active)
+ * - Layout properties (autoLayout, spacing)
+ * - Interactive behavior (cursor, transitions)
+ *
+ * Instead of handling hover/click states in component logic,
+ * define them as variant transitions using Frame's animate prop.
+ *
+ * Example usage:
+ * <Frame variant="track" variants={SLIDER_VARIANTS} />
+ * <Frame variant="thumb" variants={SLIDER_VARIANTS} animate={{ hover: { variant: 'thumbActive' } }} />
+ *
+ * @see FrameVariantConfig in variants.props.tsx for available properties
+ * @see ExtendVariant type for variant collection structure
+ */
+
 export const SLIDER_SIZES = {
   small: {
     typography: { type: 'caption' },

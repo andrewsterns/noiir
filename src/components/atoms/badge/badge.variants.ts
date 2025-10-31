@@ -1,6 +1,27 @@
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 import { VARIANT_STYLES } from '../../../theme/variant';
 
+/**
+ * Badge Variants Library
+ *
+ * This file contains variant configurations for the Badge component.
+ * Variants are imported into components via the 'variants' prop on Frame.
+ *
+ * Variants handle:
+ * - Styling (fill, stroke, appearance, typography, effects)
+ * - Animation states (hover, click, active)
+ * - Layout properties (autoLayout, spacing)
+ * - Interactive behavior (cursor, transitions)
+ *
+ * Instead of handling hover/click states in component logic,
+ * define them as variant transitions using Frame's animate prop.
+ *
+ * Example usage:
+ * <Frame variant="neutral" variants={BADGE_VARIANTS} />
+ *
+ * @see FrameVariantConfig in variants.props.tsx for available properties
+ * @see ExtendVariant type for variant collection structure
+ */
 
 export const BADGE_VARIANTS: ExtendVariant = {
   neutral: {
@@ -80,3 +101,17 @@ export const BADGE_VARIANTS: ExtendVariant = {
     autoLayout: { flow: 'vertical' as const },
   },
 } satisfies ExtendVariant;
+
+/**
+ * BADGE_VARIANTS contains all styling configurations for the Badge component.
+ * Each variant defines complete visual states including:
+ * - Background (fill properties)
+ * - Borders (stroke properties)
+ * - Corners (appearance radius)
+ * - Text styling (typography properties)
+ * - Layout (autoLayout properties)
+ * - Effects (dropShadow for depth)
+ *
+ * Use these variants with Frame's animate prop for smooth transitions
+ * between states instead of conditional styling in component logic.
+ */

@@ -5,6 +5,22 @@ import { Card } from '../card/card';
 import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 import { CARD_VARIANTS } from '../card/card';
 
+/**
+ * Dialog Component
+ *
+ * This component extends Frame and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * This component also uses Button and Card components internally, so their props are also available.
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see ButtonProps in src/components/atoms/button/button.tsx for Button props
+ * @see CardProps in src/components/molecules/card/card.tsx for Card props
+ */
+
 interface DialogProps extends FrameProps {
   open?: boolean;
   children: React.ReactNode;

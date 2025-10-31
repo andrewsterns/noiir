@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAnimateVariant, AnimateProps } from './frame-properties/animation/animate.props';
+import { useAnimateVariant, AnimateProps, AnimatePropsType } from './frame-properties/animation/animate.props';
 import { PositionProps } from './frame-properties/position/position.props';
 import { AutoLayoutProps } from './frame-properties/layout/layout.props';
 import { AppearanceProps } from './frame-properties/appearance/appearance.props';
@@ -8,6 +8,7 @@ import { FillProps } from './frame-properties/appearance/fill.props';
 import { StrokeProps } from './frame-properties/appearance/stroke.props';
 import { CursorProps } from './frame-properties/appearance/cursor.props';
 import { EffectProps } from './frame-properties/effects/effects.props';
+import { EventProps } from './frame-properties/events/event.props';
 import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
 import { mergeSizeProps } from './frame-properties/variants/size.props';
@@ -21,6 +22,10 @@ import {
   ChildStateMap
 } from './frame-properties';
 
+// FRAME PROPS ARE PULLED IN FROM THEIR RESPECTIVE FILES
+// ROOT 'CORE' PROPS ARE PULLED IN FROM UTILS FILE
+
+
 export interface FrameAnimateMap {
   hover?: string;
   click?: string;
@@ -28,7 +33,7 @@ export interface FrameAnimateMap {
   [key: string]: string | undefined;
 }
 
-export interface FrameProps {
+export interface FrameProps extends EventProps {
   id?: string;
   as?: keyof JSX.IntrinsicElements;
   childStates?: { [childId: string]: string };
@@ -36,29 +41,13 @@ export interface FrameProps {
   autoLayout?: AutoLayoutProps;
   appearance?: AppearanceProps;
   typography?: TypographyProps;
-  animate?: AnimateProps;
+  animate?: AnimatePropsType;
   fill?: FillProps;
   stroke?: StrokeProps;
   effects?: EffectProps;
   cursor?: CursorProps | CursorProps['type'];
   children?: React.ReactNode;
   className?: string;
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  onMouseEnter?: (event: React.MouseEvent<HTMLElement>) => void;
-  onMouseLeave?: (event: React.MouseEvent<HTMLElement>) => void;
-  onMouseDown?: (event: React.MouseEvent<HTMLElement>) => void;
-  onMouseUp?: (event: React.MouseEvent<HTMLElement>) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
-  onKeyUp?: (event: React.KeyboardEvent<HTMLElement>) => void;
-  onKeyPress?: (event: React.KeyboardEvent<HTMLElement>) => void;
-  onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
-  onInput?: (event: React.FormEvent<HTMLElement>) => void;
-  onChange?: (event: React.ChangeEvent<HTMLElement>) => void;
-  value?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  autoFocus?: boolean;
   onHover?: string;
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
@@ -69,11 +58,8 @@ export interface FrameProps {
   variants?: Record<string, FrameVariantConfig>;
   sizes?: Record<string, any>;
   pointerEvents?: string;
-  transform?: string;
+
   display?: string;
-  tabIndex?: number;
-  contentEditable?: boolean;
-  suppressContentEditableWarning?: boolean;
   [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
@@ -120,7 +106,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     variants: variantsProp,
     sizes: sizesProp,
     pointerEvents,
-    transform,
+
     display,
     tabIndex,
     contentEditable,
@@ -197,7 +183,6 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   if (iconStartColor !== undefined) explicitProps.iconStartColor = iconStartColor;
   if (iconEndColor !== undefined) explicitProps.iconEndColor = iconEndColor;
   if (pointerEvents !== undefined) explicitProps.pointerEvents = pointerEvents;
-  if (transform !== undefined) explicitProps.transform = transform;
   if (display !== undefined) explicitProps.display = display;
   if (tabIndex !== undefined) explicitProps.tabIndex = tabIndex;
 
@@ -386,7 +371,8 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
     onMouseEnter: finalOnMouseEnter,
     onMouseLeave: finalOnMouseLeave,
     onMouseDown: finalOnMouseDown,
-    onMouseUp: finalOnMouseUp
+    onMouseUp: finalOnMouseUp,
+    onKeyDown: finalOnKeyDown
   }, eventHandlers || {});
 
   const handleClick = finalOnClick;
@@ -394,6 +380,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   const handleMouseLeave = composedHandlers.onMouseLeave;
   const handleMouseDown = composedHandlers.onMouseDown;
   const handleMouseUp = composedHandlers.onMouseUp;
+  const handleKeyDown = composedHandlers.onKeyDown;
 
   // For freeform, wrap children in a relative container to anchor absolutely positioned children
   if (mergedAutoLayout?.flow === 'freeform') {
@@ -415,7 +402,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
         onMouseLeave: handleMouseLeave,
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
-        onKeyDown: finalOnKeyDown,
+        onKeyDown: handleKeyDown,
         onKeyUp: finalOnKeyUp,
         onKeyPress: finalOnKeyPress,
         onFocus: finalOnFocus,
@@ -444,7 +431,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
       onMouseLeave: handleMouseLeave,
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
-      onKeyDown: finalOnKeyDown,
+      onKeyDown: handleKeyDown,
       onKeyUp: finalOnKeyUp,
       onKeyPress: finalOnKeyPress,
       onFocus: finalOnFocus,

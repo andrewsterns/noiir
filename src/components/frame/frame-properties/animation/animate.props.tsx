@@ -1,18 +1,22 @@
 import { useState, useCallback, useEffect } from 'react';
 
+//ALL ANIMATION RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
+
 export interface AnimationAction {
   id?: string;
+  type?: 'hover' | 'click' | 'clickHold' | 'hotKey' | 'event';
   variant?: string;
   duration?: string;
   curve?: string;
   afterDelay?: string;
   delay?: string;
+  key?: string; // For hotKey type animations
 }
 
 export interface AnimateProps {
-  hover?: AnimationAction | 'none';
-  click?: AnimationAction | 'none';
-  clickHold?: AnimationAction | 'none';
+  hover?: AnimationAction | AnimationAction[] | 'none';
+  click?: AnimationAction | AnimationAction[] | 'none';
+  clickHold?: AnimationAction | AnimationAction[] | 'none';
   event?: string | 'none';
   duration?: string;
   curve?: string;
@@ -21,12 +25,16 @@ export interface AnimateProps {
   [key: string]: any;
 }
 
+// Allow AnimateProps to also be an array of AnimationAction for the new structure
+export type AnimatePropsType = AnimateProps | AnimationAction[];
+
 export interface UseAnimateVariantOptions {
-  animate?: AnimateProps;
+  animate?: AnimatePropsType;
   onHover?: string;
   onClickVariant?: string;
   variants?: Record<string, any>;
   variant?: string;
+  onKeyDown?: (event: React.KeyboardEvent) => void; // Add keyboard event handler
 }
 
 /**
@@ -35,13 +43,31 @@ export interface UseAnimateVariantOptions {
  */
 export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
   // console.log('useAnimateVariant called with options:', options);
-  const { animate, onHover, onClickVariant, variants, variant } = options;
+  const { animate, onHover, onClickVariant, variants, variant, onKeyDown } = options;
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [permanentClickVariant, setPermanentClickVariant] = useState<string | undefined>(undefined);
-  const [currentAnimate, setCurrentAnimate] = useState<AnimateProps | undefined>(animate);
+  const [currentAnimate, setCurrentAnimate] = useState<AnimatePropsType | undefined>(animate);
   const [delayedVariant, setDelayedVariant] = useState<string | undefined>(undefined);
   const [currentVariant, setCurrentVariant] = useState<string | undefined>(variant);
+
+  // Helper function to get the first action from an array or single action
+  const getAction = (actionOrArray: AnimationAction | AnimationAction[] | 'none' | undefined): AnimationAction | undefined => {
+    if (actionOrArray === 'none' || !actionOrArray) return undefined;
+    if (Array.isArray(actionOrArray)) return actionOrArray[0];
+    return actionOrArray;
+  };
+
+  // Helper function to find actions by type from animation array
+  const findActionsByType = (animations: AnimationAction[] | undefined, type: string): AnimationAction[] => {
+    if (!animations) return [];
+    return animations.filter(action => action.type === type);
+  };
+
+  // Helper function to determine if animate is an array (new structure) or object (old structure)
+  const isAnimateArray = (animate: AnimatePropsType | undefined): animate is AnimationAction[] => {
+    return Array.isArray(animate);
+  };
 
   // Update currentAnimate when animate prop changes
   useEffect(() => {
@@ -54,27 +80,73 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
   // Update currentVariant when dependencies change
   useEffect(() => {
     let newVariant: string | undefined = delayedVariant || variant;
+
     if (currentAnimate) {
-      if (isActive && currentAnimate.clickHold && currentAnimate.clickHold !== 'none') {
-        const action = typeof currentAnimate.clickHold === 'string' ? { variant: currentAnimate.clickHold } : currentAnimate.clickHold;
-        if (action.variant) {
-          newVariant = action.variant;
+      if (isAnimateArray(currentAnimate)) {
+        // New structure: animate is an array of actions
+        let applicableActions: AnimationAction[] = [];
+
+        if (isActive) {
+          applicableActions = findActionsByType(currentAnimate, 'clickHold');
+          if (applicableActions.length === 0) {
+            applicableActions = findActionsByType(currentAnimate, 'click');
+          }
+        } else if (isHovered) {
+          applicableActions = findActionsByType(currentAnimate, 'hover');
         }
-      } else if (isHovered && currentAnimate.hover && currentAnimate.hover !== 'none') {
-        const action = typeof currentAnimate.hover === 'string' ? { variant: currentAnimate.hover } : currentAnimate.hover;
-        if (action.variant) {
-          newVariant = action.variant;
+
+        if (applicableActions.length > 0) {
+          newVariant = applicableActions[0].variant;
+        } else if (permanentClickVariant) {
+          newVariant = permanentClickVariant;
         }
-      } else if (permanentClickVariant) {
-        newVariant = permanentClickVariant;
-      } else if (currentAnimate.event && currentAnimate.event !== 'none') {
-        newVariant = currentAnimate.event;
+      } else {
+        // Old structure: animate is an object with properties
+        // Check animate array first (highest priority)
+        if (currentAnimate.animate) {
+          let applicableActions: AnimationAction[] = [];
+
+          if (isActive) {
+            applicableActions = findActionsByType(currentAnimate.animate, 'clickHold');
+            if (applicableActions.length === 0) {
+              applicableActions = findActionsByType(currentAnimate.animate, 'click');
+            }
+          } else if (isHovered) {
+            applicableActions = findActionsByType(currentAnimate.animate, 'hover');
+          }
+
+          if (applicableActions.length > 0) {
+            newVariant = applicableActions[0].variant;
+          } else if (permanentClickVariant) {
+            newVariant = permanentClickVariant;
+          } else if (currentAnimate.event && currentAnimate.event !== 'none') {
+            newVariant = currentAnimate.event;
+          }
+        } else {
+          // Fallback to individual properties for backward compatibility
+          if (isActive && currentAnimate.clickHold && currentAnimate.clickHold !== 'none') {
+            const action = getAction(currentAnimate.clickHold);
+            if (action?.variant) {
+              newVariant = action.variant;
+            }
+          } else if (isHovered && currentAnimate.hover && currentAnimate.hover !== 'none') {
+            const action = getAction(currentAnimate.hover);
+            if (action?.variant) {
+              newVariant = action.variant;
+            }
+          } else if (permanentClickVariant) {
+            newVariant = permanentClickVariant;
+          } else if (currentAnimate.event && currentAnimate.event !== 'none') {
+            newVariant = currentAnimate.event;
+          }
+        }
       }
     } else if (isActive && onClickVariant) {
       newVariant = onClickVariant;
     } else if (isHovered && onHover) {
       newVariant = onHover;
     }
+
     setCurrentVariant(newVariant);
   }, [variant, delayedVariant, currentAnimate, isHovered, isActive, permanentClickVariant, onClickVariant, onHover]);
 
@@ -82,11 +154,23 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
   useEffect(() => {
     // console.log('afterDelay useEffect running, currentVariant:', currentVariant, 'currentAnimate:', currentAnimate, 'variants:', variants);
     if (currentVariant) {
-      const hasAfterDelay = variants?.[currentVariant]?.animate?.afterDelay || currentAnimate?.afterDelay;
-      const delayStr = variants?.[currentVariant]?.animate?.delay || currentAnimate?.delay;
+      let hasAfterDelay: string | undefined;
+      let delayStr: string | undefined;
+
+      if (isAnimateArray(currentAnimate)) {
+        // For array structure, check if any action has afterDelay
+        const afterDelayAction = currentAnimate.find(action => action.afterDelay);
+        hasAfterDelay = afterDelayAction?.afterDelay;
+        delayStr = afterDelayAction?.delay;
+      } else {
+        // For object structure
+        hasAfterDelay = variants?.[currentVariant]?.animate?.afterDelay || currentAnimate?.afterDelay;
+        delayStr = variants?.[currentVariant]?.animate?.delay || currentAnimate?.delay;
+      }
+
       if (hasAfterDelay && delayStr) {
         const afterDelay = hasAfterDelay;
-        const delayStrValue = (currentAnimate?.delay || variants?.[currentVariant]?.animate?.delay)!;
+        const delayStrValue = delayStr;
         let delayMs: number;
         if (!delayStrValue || delayStrValue.trim() === '') {
           delayMs = 0; // Default to 0 if blank
@@ -116,7 +200,7 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
     } else {
       setDelayedVariant(undefined);
     }
-  }, [currentVariant, currentAnimate, variants]);
+  }, [currentVariant, currentAnimate, variants, isAnimateArray]);
   // Event handlers to update state
   const handleMouseEnter = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setIsHovered(true);
@@ -131,9 +215,9 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
   const handleMouseUp = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setIsActive(false);
     // Toggle permanent click variant if animate.click is defined and not 'none' and has variant
-    if (currentAnimate?.click && currentAnimate.click !== 'none') {
-      const clickConfig = typeof currentAnimate.click === 'string' ? { variant: currentAnimate.click } : currentAnimate.click;
-      if (clickConfig.variant) {
+    if (currentAnimate && !isAnimateArray(currentAnimate) && currentAnimate.click && currentAnimate.click !== 'none') {
+      const clickConfig = getAction(currentAnimate.click);
+      if (clickConfig?.variant) {
         const newVariant = permanentClickVariant === clickConfig.variant ? undefined : clickConfig.variant;
         setPermanentClickVariant(newVariant);
         if (newVariant && variants?.[newVariant]?.animate) {
@@ -143,7 +227,31 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
         }
       }
     }
-  }, [currentAnimate?.click, permanentClickVariant, variants, animate]);
+  }, [currentAnimate, permanentClickVariant, variants, animate, getAction, isAnimateArray]);
+
+  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLElement>) => {
+    if (currentAnimate) {
+      let hotkeyActions: AnimationAction[] = [];
+
+      if (isAnimateArray(currentAnimate)) {
+        // New structure: currentAnimate is an array
+        hotkeyActions = findActionsByType(currentAnimate, 'hotKey');
+      } else if (currentAnimate.animate) {
+        // Old structure: currentAnimate.animate is an array
+        hotkeyActions = findActionsByType(currentAnimate.animate, 'hotKey');
+      }
+
+      const matchingAction = hotkeyActions.find(action => action.key === event.key);
+      if (matchingAction?.variant) {
+        setPermanentClickVariant(matchingAction.variant);
+        if (variants?.[matchingAction.variant]?.animate) {
+          setCurrentAnimate(variants[matchingAction.variant].animate);
+        }
+      }
+    }
+    // Call the original onKeyDown if provided
+    onKeyDown?.(event);
+  }, [currentAnimate, variants, onKeyDown, findActionsByType, isAnimateArray]);
 
   return {
     currentVariant,
@@ -152,6 +260,7 @@ export function useAnimateVariant(options: UseAnimateVariantOptions = {}) {
       onMouseLeave: handleMouseLeave,
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
+      onKeyDown: handleKeyDown,
     },
     isHovered,
     isActive,

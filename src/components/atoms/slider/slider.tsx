@@ -3,6 +3,24 @@ import { Frame, FrameProps } from '../../frame/Frame';
 import { SLIDER_VARIANTS, SLIDER_SIZES } from './slider.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
 
+/**
+ * Slider Component
+ *
+ * This component extends Frame and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use SLIDER_VARIANTS with Frame's animate prop
+ * instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'thumbHover' }, click: { variant: 'thumbActive' } }}
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see SLIDER_VARIANTS in slider.variants.tsx for available animation states
+ */
+
 export interface SliderProps extends Omit<FrameProps, 'onChange' | 'value'> {
   min?: number;
   max?: number;

@@ -1,6 +1,28 @@
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 import { VARIANT_STYLES } from '../../../theme/variant';
 
+/**
+ * Toggle Variants Library
+ *
+ * This file contains variant configurations for the Toggle component.
+ * Variants are imported into components via the 'variants' prop on Frame.
+ *
+ * Variants handle:
+ * - Styling (fill, stroke, appearance, typography, effects)
+ * - Animation states (hover, click, active)
+ * - Layout properties (autoLayout, spacing)
+ * - Interactive behavior (cursor, transitions)
+ *
+ * Instead of handling hover/click states in component logic,
+ * define them as variant transitions using Frame's animate prop.
+ *
+ * Example usage:
+ * <Frame variant="solid" variants={TOGGLE_VARIANTS} animate={{ hover: { variant: 'solidHover' } }} />
+ *
+ * @see FrameVariantConfig in variants.props.tsx for available properties
+ * @see ExtendVariant type for variant collection structure
+ */
+
 export const TOGGLE_SIZES = {
     '1': {
         autoLayout: { width: 136, height: 20 },

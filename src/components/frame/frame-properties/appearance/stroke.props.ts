@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { resolveColor, colorUtils } from '../../../../theme/colors';
 
+//ALL STROKE RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
+
 export interface StrokeProps {
   type?: 'none' | 'solid' | 'gradient';
   color?: string; // Either hex like '#333333' or theme color like 'primary3'

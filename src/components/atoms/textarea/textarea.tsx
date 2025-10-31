@@ -3,6 +3,24 @@ import { Frame, FrameProps } from '../../frame/Frame';
 import { TEXTAREA_VARIANTS, TEXTAREA_SIZES } from './textarea.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
 
+/**
+ * Textarea Component
+ *
+ * This component extends Frame and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use TEXTAREA_VARIANTS with Frame's animate prop
+ * instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'solid-focus' }, focus: { variant: 'solid-focus' } }}
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see TEXTAREA_VARIANTS in textarea.variants.tsx for available animation states
+ */
+
 export interface TextareaProps extends Omit<FrameProps, 'onChange' | 'value' | 'placeholder' | 'onFocus' | 'onBlur'> {
   value?: string;
   defaultValue?: string;

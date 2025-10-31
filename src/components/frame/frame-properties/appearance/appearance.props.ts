@@ -1,5 +1,7 @@
 ﻿import React from 'react';
 
+//ALL APPEARANCE RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
+
 export interface AppearanceProps {
   opacity?: number;
   blendMode?: 'normal' | 'multiply' | 'screen' | 'overlay' | 'soft-light' | 'hard-light';

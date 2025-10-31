@@ -1,5 +1,8 @@
 import React from 'react';
 
+//ALL LAYOUT RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
+// EXCEPTION Curved layout is handled in files within this folder
+
 export interface AutoLayoutProps {
   // Flow and alignment
   flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';

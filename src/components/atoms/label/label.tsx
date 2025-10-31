@@ -2,6 +2,24 @@ import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
 
+/**
+ * Label Component
+ *
+ * This component extends Frame and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use LABEL_VARIANTS with Frame's animate prop
+ * instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'primaryHover' }, click: { variant: 'primaryActive' } }}
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see LABEL_VARIANTS in label.variants.ts for available animation states
+ */
+
 export interface LabelProps extends FrameProps {
   children: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;

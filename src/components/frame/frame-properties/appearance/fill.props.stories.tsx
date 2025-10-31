@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Frame, FrameProps } from '../../Frame';
 
+//ALL FILL RELATED PROPS AND STORIES SHOULD GO IN THIS FILE
+
 interface FillArgs extends Partial<FrameProps> {
   fillType: 'none' | 'solid' | 'linear-gradient' | 'radial-gradient' | 'conic-gradient' | 'image';
   // Overall fill opacity

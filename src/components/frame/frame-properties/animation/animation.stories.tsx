@@ -237,162 +237,206 @@ export const AllAnimations: Story = {
             appearance: { radius: 16 }
           }
         }} />
+      <Frame
+        children="Array Animate: Hover + Click + Hotkey!"
+        autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
+        appearance={{ radius: 8 }}
+        variant="multiAction"
+        tabIndex={0}
+        variants={{
+          multiAction: {
+            fill: { type: 'solid', color: 'purple5' },
+            stroke: { type: 'solid', color: 'purple7' },
+            typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' },
+            appearance: { radius: 8 },
+            animate: [
+              { type: 'hover', variant: 'multiHover', duration: '0.3s', curve: 'ease-in-out' },
+              { type: 'click', variant: 'multiClick', duration: '0.5s', curve: 'ease-out' },
+              { type: 'hotKey', key: 'space', variant: 'multiHotkey', duration: '0.8s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' }
+            ]
+          },
+          multiHover: {
+            fill: { type: 'solid', color: 'green5' },
+            stroke: { type: 'solid', color: 'green7' },
+            typography: { color: 'white1', textAlign: 'center' },
+            appearance: { radius: 12 }
+          },
+          multiClick: {
+            fill: { type: 'solid', color: 'orange5' },
+            stroke: { type: 'solid', color: 'orange7' },
+            typography: { color: 'white1', textAlign: 'center' },
+            appearance: { radius: 16 }
+          },
+          multiHotkey: {
+            fill: { type: 'solid', color: 'red5' },
+            stroke: { type: 'solid', color: 'red7' },
+            typography: { color: 'white1', textAlign: 'center' },
+            appearance: { radius: 20 }
+          }
+        }} />
+      <Frame
+        children="Array Animate: After Delay + Click"
+        autoLayout={{ flow: 'horizontal', alignment: 'center', width: 200, height: 120 }}
+        appearance={{ radius: 8 }}
+        variant="delayed"
+        variants={{
+          delayed: {
+            fill: { type: 'solid', color: 'blue5' },
+            stroke: { type: 'solid', color: 'blue7' },
+            typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' },
+            appearance: { radius: 8 },
+            animate: [
+              { type: 'afterDelay', delay: '2s', variant: 'autoPulse', duration: '1s', curve: 'ease-in-out' },
+              { type: 'click', variant: 'manualPulse', duration: '0.5s', curve: 'ease-out' }
+            ]
+          },
+          autoPulse: {
+            fill: { type: 'solid', color: 'yellow5' },
+            stroke: { type: 'solid', color: 'yellow7' },
+            typography: { color: 'black12', textAlign: 'center' },
+            appearance: { radius: 12 }
+          },
+          manualPulse: {
+            fill: { type: 'solid', color: 'red5' },
+            stroke: { type: 'solid', color: 'red7' },
+            typography: { color: 'white1', textAlign: 'center' },
+            appearance: { radius: 16 }
+          }
+        }} />
     </Frame>
     );
   }
 };
 
-export const PositionAnimations: Story = {
-  render: () => (
-    <Frame
-      autoLayout={{ flow: 'vertical', gap: 20 }}
-    >
-      {/* Linear */}
-      <Frame
-        autoLayout={{ flow: 'freeform', width: 400, height: 80 }}
-        fill={{ type: 'solid', color: '#f0f0f0' }}
-        appearance={{ radius: 8 }}
-        stroke={{ type: 'solid', color: '#cccccc' }}
-      >
+export const MultipleActions: Story = {
+  render: () => {
+    return (
+      <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center' }}>
         <Frame
-          variant="default"
-          autoLayout={{ width: 50, height: 50 }}
-          appearance={{ radius: 4 }}
-          animate={{ click: { variant: 'moved', duration: '1s', curve: 'linear' } }}
+          children="Multiple Actions Demo - Hover, Click, or Press 'A'!"
+          autoLayout={{ flow: 'horizontal', alignment: 'center', width: 300, height: 60 }}
+          appearance={{ radius: 8 }}
+          variant="starting"
+          tabIndex={0} // Make focusable for keyboard events
           variants={{
-            default: {
-              fill: { type: 'solid', color: '#ff6b6b' },
-              typography: { fontSize: 12, color: 'white1', textAlign: 'center' },
-              position: { x: 0, y: 15 }
+            starting: {
+              fill: { type: 'solid', color: 'blue5' },
+              stroke: { type: 'solid', color: 'blue7' },
+              typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' },
+              appearance: { radius: 8 },
+              animate: [
+                { type: 'hover', variant: 'hoverState', duration: '0.3s', curve: 'ease-in-out' },
+                { type: 'click', variant: 'clickState', duration: '0.5s', curve: 'ease-out' },
+                { type: 'hotKey', key: 'a', variant: 'hotkeyState', duration: '1s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' }
+              ]
             },
-            moved: {
-              position: { x: 320, y: 15 }
+            hoverState: {
+              fill: { type: 'solid', color: 'green5' },
+              stroke: { type: 'solid', color: 'green7' },
+              typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' },
+              appearance: { radius: 12 },
+              effects: {
+                dropShadow: [{ x: 0, y: 4, blur: 12, color: 'rgba(0, 255, 0, 0.3)' }]
+              }
+            },
+            clickState: {
+              fill: { type: 'solid', color: 'orange5' },
+              stroke: { type: 'solid', color: 'orange7' },
+              typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' },
+              appearance: { radius: 16 },
+              effects: {
+                dropShadow: [{ x: 0, y: 6, blur: 16, color: 'rgba(255, 165, 0, 0.4)' }]
+              }
+            },
+            hotkeyState: {
+              fill: { type: 'solid', color: 'purple5' },
+              stroke: { type: 'solid', color: 'purple7' },
+              typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' },
+              appearance: { radius: 20 },
+              effects: {
+                dropShadow: [{ x: 0, y: 8, blur: 20, color: 'rgba(128, 0, 128, 0.5)' }]
+              }
             }
-          }}
-        >Click
-        </Frame>
-      </Frame>
-      {/* Ease In */}
-      <Frame
-        autoLayout={{ flow: 'freeform', width: 400, height: 80 }}
-        fill={{ type: 'solid', color: '#e8f5e8' }}
-        
-        appearance={{ radius: 8 }}
-        stroke={{ type: 'solid', color: '#c8e6c9' }}
-      >
+          }} />
+
         <Frame
-          variant="default"
-          autoLayout={{ width: 50, height: 50 }}
+          children="Instructions: Hover over the box above, click it, or press 'A' key while focused"
+          autoLayout={{ flow: 'horizontal', alignment: 'center', width: 400, height: 40 }}
           appearance={{ radius: 4 }}
-          animate={{ click: { variant: 'moved', duration: '1.2s', curve: 'ease-in' } }}
-          variants={{
-            default: {
-              fill: { type: 'solid', color: '#4caf50' },
-              typography: { fontSize: 12, color: 'white1', textAlign: 'center' },
-              position: { x: 0, y: 15 }
-            },
-            moved: {
-              position: { x: 320, y: 15 }
-            }
-          }}
-        >Click</Frame>
+          fill={{ type: 'solid', color: 'gray2' }}
+          typography={{ color: 'black12', fontSize: 12, textAlign: 'center' }} />
       </Frame>
-      {/* Ease Out */}
-      <Frame
-        autoLayout={{ flow: 'freeform', width: 400, height: 80 }}
-        fill={{ type: 'solid', color: '#fff3e0' }}
-        appearance={{ radius: 8 }}
-        stroke={{ type: 'solid', color: '#ffcc02' }}
-      >
-        <Frame
-          variant="default"
-          autoLayout={{ width: 50, height: 50 }}
-          appearance={{ radius: 4 }}
-          animate={{ click: { variant: 'moved', duration: '1.2s', curve: 'ease-out' } }}
-          variants={{
-            default: {
-              fill: { type: 'solid', color: '#ff9800' },
-              typography: { fontSize: 12, color: 'white1', textAlign: 'center' },
-              position: { x: 0, y: 15 }
-            },
-            moved: {
-              position: { x: 320, y: 15 }
-            }
-          }}
-        >Click</Frame>
-      </Frame>
-      {/* Ease In Out */}
-      <Frame
-        autoLayout={{ flow: 'freeform', width: 400, height: 80 }}
-        fill={{ type: 'solid', color: '#e3f2fd' }}
-        appearance={{ radius: 8 }}
-        stroke={{ type: 'solid', color: '#bbdefb' }}
-      >
-        <Frame
-          variant="default"
-          autoLayout={{ width: 50, height: 50 }}
-          appearance={{ radius: 4 }}
-          animate={{ click: { variant: 'moved', duration: '1s', curve: 'ease-in-out' } }}
-          variants={{
-            default: {
-              fill: { type: 'solid', color: '#2196f3' },
-              typography: { fontSize: 12, color: 'white1', textAlign: 'center' },
-              position: { x: 0, y: 15 }
-            },
-            moved: {
-              position: { x: 320, y: 15 }
-            }
-          }}
-        >Click</Frame>
-      </Frame>
-      {/* Cubic Bezier */}
-      <Frame
-        autoLayout={{ flow: 'freeform', width: 400, height: 80 }}
-        fill={{ type: 'solid', color: '#f3e5f5' }}
-        appearance={{ radius: 8 }}
-        stroke={{ type: 'solid', color: '#ce93d8' }}
-      >
-        <Frame
-          variant="default"
-          autoLayout={{ width: 50, height: 50 }}
-          appearance={{ radius: 4 }}
-          animate={{ click: { variant: 'moved', duration: '1.5s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' } }}
-          variants={{
-            default: {
-              fill: { type: 'solid', color: '#9c27b0' },
-              typography: { fontSize: 12, color: 'white1', textAlign: 'center' },
-              position: { x: 0, y: 15 }
-            },
-            moved: {
-              position: { x: 320, y: 15 }
-            }
-          }}
-        >Click</Frame>
-      </Frame>
-      {/* Bounce */}
-      <Frame
-        autoLayout={{ flow: 'freeform', width: 400, height: 80 }}
-        fill={{ type: 'solid', color: '#fce4ec' }}
-        appearance={{ radius: 8 }}
-        stroke={{ type: 'solid', color: '#f8bbd9' }}
-      >
-        <Frame
-          variant="default"
-          autoLayout={{ width: 50, height: 50 }}
-          appearance={{ radius: 4 }}
-          animate={{ click: { variant: 'moved', duration: '0.8s', curve: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)' } }}
-          variants={{
-            default: {
-              fill: { type: 'solid', color: '#e91e63' },
-              typography: { fontSize: 12, color: 'white1', textAlign: 'center' },
-              position: { x: 0, y: 15 }
-            },
-            moved: {
-              position: { x: 320, y: 15 }
-            }
-          }}
-        >Click</Frame>
-      </Frame>
-    </Frame>
-  )
+    );
+  }
 };
+
+export const MultiAnimation: Story = {
+  render: () => {
+    const VARIANT_LIBRARY = {
+      startingVariant: {
+        fill: { type: 'solid' as const, color: 'blue5' },
+        stroke: { type: 'solid' as const, color: 'blue7' },
+        typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' as const },
+        appearance: { radius: 8 },
+        animate: [
+          { type: 'click', id: 'frame2', variant: 'destinationVariant', duration: '1s' },
+          { type: 'hover', variant: 'otherVariant', duration: '0.5s' },
+          { type: 'hotKey', id: 'frame2', key: 'a', variant: 'destinationVariant', duration: '3s' }
+        ]
+      },
+      destinationVariant: {
+        fill: { type: 'solid' as const, color: 'red5' },
+        stroke: { type: 'solid' as const, color: 'red7' },
+        typography: { color: 'white1', textAlign: 'center' as const },
+        appearance: { radius: 12 }
+      },
+      otherVariant: {
+        fill: { type: 'solid' as const, color: 'green5' },
+        stroke: { type: 'solid' as const, color: 'green7' },
+        typography: { color: 'white1', textAlign: 'center' as const },
+        appearance: { radius: 16 }
+      }
+    };
+
+    return (
+      <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center' }}>
+        <Frame
+          children="Cross-Frame Animation Demo"
+          autoLayout={{ flow: 'horizontal', alignment: 'center', width: 400, height: 40 }}
+          appearance={{ radius: 4 }}
+          fill={{ type: 'solid', color: 'gray2' }}
+          typography={{ color: 'black12', fontSize: 16, fontWeight: 600, textAlign: 'center' }} />
+
+        <Frame autoLayout={{ flow: 'horizontal', gap: 20, alignment: 'center' }}>
+          <Frame
+            id="frame1"
+            children="Frame 1 - Click me!"
+            autoLayout={{ flow: 'horizontal', alignment: 'center', width: 150, height: 100 }}
+            appearance={{ radius: 8 }}
+            variant="startingVariant"
+            variants={VARIANT_LIBRARY}
+            cursor="pointer"
+            tabIndex={0} />
+
+          <Frame
+            id="frame2"
+            children="Frame 2 - Watch me!"
+            autoLayout={{ flow: 'horizontal', alignment: 'center', width: 150, height: 100 }}
+            appearance={{ radius: 8 }}
+            variant="startingVariant"
+            variants={VARIANT_LIBRARY}
+            cursor="pointer"
+            tabIndex={0} />
+        </Frame>
+
+        <Frame
+          children="Instructions: Click Frame 1 to animate Frame 2, hover Frame 1 for its own animation, or press 'A' while focused on Frame 1 to animate Frame 2"
+          autoLayout={{ flow: 'horizontal', alignment: 'center', width: 500, height: 60 }}
+          appearance={{ radius: 4 }}
+          fill={{ type: 'solid', color: 'gray1' }}
+          typography={{ color: 'black12', fontSize: 12, textAlign: 'center' }} />
+      </Frame>
+    );
+  }
+};
+

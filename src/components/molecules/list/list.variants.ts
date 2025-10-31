@@ -1,5 +1,27 @@
 import { ExtendVariant } from "../../frame/frame-properties/variants/variants.props";
 
+/**
+ * List Variants Library
+ *
+ * This file contains variant configurations for the List component.
+ * Variants are imported into components via the 'variants' prop on Frame.
+ *
+ * Variants handle:
+ * - Styling (fill, stroke, appearance, typography, effects)
+ * - Animation states (hover, click, active)
+ * - Layout properties (autoLayout, spacing)
+ * - Interactive behavior (cursor, transitions)
+ *
+ * Instead of handling hover/click states in component logic,
+ * define them as variant transitions using Frame's animate prop.
+ *
+ * Example usage:
+ * <Frame variant="default" variants={LIST_VARIANTS} />
+ *
+ * @see FrameVariantConfig in variants.props.tsx for available properties
+ * @see ExtendVariant type for variant collection structure
+ */
+
 export type ListVariant = 'default';
 
 export interface ListVariantConfig {
@@ -51,3 +73,16 @@ export const LIST_VARIANTS = {
     cursor: { type: 'not-allowed' }
   },
 } satisfies ExtendVariant;
+
+/**
+ * LIST_VARIANTS contains all styling configurations for the List component.
+ * Each variant defines complete visual states including:
+ * - Layout (autoLayout properties)
+ * - Background (fill properties)
+ * - Borders (stroke properties)
+ * - Corners (appearance radius)
+ * - Interactive states (cursor, display)
+ *
+ * Use these variants with Frame's animate prop for smooth transitions
+ * between states instead of conditional styling in component logic.
+ */

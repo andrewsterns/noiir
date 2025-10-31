@@ -4,6 +4,27 @@ import { Label } from '../../atoms/label/label';
 import { LABEL_SIZES, LABEL_VARIANTS } from '../../atoms/label/label.variants';
 import { LIST_SIZES, LIST_VARIANTS } from './list.variants';
 
+/**
+ * List Component
+ *
+ * This component extends Frame and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use LIST_VARIANTS with Frame's animate prop
+ * instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'active' }, click: { variant: 'active' } }}
+ *
+ * This component also uses Label components internally for list items.
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see LabelProps in src/components/atoms/label/label.tsx for Label props
+ * @see LIST_VARIANTS in list.variants.ts for available animation states
+ */
+
 export type ListItem = string | { label: string; value?: any; disabled?: boolean };
 
 export interface ListProps extends Omit<FrameProps, 'size'> {

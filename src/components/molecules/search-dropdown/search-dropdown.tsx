@@ -4,6 +4,29 @@ import { Input, INPUT_VARIANTS } from '../../atoms/input/input';
 import { List } from '../../molecules/list/list';
 import { SearchIcon } from '../../../theme/icons/search';
 
+/**
+ * SearchDropdown Component
+ *
+ * This component uses Frame internally and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use INPUT_VARIANTS and LIST_VARIANTS from the
+ * Input and List components with Frame's animate prop instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'primaryHover' }, click: { variant: 'primaryActive' } }}
+ *
+ * This component also uses Input and List components internally.
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see InputProps in src/components/atoms/input/input.tsx for Input props
+ * @see ListProps in src/components/molecules/list/list.tsx for List props
+ * @see INPUT_VARIANTS in input.tsx for available input animation states
+ * @see LIST_VARIANTS in list.variants.ts for available list animation states
+ */
+
 export type SearchItem = string | { label: string; value?: any; searchableText?: string };
 
 export interface SearchDropdownProps {

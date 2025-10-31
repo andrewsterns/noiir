@@ -4,6 +4,23 @@ import { Button } from '../atoms/button/button';
 import { Label } from '../atoms/label/label';
 import { SearchDropdown } from '../molecules/search-dropdown/search-dropdown';
 
+/**
+ * Template Component
+ *
+ * This component uses Frame internally and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * This component also uses Button, Label, and SearchDropdown components internally.
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see ButtonProps in src/components/atoms/button/button.tsx for Button props
+ * @see LabelProps in src/components/atoms/label/label.tsx for Label props
+ * @see SearchDropdownProps in src/components/molecules/search-dropdown/search-dropdown.tsx for SearchDropdown props
+ */
+
 export interface TemplateProps {
   title?: string;
   onSearch?: (query: string) => void;

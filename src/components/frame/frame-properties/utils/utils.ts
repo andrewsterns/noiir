@@ -8,6 +8,10 @@ import { StrokeProps, convertStrokeProps } from '../appearance/stroke.props';
 import { EffectProps, convertEffectProps } from '../effects/effects.props';
 import { resolveColor, colorUtils } from '../../../../theme/colors';
 
+//ALL CORE FRAME PROPS AND UTILITIES SHOULD GO IN THIS FILE
+//PROPS SUCH AS POSITION, AUTO LAYOUT, APPEARANCE, FILL, STROKE, EFFECTS, ETC SHOULD BE IMPORTED FROM THEIR RESPECTIVE FILES
+
+
 export interface FramePropsBase {
   position?: PositionProps;
   autoLayout?: AutoLayoutProps;
@@ -28,6 +32,7 @@ export interface EventHandlers {
   onMouseLeave?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseDown?: (event: React.MouseEvent<HTMLElement>) => void;
   onMouseUp?: (event: React.MouseEvent<HTMLElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
 }
 
 /**
@@ -103,25 +108,51 @@ export const composeEventHandlers = (
 ): EventHandlers => {
   const composed: EventHandlers = {};
 
-  Object.keys(originalHandlers).forEach(key => {
-    const original = originalHandlers[key as keyof EventHandlers];
-    const animation = animationHandlers[key as keyof EventHandlers];
-    if (animation) {
-      composed[key as keyof EventHandlers] = (event: React.MouseEvent<HTMLElement>) => {
-        animation(event);
-        if (original) original(event);
-      };
-    } else {
-      composed[key as keyof EventHandlers] = original;
-    }
-  });
+  // Handle each event type separately
+  if (originalHandlers.onMouseEnter || animationHandlers.onMouseEnter) {
+    const original = originalHandlers.onMouseEnter;
+    const animation = animationHandlers.onMouseEnter;
+    composed.onMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+      if (animation) animation(event);
+      if (original) original(event);
+    };
+  }
 
-  // Add animation handlers that don't have originals
-  Object.keys(animationHandlers).forEach(key => {
-    if (!(key in composed)) {
-      composed[key as keyof EventHandlers] = animationHandlers[key as keyof EventHandlers];
-    }
-  });
+  if (originalHandlers.onMouseLeave || animationHandlers.onMouseLeave) {
+    const original = originalHandlers.onMouseLeave;
+    const animation = animationHandlers.onMouseLeave;
+    composed.onMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+      if (animation) animation(event);
+      if (original) original(event);
+    };
+  }
+
+  if (originalHandlers.onMouseDown || animationHandlers.onMouseDown) {
+    const original = originalHandlers.onMouseDown;
+    const animation = animationHandlers.onMouseDown;
+    composed.onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+      if (animation) animation(event);
+      if (original) original(event);
+    };
+  }
+
+  if (originalHandlers.onMouseUp || animationHandlers.onMouseUp) {
+    const original = originalHandlers.onMouseUp;
+    const animation = animationHandlers.onMouseUp;
+    composed.onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+      if (animation) animation(event);
+      if (original) original(event);
+    };
+  }
+
+  if (originalHandlers.onKeyDown || animationHandlers.onKeyDown) {
+    const original = originalHandlers.onKeyDown;
+    const animation = animationHandlers.onKeyDown;
+    composed.onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+      if (animation) animation(event);
+      if (original) original(event);
+    };
+  }
 
   return composed;
 };

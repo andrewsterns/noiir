@@ -3,6 +3,24 @@ import { Frame, FrameProps } from '../../frame/Frame';
 import { Check } from '../../../theme/icons/check';
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
 
+/**
+ * Checkbox Component
+ *
+ * This component extends Frame and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use ICON_VARIANTS with Frame's animate prop
+ * instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'checkHover' }, click: { variant: 'checked' } }}
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see ICON_VARIANTS in this file for available animation states
+ */
+
 export interface CheckboxProps extends FrameProps {
     sizes?: Record<string, any>;
     variants?: Record<string, any>;

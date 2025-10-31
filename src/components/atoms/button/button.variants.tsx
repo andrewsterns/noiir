@@ -3,6 +3,27 @@ import { VARIANT_STYLES } from '../../../theme/variant';
 import { HappyFace, HappyWink } from '../../../theme/icons/fun';
 import { Typography } from '../../frame/frame-properties/typography/typography.props.stories';
 
+/**
+ * Button Variants Library
+ *
+ * This file contains variant configurations for the Button component.
+ * Variants are imported into components via the 'variants' prop on Frame.
+ *
+ * Variants handle:
+ * - Styling (fill, stroke, appearance, typography, effects)
+ * - Animation states (hover, click, active)
+ * - Layout properties (autoLayout, spacing)
+ * - Interactive behavior (cursor, transitions)
+ *
+ * Instead of handling hover/click states in component logic,
+ * define them as variant transitions using Frame's animate prop.
+ *
+ * Example usage:
+ * <Frame variant="primary" variants={BUTTON_VARIANTS} animate={{ hover: { variant: 'primaryHover' } }} />
+ *
+ * @see FrameVariantConfig in variants.props.tsx for available properties
+ * @see ExtendVariant type for variant collection structure
+ */
 
 export const BUTTON_SIZES = {
 

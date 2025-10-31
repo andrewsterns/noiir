@@ -5,7 +5,7 @@ import {
   TypographyProps,
   EffectProps,
   AutoLayoutProps,
-  AnimateProps,
+  AnimatePropsType,
   CursorProps,
   PositionProps,
   ConstraintProps
@@ -22,7 +22,7 @@ export interface FrameVariantConfig {
   autoLayout?: AutoLayoutProps;
   typography?: TypographyProps;
   effects?: EffectProps;
-  animate?: AnimateProps;
+  animate?: AnimatePropsType;
   cursor?: CursorProps | CursorProps['type'];
   position?: PositionProps;
   constraints?: ConstraintProps;

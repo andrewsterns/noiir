@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+//ALL EFFECTS RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
+
 export interface EffectProps {
   dropShadow?: {
     x: number;

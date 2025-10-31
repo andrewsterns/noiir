@@ -2,6 +2,24 @@ import React from 'react';
 import { Frame } from '../../frame/Frame';
 import {BADGE_VARIANTS} from './badge.variants';
 
+/**
+ * Badge Component
+ *
+ * This component uses Frame internally and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use BADGE_VARIANTS with Frame's animate prop
+ * instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'neutral-hover' }, click: { variant: 'active' } }}
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see BADGE_VARIANTS in badge.variants.ts for available animation states
+ */
+
 export interface BadgeProps {
   children: React.ReactNode;
   color?: string;

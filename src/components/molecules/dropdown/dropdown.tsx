@@ -6,6 +6,29 @@ import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES } from './dr
 import { LIST_SIZES, LIST_VARIANTS } from '../list/list.variants';
 import { BUTTON_SIZES, BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 
+/**
+ * Dropdown Component
+ *
+ * This component extends Frame and should leverage Frame's built-in props as much as possible.
+ * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
+ * instead of creating custom props for styling/behavior.
+ *
+ * For animations and state transitions, use DROPDOWN_BUTTON_VARIANTS and LIST_VARIANTS with Frame's animate prop
+ * instead of handling hover/click states in component logic.
+ *
+ * Example: animate={{ hover: { variant: 'primaryHover' }, click: { variant: 'primaryActive' } }}
+ *
+ * This component also uses Button and List components internally, so their props are also available
+ * through buttonProps and listProps.
+ *
+ * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
+ *
+ * @see FrameProps in src/components/frame/Frame.tsx for available props
+ * @see ButtonProps in src/components/atoms/button/button.tsx for Button props
+ * @see ListProps in src/components/molecules/list/list.tsx for List props
+ * @see DROPDOWN_BUTTON_VARIANTS in dropdown.variants.tsx for available animation states
+ */
+
 export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant' | 'size' | 'onChange'> {
   items: ListItem[];
   selectedIndex?: number;
