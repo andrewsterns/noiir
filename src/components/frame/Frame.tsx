@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAnimateVariant, AnimateProps, AnimatePropsType } from './frame-properties/animation/animate.props';
+import { useAnimateVariant, AnimateProps, AnimatePropsType } from './frame-properties/animate/animate.props';
 import { PositionProps } from './frame-properties/position/position.props';
 import { AutoLayoutProps } from './frame-properties/layout/layout.props';
 import { AppearanceProps } from './frame-properties/appearance/appearance.props';
