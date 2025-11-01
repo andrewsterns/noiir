@@ -158,7 +158,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     const camelCaseSplit = props.alignment.match(/^[a-z]+|[A-Z][a-z]*/g) || [props.alignment];
     const vertical = camelCaseSplit[0].toLowerCase();
     const horizontal = camelCaseSplit.length > 1 ? camelCaseSplit[1].toLowerCase() : vertical; // If single value, use same for both axes
-    
+
     if (props.flow === 'horizontal') {
       // For horizontal flow (flex-direction: row)
       // Map vertical part to align-items (cross axis)
@@ -173,7 +173,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
           styles.alignItems = 'flex-end';
           break;
       }
-      
+
       // Map horizontal part to justify-content (main axis)
       switch (horizontal) {
         case 'left':
@@ -200,7 +200,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
           styles.justifyContent = 'flex-end';
           break;
       }
-      
+
       // Map horizontal part to align-items (cross axis)
       switch (horizontal) {
         case 'left':
@@ -216,7 +216,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     } else if (props.flow === 'grid') {
       // For grid layout, use place-items
       let placeItems = '';
-      
+
       // Map vertical part
       switch (vertical) {
         case 'top':
@@ -229,9 +229,9 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
           placeItems += 'end';
           break;
       }
-      
+
       placeItems += ' ';
-      
+
       // Map horizontal part
       switch (horizontal) {
         case 'left':
@@ -244,7 +244,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
           placeItems += 'end';
           break;
       }
-      
+
       styles.placeItems = placeItems.trim();
     }
   }

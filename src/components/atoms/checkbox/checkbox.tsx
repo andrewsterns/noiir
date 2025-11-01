@@ -45,7 +45,6 @@ export const ICON_VARIANTS = {
         stroke: { type: 'solid' as const, color: 'gray4', weight: 2 },
         appearance: { radius: 4 },
         iconStart: null,
-        animate: { hover: { variant: 'checkHover', duration: '.4s', curve: 'ease-in-out' }, click: { variant: 'checked', duration: '.4s', curve: 'ease-in-out' } },
     },
     checked: {
         fill: { type: 'solid' as const, color: 'blue5' },
@@ -53,7 +52,6 @@ export const ICON_VARIANTS = {
         stroke: { type: 'solid' as const, color: 'blue5', weight: 2 },
         appearance: { radius: 4 },
         iconStart: <Check />,
-        animate: { hover: { variant: 'checkHover', duration: '.2s', curve: 'ease-in-out' }, click: { variant: 'unchecked', duration: '.2s', curve: 'ease-in-out' } },
     },
     checkHover: {
         fill: { type: 'solid' as const, color: 'black4' },
@@ -61,7 +59,6 @@ export const ICON_VARIANTS = {
         stroke: { type: 'solid' as const, color: 'blue4', weight: 1, opacity: 0 },
         appearance: { radius: 4 },
         iconStart: <Check />,
-        animate: { hover: { variant: 'checkHover', duration: '.2s', curve: 'ease-in-out' }, click: { variant: 'unchecked', duration: '.2s', curve: 'ease-in-out' } },
     },
 } satisfies ExtendVariant;
 

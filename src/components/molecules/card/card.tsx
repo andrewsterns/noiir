@@ -72,7 +72,6 @@ export const CARD_VARIANTS = {
         { x: -12, y: -12, blur: 32, color: 'rgba(255,255,255,0.7)' }
       ]
     },
-    animate: { hover: { variant: 'defaultHover' } }
   },
   defaultHover: {
     fill: { type: 'solid' as const, color: 'gray1' },
@@ -85,7 +84,6 @@ export const CARD_VARIANTS = {
     stroke: { type: 'solid' as const, color: 'gray3', weight: 1 },
     appearance: { radius: 12 },
     effects: { dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0, 0, 0, 0.06)' }] },
-    animate: { hover: { variant: 'elevatedHover' } }
   },
   elevatedHover: {
     fill: { type: 'solid' as const, color: 'white1' },

@@ -27,17 +27,17 @@ import { Typography } from '../../frame/frame-properties/typography/typography.p
 
 export const BUTTON_SIZES = {
 
-    1: {
+    '1': {
         typography: { type: 'h6', wrap: 'nowrap' },
-        autoLayout: { paddingHorizontal: 12, paddingVertical: 4 },
+        autoLayout: { paddingHorizontal: 12, paddingVertical: 4, width: 'hug' },
     },
-    2: {
+    '2': {
         typography: { type: 'h5', wrap: 'nowrap' },
-        autoLayout: { paddingHorizontal: 16, paddingVertical: 8 },
+        autoLayout: { paddingHorizontal: 16, paddingVertical: 8, width: 'hug' },
     },
-    3: {
+    '3': {
         typography: { type: 'h3', wrap: 'nowrap' },
-        autoLayout: { paddingHorizontal: 20, paddingVertical: 12 },
+        autoLayout: { paddingHorizontal: 20, paddingVertical: 12, width: 'hug' },
     },
     'fill': {
         autoLayout: { width: 'fill-container', height: 'hug', paddingHorizontal: 20, paddingVertical: 12 },
@@ -45,13 +45,15 @@ export const BUTTON_SIZES = {
     }
 };
 
+
+
 export const BUTTON_VARIANTS: ExtendVariant = {
     primary: {
         ...VARIANT_STYLES.solid as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'primaryHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'primaryActive', duration: '.3s', curve: 'ease-in-out' } },
+
 
     },
     primaryHover: {
@@ -65,9 +67,7 @@ export const BUTTON_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
-        animate: { 
-            hover: { variant: 'primaryActiveHover', duration: '.3s', curve: 'ease-in-out' },
-        click: { variant: 'primary', duration: '.3s', curve: 'ease-in-out' } },
+
     },
 
     primaryActiveHover: {
@@ -102,7 +102,6 @@ export const BUTTON_SOLID_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'solidHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'solidActive', duration: '.3s', curve: 'ease-in-out' } },
     },
     solidHover: {
         ...VARIANT_STYLES.solidHover as any,
@@ -115,7 +114,6 @@ export const BUTTON_SOLID_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'solidActiveHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'solid', duration: '.3s', curve: 'ease-in-out' } },
     },
     solidActiveHover: {
         ...VARIANT_STYLES.solid as any,
@@ -136,7 +134,7 @@ export const BUTTON_SOFT_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'softHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'softActive', duration: '.3s', curve: 'ease-in-out' } },
+       
     },
     softHover: {
         ...VARIANT_STYLES.softHover as any,
@@ -149,7 +147,6 @@ export const BUTTON_SOFT_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'softActiveHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'soft', duration: '.3s', curve: 'ease-in-out' } },
     },
     softActiveHover: {
         ...VARIANT_STYLES.soft as any,
@@ -170,7 +167,7 @@ export const BUTTON_SURFACE_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'surfaceHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'surfaceActive', duration: '.3s', curve: 'ease-in-out' } },
+     
     },
     surfaceHover: {
         ...VARIANT_STYLES.surfaceHover as any,
@@ -183,7 +180,6 @@ export const BUTTON_SURFACE_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'surfaceActiveHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'surface', duration: '.3s', curve: 'ease-in-out' } },
     },
     surfaceActiveHover: {
         ...VARIANT_STYLES.surface as any,
@@ -204,7 +200,6 @@ export const BUTTON_GHOST_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'ghostHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'ghostActive', duration: '.3s', curve: 'ease-in-out' } },
     },
     ghostHover: {
         ...VARIANT_STYLES.ghostHover as any,
@@ -217,7 +212,6 @@ export const BUTTON_GHOST_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'ghostActiveHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'ghost', duration: '.3s', curve: 'ease-in-out' } },
     },
     ghostActiveHover: {
         ...VARIANT_STYLES.ghost as any,
@@ -238,7 +232,6 @@ export const BUTTON_OUTLINE_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'outlineHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'outlineActive', duration: '.3s', curve: 'ease-in-out' } },
     },
     outlineHover: {
         ...VARIANT_STYLES.outlineHover as any,
@@ -251,7 +244,6 @@ export const BUTTON_OUTLINE_VARIANTS: ExtendVariant = {
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
-        animate: { hover: { variant: 'outlineActiveHover', duration: '.3s', curve: 'ease-in-out' }, click: { variant: 'outline', duration: '.3s', curve: 'ease-in-out' } },
     },
     outlineActiveHover: {
         ...VARIANT_STYLES.outline as any,

@@ -37,7 +37,6 @@ const DIALOG_CARD_VARIANTS = {
     stroke: { type: 'solid' as const, color: 'gray3', weight: 1 },
     appearance: { radius: 12 },
     effects: { dropShadow: [{ x: 0, y: 4, blur: 12, color: 'rgba(0, 0, 0, 0.1)' }] },
-    animate: { hover: { variant: 'primaryHover' } }
   },
   primaryHover: {
     fill: { type: 'solid' as const, color: 'gray1' },

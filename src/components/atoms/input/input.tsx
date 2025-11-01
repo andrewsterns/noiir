@@ -57,7 +57,6 @@ const INPUT_VARIANTS = {
         autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const, },
         fill: { type: 'solid' as const, color: 'white2' },
         stroke: { type: 'solid' as const, color: 'gray2', weight: .5 },
-        animate: { hover: { variant: 'primaryHover' }, click: { variant: 'primaryActive' } },
     },
     primaryHover: {
         autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const, },
@@ -81,12 +80,10 @@ const CURSOR_VARIANTS = {
         autoLayout: { flow: 'grid', width: 'hug', height: 'hug' },
         typography: { type: 'h4' },
         appearance: { opacity: 1 },
-        animate: { afterDelay: 'blinkOff', delay: '0.5s' }
     },
     blinkOff: {
         typography: { type: 'h4' },
         appearance: { opacity: 0 },
-        animate: { afterDelay: 'blinkOn', delay: '0.5s' }
     },
 } satisfies ExtendVariant;
 

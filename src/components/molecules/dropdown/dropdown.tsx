@@ -165,7 +165,6 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         variant={isOpen ? 'active' : 'hidden'}
         variants={LIST_VARIANTS}
         sizes={LIST_SIZES}
-        animate={{ duration: '0.3s', curve: 'ease-in-out' }}
         {...listProps}
       />
 

@@ -147,7 +147,7 @@ export const TwoLists: Story = {
     return (
       <Frame autoLayout={{ flow: 'horizontal', gap: 32 }}>
         <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
-          <Label variant="primary" animate={{ hover: 'none', click: 'none' }}>List 1</Label>
+          <Label variant="primary">List 1</Label>
           <List
             items={sampleItems}
             selectedIndex={selectedIndex1}

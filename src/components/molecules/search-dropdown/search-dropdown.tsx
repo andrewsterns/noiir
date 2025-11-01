@@ -115,7 +115,6 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
       ref={ref}
       onClick={handleFrameClick}
       onMouseLeave={handleMouseLeave}
-      animate={undefined}
       tabIndex={-1}
       {...frameProps}
     >

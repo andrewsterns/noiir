@@ -52,7 +52,6 @@ export const LABEL_VARIANTS = {
       color: 'white2',
       wrap: 'nowrap',
     },
-    animate: { hover: { variant: 'primaryHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
  primaryHover: {
@@ -65,8 +64,6 @@ export const LABEL_VARIANTS = {
       color: 'white1',
       wrap: 'nowrap',
     },
-    animate: { hover: { variant: 'primaryHover', duration: '0.2s', curve: 'ease-in-out' },
-     click: { variant: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
   primaryActive: {
@@ -79,7 +76,6 @@ export const LABEL_VARIANTS = {
             wrap: 'nowrap',
 
         },
-    animate: { hover: { variant: 'primaryActiveHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'primaryActive', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
   primaryActiveHover: {
@@ -92,7 +88,6 @@ export const LABEL_VARIANTS = {
       color: 'blue7',
       wrap: 'nowrap',
     },
-    animate: { hover: { variant: 'primaryActiveHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'primary', duration: '0.2s', curve: 'ease-in-out' } },
   },
 
   disabled: {

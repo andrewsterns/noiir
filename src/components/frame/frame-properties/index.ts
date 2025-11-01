@@ -6,7 +6,6 @@ export * from './effects/effects.props';
 export * from './layout/layout.props';
 export * from './position/position.props';
 export * from './typography/typography.props';
-export * from './animate/animate.props';
 export * from './events/event.props';
 export * from './variants/variants.props';
 export * from './variants/size.props';

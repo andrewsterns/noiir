@@ -56,14 +56,12 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
     ...BUTTON_VARIANTS.primary,
     iconStart: null,
     iconEnd: <ArrowDown />,
-    animate: { hover: { variant: 'primaryHover', duration: '.25s', curve: 'ease-in-out' } },
   },
 
   primaryHover: {
     ...BUTTON_VARIANTS.primaryHover,
     iconStart: null,
     iconEnd: <ArrowDown />,
-    animate: { hover: { variant: 'primaryActiveHover', duration: '.25s', curve: 'ease-in-out' }, click: { variant: 'primaryOpen', duration: '.25s', curve: 'ease-in-out' } },
   },
 
   primaryActive: {
