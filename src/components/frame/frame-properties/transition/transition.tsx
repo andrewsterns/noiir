@@ -1,7 +1,7 @@
 // src/components/frame/frame-properties/transition/transition.tsx
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
-export type EventType = 'click' | 'hover' | 'mouseEnter' | 'mouseLeave' | 'mouseDown' | 'mouseUp' | 'key' | 'hotKey' | 'delay' | (() => void);
+export type EventType = 'click' | 'hover' | 'mouseEnter' | 'mouseLeave' | 'mouseDown' | 'mouseUp' | 'key' | 'hotKey' | 'delay' | 'close' | 'listen' | (() => void);
 
 export interface TransitionRule {
   event: EventType;
@@ -16,6 +16,8 @@ export interface TransitionRule {
   curve?: string; // Easing curve ('ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear', etc.)
   key?: string; // For 'key' and 'hotKey' events
   hotKey?: string; // Alternative to key for hotKey events
+  listenId?: string; // For 'listen' event: the ID of the Frame to listen to
+  listenVariant?: string; // For 'listen' event: the variant to listen for
 }
 
 export type Transitions = TransitionRule[];
@@ -82,6 +84,74 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setAllTransitions(prev => prev.filter(t => !transitions.some(rt => rt === t)));
   }, []);
 
+  const applyTransitionRef = useRef<(rule: TransitionRule, sourceId?: string) => boolean | undefined>();
+
+  const emitEvent = useCallback((sourceId: string, event: EventType, eventData?: any) => {
+    let relevant;
+    if (event === 'listen') {
+      relevant = allTransitions.filter(rule =>
+        rule.event === 'listen' && rule.listenId === eventData.listenId && rule.listenVariant === eventData.listenVariant
+      );
+    } else {
+      relevant = allTransitions.filter(rule =>
+        rule.event === event && (!rule.sourceId || rule.sourceId === sourceId)
+      );
+    }
+
+    console.log(`🚀 Emitting event: ${sourceId} -> ${event}`, {
+      sourceId,
+      event,
+      eventData,
+      allTransitionsCount: allTransitions.length,
+      relevantTransitions: relevant
+    });
+
+    if (relevant.length === 0) return;
+
+    // Group rules by targetId (or sourceId if no targetId)
+    const byTarget: Record<string, TransitionRule[]> = {};
+    relevant.forEach(rule => {
+      const tId = rule.targetId || sourceId || '__global';
+      byTarget[tId] = byTarget[tId] || [];
+      byTarget[tId].push(rule);
+    });
+
+    // For each target, apply non-toggle (explicit) rules first, then toggles only if no explicit rule applied
+    Object.keys(byTarget).forEach(tId => {
+      const rules = byTarget[tId];
+      // filter key/hotKey mismatches
+      const filtered = rules.filter(rule => {
+        if ((event === 'key' || event === 'hotKey') && rule.key && eventData?.key !== rule.key) return false;
+        if ((event === 'key' || event === 'hotKey') && rule.hotKey && eventData?.key !== rule.hotKey) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) return;
+
+      const explicit = filtered.filter(r => !r.toggle);
+      const toggles = filtered.filter(r => r.toggle);
+
+      let explicitApplied = false;
+      for (const r of explicit) {
+        // skip function events
+        if (typeof r.event === 'function') continue;
+        if (applyTransitionRef.current) {
+          const applied = applyTransitionRef.current(r, sourceId);
+          if (applied) explicitApplied = true;
+        }
+      }
+
+      if (!explicitApplied) {
+        for (const r of toggles) {
+          if (typeof r.event === 'function') continue;
+          if (applyTransitionRef.current) {
+            applyTransitionRef.current(r, sourceId);
+          }
+        }
+      }
+    });
+  }, [allTransitions]);
+
   const applyTransition = useCallback((rule: TransitionRule, sourceId?: string) => {
     const targetId = rule.targetId || sourceId;
     if (!targetId) return; // No target specified and no source available
@@ -89,7 +159,7 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const currentVariant = frames[targetId];
 
     if (rule.fromVariant && currentVariant !== rule.fromVariant) {
-      return;
+      return false;
     }
 
     let newVariant: string;
@@ -114,39 +184,28 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       curve: rule.curve,
       rule
     });
-
-    setFrames(prev => ({ ...prev, [targetId]: newVariant }));
-
     // Handle delay for 'delay' event type
-    if (rule.event === 'delay' && rule.delay) {
-      const delayMs = parseTime(rule.delay);
+    if (rule.event === 'delay' && rule.delay != null) {
+      const delayMs = parseTime(rule.delay as string | number);
       const timeoutId = setTimeout(() => {
         // Delay event completed
       }, delayMs);
-      timeoutsRef.current[targetId] = timeoutId;
+      // targetId is guaranteed to exist due to earlier check
+      timeoutsRef.current[targetId as string] = timeoutId;
     }
-  }, [frames]);
 
-  const emitEvent = useCallback((sourceId: string, event: EventType, eventData?: any) => {
-    console.log(`🚀 Emitting event: ${sourceId} -> ${event}`, {
-      sourceId,
-      event,
-      eventData,
-      allTransitionsCount: allTransitions.length,
-      relevantTransitions: allTransitions.filter(rule =>
-        rule.event === event && (!rule.sourceId || rule.sourceId === sourceId)
-      )
-    });
+    const oldVariant = frames[targetId];
+    setFrames(prev => ({ ...prev, [targetId]: newVariant }));
 
-    allTransitions.forEach(rule => {
-      if (rule.event === event && (!rule.sourceId || rule.sourceId === sourceId)) {
-        if ((event === 'key' || event === 'hotKey') && rule.key && eventData?.key !== rule.key) return;
-        if ((event === 'key' || event === 'hotKey') && rule.hotKey && eventData?.key !== rule.hotKey) return;
-        if (typeof event === 'function') return;
-        applyTransition(rule, sourceId);
-      }
-    });
-  }, [allTransitions, applyTransition]);
+    // Emit 'listen' event if variant changed
+    if (newVariant !== oldVariant) {
+      emitEvent(targetId, 'listen', { listenId: targetId, listenVariant: newVariant });
+    }
+
+    return true;
+  }, [frames, emitEvent]);
+
+  applyTransitionRef.current = applyTransition;
 
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {

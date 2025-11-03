@@ -14,10 +14,10 @@ import { VARIANT_STYLES } from '../../../theme/variant';
  * - Interactive behavior (cursor, transitions)
  *
  * Instead of handling hover/click states in component logic,
- * define them as variant transitions using Frame's animate prop.
+ * variants define different visual states that the component switches between.
  *
  * Example usage:
- * <Frame variant="solid" variants={TOGGLE_VARIANTS} animate={{ hover: { variant: 'solidHover' } }} />
+ * <Frame variant="primary" variants={TOGGLE_VARIANTS} />
  *
  * @see FrameVariantConfig in variants.props.tsx for available properties
  * @see ExtendVariant type for variant collection structure
@@ -28,7 +28,7 @@ export const TOGGLE_SIZES = {
         autoLayout: { width: 136, height: 20 },
     },
     '2': {
-        autoLayout: { width: 44, height: 24 },
+        autoLayout: { width: 144, height: 24, paddingVertical: 2 },
     },
     '3': {
         autoLayout: { width: 52, height: 28 },
@@ -36,34 +36,49 @@ export const TOGGLE_SIZES = {
 };
 
 export const TOGGLE_VARIANTS: ExtendVariant = {
-    // Background (track) variants - these don't change
-    solid: {
-        ...VARIANT_STYLES.solid as any,
-        autoLayout: { alignment: 'centerLeft' },
-        appearance: { radius: '10' },
-        animate: { hover: { variant: 'solidHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'solidActive', duration: '0.2s', curve: 'ease-in-out' } },
-    },
-
-    solidHover: {
-        ...VARIANT_STYLES.solidHover as any,
-        autoLayout: { alignment: 'center' },
-        animate: { hover: { variant: 'solidHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'solidActive', duration: '0.2s', curve: 'ease-in-out' } },
-    },
-
-    solidActive: {
-        ...VARIANT_STYLES.solidActive as any,
-        autoLayout: { alignment: 'centerRight' },
-        animate: { hover: { variant: 'solidHover', duration: '0.2s', curve: 'ease-in-out' }, click: { variant: 'solid', duration: '0.2s', curve: 'ease-in-out' } },
-    },
-
-    solidTrack: {
-       ...VARIANT_STYLES.solidActive as any,
-       autoLayout: { width: 'fill-container', height: 'fill-container', padding: 2 },
-    },
-
-    solidThumb: {
-        fill: { type: 'solid', color: 'tomato5' },
+    // Track (background) variants - control position and color
+    primary: {
+        fill: { type: 'solid', color: 'gray3', opacity: 1 },
         stroke: { type: 'solid', color: 'gray4', weight: 1 },
+        autoLayout: { alignment: 'centerLeft' },
+        appearance: { radius: 12 },
     },
 
-} satisfies ExtendVariant;
+    primaryHover: {
+        fill: { type: 'solid', color: 'gray4', opacity: 1 },
+        stroke: { type: 'solid', color: 'gray5', weight: 1 },
+        autoLayout: { alignment: 'center' },
+        appearance: { radius: 12 },
+    },
+
+    primaryActive: {
+        fill: { type: 'solid', color: 'blue5', opacity: 1 },
+        stroke: { type: 'solid', color: 'blue6', weight: 1 },
+        autoLayout: { alignment: 'centerRight' },
+        appearance: { radius: 12 },
+    },
+
+    primaryActiveHover: {
+        fill: { type: 'solid', color: 'blue6', opacity: 1 },
+        stroke: { type: 'solid', color: 'blue7', weight: 1 },
+        autoLayout: { alignment: 'centerRight' },
+        appearance: { radius: 12 },
+    },
+
+    // Thumb variants - circular element that moves
+    solidThumb: {
+        fill: { type: 'solid', color: 'white1', opacity: 1 },
+        stroke: { type: 'solid', color: 'gray3', weight: 1 },
+        autoLayout: { width: 6, height: 6 },
+        effects: { dropShadow: [{ x: 0, y: 1, blur: 2, color: 'rgba(0,0,0,0.1)' }] },
+    },
+
+    solidThumbActive: {
+        fill: { type: 'solid', color: 'white1', opacity: 1 },
+        stroke: { type: 'solid', color: 'gray3', weight: 1 },
+        autoLayout: { width: 11, height: 11 },
+        appearance: { radius: 12 },
+
+    },
+
+};

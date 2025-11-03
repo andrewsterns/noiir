@@ -1,6 +1,8 @@
 import { ExtendVariant} from '../../frame/frame-properties/variants/variants.props';
 import { ArrowDown, ArrowUp } from '../../../theme/icons/arrows';
 import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
+import { LIST_VARIANTS } from '../list/list.variants';
+import { LABEL_VARIANTS } from '../../atoms/label/label.variants';
 
 /**
  * Dropdown Variants Library
@@ -134,3 +136,17 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
     cursor: { type: 'not-allowed' }
   },
 } satisfies ExtendVariant;
+
+// Dropdown-specific list variants for show/hide
+export const DROPDOWN_LIST_VARIANTS = {
+  ...LIST_VARIANTS,
+  hidden: {
+    display: 'none'
+  },
+  visible: {
+    ...LIST_VARIANTS.default,
+    autoLayout: { height: 100, width: 'fill-container' },
+    fill: { type: 'solid', color: 'tomato4' },
+  },
+} satisfies ExtendVariant;
+

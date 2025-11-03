@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { TOGGLE_VARIANTS, TOGGLE_SIZES } from './toggle.variants';
+import { TOGGLE_SIZES, TOGGLE_VARIANTS } from './toggle.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
+import { Transitions } from '../../frame/frame-properties/transition/transition';
 
 /**
  * Toggle Component
@@ -13,8 +14,6 @@ import { FrameVariantConfig } from '../../frame/frame-properties/variants/varian
  * For animations and state transitions, use TOGGLE_VARIANTS with Frame's animate prop
  * instead of handling hover/click states in component logic.
  *
- * Example: animate={{ hover: { variant: 'solidHover' }, click: { variant: 'solidActive' } }}
- *
  * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
  *
  * @see FrameProps in src/components/frame/Frame.tsx for available props
@@ -22,45 +21,57 @@ import { FrameVariantConfig } from '../../frame/frame-properties/variants/varian
  */
 
 export interface ToggleProps extends Omit<FrameProps, 'onChange'> {
+  children?: ReactNode;
+  variant?: string;
+  variantThumb?: string;
+  size?: FrameVariantConfig | string;
+  transitions?: Transitions;
   checked?: boolean;
-  defaultChecked?: boolean;
   onChange?: (checked: boolean) => void;
-  disabled?: boolean;
-  size?: '1' | '2' | '3';
-  label?: string;
 }
 
-export const Toggle = React.forwardRef<HTMLDivElement, ToggleProps>(({
-  checked: controlledChecked,
-  defaultChecked = false,
-  onChange,
-  disabled = false,
-  size = '2',
-  label,
-  variant = 'solid',
+export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
+  children,
+  variant = 'primary',
   variants = TOGGLE_VARIANTS,
+  variantThumb = 'solidThumb',
+  size = '2',
   sizes = TOGGLE_SIZES,
+  transitions,
+  checked = false,
+  onChange,
   ...toggleProps
 }, ref) => {
 
+  const defaultTransitions: Transitions = [
+    // Toggle track alignment on click
+    { event: 'click', targetId: 'trackId', toggle: true, toggleVariants: ['primary', 'primaryActive'], duration: '0.2s', curve: 'ease' },
+    // Toggle thumb variant on click
+    { event: 'click', targetId: 'thumbId', toggle: true, toggleVariants: ['solidThumb', 'solidThumbActive'], duration: '0.2s', curve: 'ease' },
+    // Track hover states
+    { event: 'mouseEnter', targetId: 'trackId', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.1s', curve: 'ease' },
+    { event: 'mouseLeave', targetId: 'trackId', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
+  ];
 
 
   return (
+
       <Frame
-        variant='solid'
-        variants={TOGGLE_VARIANTS}
-        size={size}
-        sizes={sizes}
-        autoLayout={{ flow: 'horizontal' }}
-        cursor={disabled ? 'not-allowed' : 'pointer'}
-        tabIndex={disabled ? -1 : 0}
+       ref={ref}  
+      as="button"
+      id="trackId"
+      variant={variant}
+      variants={variants}
+      size={size}
+      sizes={sizes}
+      transitions={transitions ?? defaultTransitions}
+ 
+      {...toggleProps}
       >
         <Frame
-          id='thumb'
-          variant='solidThumb'
-          variants={TOGGLE_VARIANTS}
-          autoLayout={{ width: '18', height: 18 }}
-          appearance={{ radius: 9 }}
+          id="thumbId"
+          variant={variantThumb}
+          variants={variants}
         />
       </Frame>
 

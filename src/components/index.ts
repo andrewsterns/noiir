@@ -2,6 +2,7 @@
 export { Frame } from './frame/Frame';
 export { Button } from './atoms/button/button';
 export { Label } from './atoms/label/label';
+export { Toggle } from './atoms/toggle/toggle';
 
 // Molecules
 export { List } from './molecules/list/list';

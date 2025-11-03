@@ -100,4 +100,8 @@ export const LABEL_VARIANTS = {
     },
     cursor: { type: 'not-allowed' }
   },
+
+  hidden: {
+    fill: { type: 'solid', color: 'green4' },
+  },
 } satisfies ExtendVariant;

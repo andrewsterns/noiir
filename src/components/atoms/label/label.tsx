@@ -1,6 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
+import { Transitions } from '../../frame/frame-properties/transition/transition';
 
 /**
  * Label Component
@@ -24,8 +25,9 @@ export interface LabelProps extends FrameProps {
   children: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
-  variant?: 'primary'| 'primary-hover' | 'primary-active' | 'primary-active-hover' | 'disabled';
+  variant?: 'primary'| 'primaryHover' | 'primaryActive' | 'primaryActiveHover' | 'disabled' | 'hidden';
   size?: string;
+  transitions?: Transitions;
 }
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
@@ -34,20 +36,33 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   disabled = false,
   variant = 'primary',
   size = 'default',
+  transitions,
   ...frameProps
 }, ref) => {
   // Determine effective variant based on disabled state
   const effectiveVariant = disabled ? 'disabled' : variant;
 
+  const defaultTransitions: Transitions = [
+    { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
+    { event: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
+    { event: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
+    { event: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
+    { event: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
+    { event: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
+  ];
+
   return (
     <Frame
       ref={ref}
+      as='label'
+      id='label'
       size={size}
       sizes={LABEL_SIZES}
-      variant={effectiveVariant}
+      variant={variant}
       variants={LABEL_VARIANTS}
-      cursor={onClick && !disabled ? 'pointer' : undefined}
+      cursor={'pointer'}
       onClick={disabled ? undefined : onClick}
+      transitions={transitions ?? defaultTransitions}
       {...frameProps}
     >
       {children}

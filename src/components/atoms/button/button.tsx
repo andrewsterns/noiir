@@ -40,15 +40,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   ...buttonProps
 }, ref) => {
   const defaultTransitions: Transitions = variant ? [
-    { event: 'mouseEnter', toVariant: `primaryHover`, duration: '0.2s', curve: 'ease' },
-    { event: 'mouseLeave', toVariant: 'primary', duration: '0.2s', curve: 'ease' },
-
+    { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
+    { event: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
+    { event: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
+    { event: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
+    { event: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
+    { event: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
   ] : [];
+
+  console.log('Button defaultTransitions:', defaultTransitions);
 
   return (
     <Frame
     id='button'
       ref={ref}
+      as='button'
+      type='button'
       variant={variant}
       variants={variants}
       sizes={sizes}

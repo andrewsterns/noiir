@@ -56,19 +56,19 @@ export const AnimationCycle: Story = {
         <div>
           <h4>Primary-Hover State</h4>
           <p>Hover → stays primary-hover | Click → primary-active</p>
-          <Label variant="primary-hover" onClick={() => {}}>Primary Hover (hover & click me)</Label>
+          <Label variant="primaryHover" onClick={() => {}}>Primary Hover (hover & click me)</Label>
         </div>
 
         <div>
           <h4>Primary-Active State</h4>
           <p>Hover → primary-active-hover | Click → stays primary-active</p>
-          <Label variant="primary-active" onClick={() => {}}>Primary Active (hover & click me)</Label>
+          <Label variant="primaryActive" onClick={() => {}}>Primary Active (hover & click me)</Label>
         </div>
 
         <div>
           <h4>Primary-Active-Hover State</h4>
           <p>Hover → stays primary-active-hover | Click → primary</p>
-          <Label variant="primary-active-hover" onClick={() => {}}>Primary Active Hover (hover & click me)</Label>
+          <Label variant="primaryActiveHover" onClick={() => {}}>Primary Active Hover (hover & click me)</Label>
         </div>
       </Frame>
     </Frame>
@@ -87,7 +87,7 @@ export const Sizes: Story = {
   render: () => (
     <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'center' }}>
       <Label variant="primary">Primary</Label>
-      <Label variant="primary-active">Active</Label>
+      <Label variant="primaryActive">Active</Label>
       <Label variant="disabled" disabled>Disabled</Label>
     </Frame>
   ),
@@ -112,9 +112,9 @@ export const InteractiveDemo: Story = {
 
       <Frame autoLayout={{ flow: 'horizontal', gap: 12 }}>
         <Label variant="primary">Primary</Label>
-        <Label variant="primary-active">Active</Label>
-        <Label variant="primary-hover">Hover</Label>
-        <Label variant="primary-active-hover">Active Hover</Label>
+        <Label variant="primaryActive">Active</Label>
+        <Label variant="primaryHover">Hover</Label>
+        <Label variant="primaryActiveHover">Active Hover</Label>
         <Label variant="disabled" disabled>Disabled</Label>
       </Frame>
 
@@ -129,7 +129,7 @@ export const InteractiveDemo: Story = {
           Primary (freeform)
         </Label>
         <Label
-          variant="primary-active"
+          variant="primaryActive"
           fill={{ type: 'solid', color: 'primary3' }}
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, color: 'primary9' }}
@@ -138,7 +138,7 @@ export const InteractiveDemo: Story = {
           Active (freeform)
         </Label>
         <Label
-          variant="primary-hover"
+          variant="primaryHover"
           fill={{ type: 'solid', color: 'primary3' }}
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, color: 'primary9' }}
@@ -147,7 +147,7 @@ export const InteractiveDemo: Story = {
           Hover (freeform)
         </Label>
         <Label
-          variant="primary-active-hover"
+          variant="primaryActiveHover"
           fill={{ type: 'solid', color: 'primary3' }}
           appearance={{ radius: 4 }}
           typography={{ fontSize: 14, color: 'primary9' }}

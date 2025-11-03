@@ -53,6 +53,7 @@ export interface FrameProps extends EventProps {
   transitions?: Transitions;
 
   display?: string;
+  type?: string;
   [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
@@ -101,6 +102,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     transitions,
 
     display,
+    type,
     tabIndex,
     contentEditable,
     suppressContentEditableWarning,
@@ -224,6 +226,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   if (pointerEvents !== undefined) explicitProps.pointerEvents = pointerEvents;
   if (display !== undefined) explicitProps.display = display;
   if (tabIndex !== undefined) explicitProps.tabIndex = tabIndex;
+  if (type !== undefined) explicitProps.type = type;
 
   // Create effective variant props without animate if it's explicitly provided
   const filteredVariantProps = { ...finalEffectiveVariantProps };
@@ -286,6 +289,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     tabIndex: finalTabIndex,
     contentEditable: finalContentEditable,
     suppressContentEditableWarning: finalSuppressContentEditableWarning,
+    type: finalType,
   } = mergedProps;
 
   // Merge size's autoLayout into finalAutoLayout if present
@@ -505,6 +509,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     finalOnClick?.(e);
   };
   const handleMouseEnter = (e: any) => {
+    console.log('MouseEnter on', id);
     if (transitionContext && id) {
       transitionContext.emitEvent(id, 'mouseEnter');
     }
@@ -566,6 +571,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
         tabIndex: finalTabIndex,
         contentEditable: finalContentEditable,
         suppressContentEditableWarning: finalSuppressContentEditableWarning,
+        type: finalType,
       },
       childrenWithIcons
     );
@@ -595,6 +601,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
       tabIndex: finalTabIndex,
       contentEditable: finalContentEditable,
       suppressContentEditableWarning: finalSuppressContentEditableWarning,
+      type: finalType,
     },
     mergedAutoLayout?.flow === 'curved' ? curvedChildren : childrenWithIcons
   );

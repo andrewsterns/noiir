@@ -36,6 +36,8 @@ export interface ListProps extends Omit<FrameProps, 'size'> {
   itemVariant?: 'primary'| 'primaryHover' | 'primaryActive' | 'primaryActiveHover' | 'disabled';
   selectedVariant?: 'primary' | 'primaryActive';
   disabledVariant?: 'disabled';
+  children?: React.ReactNode;
+  renderItem?: (item: ListItem, index: number) => React.ReactNode;
 }
 
 export const List = React.forwardRef<HTMLDivElement, ListProps>(({
@@ -47,6 +49,8 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   itemVariant = 'primary',
   selectedVariant = 'primary',
   disabledVariant = 'disabled',
+  children,
+  renderItem,
   as,
   ...frameProps
 }, ref) => {
@@ -80,6 +84,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
 
   return (
     <Frame
+      id='list'
       ref={ref}
       as={as || "div"}
       autoLayout={{ flow: 'vertical' }}
@@ -87,20 +92,24 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
       sizes={LIST_SIZES}
       variant='default'
       variants={LIST_VARIANTS}
+
       {...frameProps}
     >
       {items.map((item, index) => {
         const itemVariantValue = getItemVariant(index, item);
         const disabled = isItemDisabled(item);
 
+        if (renderItem) {
+          return renderItem(item, index);
+        }
+
+        // Default rendering using Label
         return (
           <Label
+            id={`list-item-${index}`}
             key={index}
-            size='fill'
-            sizes={LABEL_SIZES}
-            stroke={{ type: 'none' }}
-            variant='primary'
-            variants={LABEL_VARIANTS}
+            size="fill"
+            variant={itemVariantValue}
             disabled={disabled}
             onClick={() => handleItemClick(index, item)}
           >

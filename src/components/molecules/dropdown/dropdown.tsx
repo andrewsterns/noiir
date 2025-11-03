@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
-import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES } from './dropdown.variants';
-import { LIST_SIZES, LIST_VARIANTS } from '../list/list.variants';
-import { BUTTON_SIZES, BUTTON_VARIANTS } from '../../atoms/button/button.variants';
+import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES, DROPDOWN_LIST_VARIANTS } from './dropdown.variants';
+import { BUTTON_SIZES } from '../../atoms/button/button.variants';
+import { Transitions, useTransitionContext } from '../../frame/frame-properties/transition/transition';
 
 /**
  * Dropdown Component
@@ -13,19 +13,17 @@ import { BUTTON_SIZES, BUTTON_VARIANTS } from '../../atoms/button/button.variant
  * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
  * instead of creating custom props for styling/behavior.
  *
- * For animations and state transitions, use DROPDOWN_BUTTON_VARIANTS and LIST_VARIANTS with Frame's animate prop
+ * For animations and state transitions, use DROPDOWN_BUTTON_VARIANTS and DROPDOWN_LIST_VARIANTS with Frame's animate prop
  * instead of handling hover/click states in component logic.
  *
  * Example: animate={{ hover: { variant: 'primaryHover' }, click: { variant: 'primaryActive' } }}
  *
- * This component also uses Button and List components internally, so their props are also available
- * through buttonProps and listProps.
+ * This component also uses Button and Label components internally.
  *
  * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
  *
  * @see FrameProps in src/components/frame/Frame.tsx for available props
  * @see ButtonProps in src/components/atoms/button/button.tsx for Button props
- * @see ListProps in src/components/molecules/list/list.tsx for List props
  * @see DROPDOWN_BUTTON_VARIANTS in dropdown.variants.tsx for available animation states
  */
 
@@ -39,9 +37,10 @@ export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant' | 
   onMultiChange?: (selectedIndices: number[], items: ListItem[]) => void;
   disabled?: boolean;
   variant?: string | keyof typeof DROPDOWN_VARIANT;
+  listVariant?: string;
   buttonSize?: '1' | '2' | '3' |'fill';
   buttonProps?: Partial<React.ComponentProps<typeof Button>>;
-  listProps?: Partial<React.ComponentProps<typeof List>>;
+  transitions?: Transitions;
 }
 
 export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
@@ -53,125 +52,75 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   onChange,
   onMultiChange,
   disabled = false,
-  variant = 'default',
+  listVariant = 'hidden',
   buttonSize = '2',
+  
   buttonProps,
-  listProps,
+  transitions,
   ...frameProps
 }, ref) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [internalSelectedIndex, setInternalSelectedIndex] = useState<number | undefined>(selectedIndex);
-  const [internalSelectedIndices, setInternalSelectedIndices] = useState<number[]>(selectedIndices);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Use controlled props if provided, otherwise use internal state
-  const currentSelectedIndex = selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
-  const currentSelectedIndices = selectedIndices !== undefined ? selectedIndices : internalSelectedIndices;
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const handleButtonClick = () => {
-    if (!disabled) {
-      setIsOpen(!isOpen);
-    }
-  };
-
-  const handleItemClick = (index: number, item: ListItem) => {
+  const getSelectedLabel = () => {
     if (multiSelect) {
-      const newSelectedIndices = currentSelectedIndices.includes(index)
-        ? currentSelectedIndices.filter(i => i !== index)
-        : [...currentSelectedIndices, index];
-
-      if (selectedIndices === undefined) {
-        setInternalSelectedIndices(newSelectedIndices);
-      }
-
-      if (onMultiChange) {
-        onMultiChange(newSelectedIndices, items.filter((_, i) => newSelectedIndices.includes(i)));
-      }
+      if (selectedIndices.length === 0) return placeholder;
+      return selectedIndices.map(i => typeof items[i] === 'string' ? items[i] : items[i].label).join(', ');
     } else {
-      if (selectedIndex === undefined) {
-        setInternalSelectedIndex(index);
-      }
-      setIsOpen(false);
-      if (onChange) {
-        onChange(index, item);
-      }
-    }
-  };
-
-  const getSelectedLabel = (): string => {
-    if (multiSelect) {
-      if (currentSelectedIndices.length === 0) {
-        return placeholder;
-      } else if (currentSelectedIndices.length === 1) {
-        const item = items[currentSelectedIndices[0]];
-        return typeof item === 'string' ? item : item.label;
-      } else {
-        return `${currentSelectedIndices.length} selected`;
-      }
-    } else {
-      if (currentSelectedIndex !== undefined && items[currentSelectedIndex]) {
-        const item = items[currentSelectedIndex];
-        return typeof item === 'string' ? item : item.label;
+      const index = selectedIndex ?? -1;
+      if (index >= 0 && items[index]) {
+        return typeof items[index] === 'string' ? items[index] : items[index].label;
       }
       return placeholder;
     }
   };
 
+  const openCloseTransitions: Transitions = [
+    { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s' },
+    { event: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s' },
+    { event: 'click', targetId: 'dropdown-list', toggle: true, toggleVariants: ['visible', 'hidden'], duration: '0.3s' },
+    { event: 'listen', listenId: 'dropdown-list', listenVariant: 'visible', targetId: 'dropdown-button', toVariant: 'primaryActive' },
+    { event: 'listen', listenId: 'dropdown-list', listenVariant: 'hidden', targetId: 'dropdown-button', toVariant: 'primary' },
+  ];
+
+  const ItemClickHandler = ({ children }: { children: React.ReactElement }) => {
+    const transitionContext = useTransitionContext();
+
+    const handleItemClick = (index: number, item: ListItem) => {
+      onChange?.(index, item);
+      // The list toggle will trigger the 'listen' event to reset the button
+    };
+
+    return React.cloneElement(children, { onItemClick: handleItemClick });
+  };
+
   return (
     <Frame
-      ref={dropdownRef}
       variants={DROPDOWN_VARIANT}
       variant="default"
       size="2"
       sizes={DROPDOWN_SIZES}
+      transitions={[]}
       {...frameProps}
     >
       <Button
-        variant={isOpen ? 'primaryActive' : 'primary' as any}
+        id='dropdown-button'
+        variant='primary'
         variants={DROPDOWN_BUTTON_VARIANTS}
         size={buttonSize}
         sizes={BUTTON_SIZES}
-        onClick={disabled ? undefined : handleButtonClick}
-        autoLayout={{alignment: 'left', gap: 'fill', paddingRight: 18}}
-
-        
+        autoLayout={{alignment: 'left', gap: 23, paddingRight: 18}}
+        transitions={openCloseTransitions}
         {...buttonProps}
       >
         {getSelectedLabel()}
       </Button>
-      <List
-        items={items}
-        selectedIndex={multiSelect ? undefined : currentSelectedIndex}
-        selectedIndices={multiSelect ? currentSelectedIndices : undefined}
-        multiSelect={multiSelect}
-        onItemClick={handleItemClick}
-        variant={isOpen ? 'active' : 'hidden'}
-        variants={LIST_VARIANTS}
-        sizes={LIST_SIZES}
-        {...listProps}
-      />
-
+      <ItemClickHandler>
+        <List
+          id='dropdown-list'
+          items={items}
+          variant={listVariant}
+          variants={DROPDOWN_LIST_VARIANTS}
+        />
+      </ItemClickHandler>
     </Frame>
   );
 });
-
-Dropdown.displayName = 'Dropdown';
-
-export default Dropdown;

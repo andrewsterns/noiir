@@ -62,7 +62,7 @@ export const LIST_VARIANTS = {
     stroke: { type: 'none' },
     appearance: { radius: 8 },
   },
-  hidden: {
+  closed: {
     display: 'none',
   },
   disabled: {
