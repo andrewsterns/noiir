@@ -2,13 +2,77 @@
 
 ## What is Noiir?
 
-Noiir is a lightweight preprocessor that allows designers and developers to write React components using a more intuitive, designer-friendly syntax. Files with the `.noiir` extension are compiled into standard TypeScript/React `.tsx` files.
+Noiir is a lightweight system that allows designers and developers to write React components using a more intuitive, designer-friendly syntax. It supports both **compilation** (`.noiir` → `.tsx`) and **runtime** parsing for maximum flexibility.
 
-## Purpose
+## Runtime Usage (New!)
 
-- **Lower barrier to entry**: Simplified syntax makes it easier for designers to write component code
-- **Seamless integration**: Compiled files are standard TypeScript that work with your existing build process
-- **Familiar patterns**: Uses designer-friendly keywords like `group`, `variant`, and `frame`
+Noiir now supports runtime parsing of `.noiir` files without compilation:
+
+```tsx
+import { Noiir } from 'your-framework/noiir';
+
+// Load and render a .noiir file at runtime
+<Noiir src="./components/MyComponent.noiir" props={{ theme: 'dark' }} />
+```
+
+### Runtime API
+
+```tsx
+import { useNoiir, parseNoiir } from 'your-framework/noiir';
+
+// Hook-based loading
+const { component, loading, error } = useNoiir('./path/to/component.noiir', props);
+
+// Direct parsing
+const component = parseNoiir(noiirFileContent, props);
+```
+
+## Architecture
+
+### Runtime System
+- **`parseNoiir.tsx`**: Core parser that transforms Noiir syntax to React elements
+- **`useNoiir.tsx`**: React hook for loading .noiir files dynamically
+- **`Noiir.tsx`**: React component for declarative .noiir file loading
+- **`vite.config.noiir.ts`**: Vite plugin for importing .noiir files as strings
+
+### Compilation System
+- **`scripts/compile-noiir.js`**: Build-time compiler for .noiir → .tsx transformation
+- **Generated `.tsx` files**: Standard TypeScript/React components
+
+## Workflow Options
+
+### Option 1: Runtime Loading (Recommended for Prototyping)
+```tsx
+// Load .noiir files directly in your app
+import { Noiir } from 'framework/noiir';
+
+<Noiir src="./Button.noiir" />
+```
+
+### Option 2: Compile-Time Generation (Recommended for Production)
+```bash
+# Generate .tsx files once
+npm run build:noiir
+
+# Then import normally
+import { Button } from './Button';
+```
+
+## Compilation Usage (Original)
+
+### Compiling Noiir Files
+
+Compile all `.noiir` files to `.tsx`:
+
+```bash
+npm run build:noiir
+```
+
+Watch for changes and auto-compile:
+
+```bash
+npm run watch:noiir
+```
 
 ## Getting Started
 
