@@ -10,7 +10,7 @@ export group Navbar = (props: groupProps) => {
   function: { console.log("toggle menu") }
 
   return (
-    <frame variant="navbar" variants={{NAVBAR_VARIANTS}}>
+    <frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={{NAVBAR_VARIANTS}}>
       <frame variant="logo">{props.logo}</frame>
       <Button onClick={logic}>Toggle</Button>
     </frame>

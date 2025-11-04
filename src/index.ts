@@ -1,12 +1,13 @@
 // Main exports for the Figma Components Framework
 
-// Export all components  
+// Export all components
 export * from './components';
 
 // Export theme system
 export * from './theme';
 
-// Export all interface types from their respective files
+// Export Noiir runtime system
+export * from './noiir';// Export all interface types from their respective files
 export type {
   PositionProps,
   ConstraintProps
