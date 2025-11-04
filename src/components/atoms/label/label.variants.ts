@@ -41,41 +41,22 @@ export const LABEL_SIZES = {
   },
 } satisfies ExtendVariant;
 
-export const LABEL_VARIANTS = {
+export const LABEL_VARIANTS: ExtendVariant = {
   primary: {
-    fill: { type: 'solid', color: 'black3', opacity: 1 },
-    stroke: { type: 'none' },
+    ...VARIANT_STYLES.solid as any,
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-    appearance: { radius: 0 },
-    typography: {
-      type: 'h6',
-      color: 'white2',
-      wrap: 'nowrap',
-    },
+
   },
 
  primaryHover: {
-    fill: { type: 'solid', color: 'black7', opacity: 1 },
-    stroke: { type: 'none' },
+  ...VARIANT_STYLES.solidHover as any,
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-    appearance: { radius: 0 },
-    typography: {
-      type: 'h6',
-      color: 'white1',
-      wrap: 'nowrap',
-    },
+
   },
 
   primaryActive: {
-     fill: { type: 'solid', color: 'blue5', opacity: 1 },
-        stroke: { type: 'solid', color: 'black4', weight: 1 },
-        autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-        typography: {
-          type: 'h6',
-            color: 'white6',
-            wrap: 'nowrap',
-
-        },
+    ...VARIANT_STYLES.solidActive as any,
+    autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
   },
 
   primaryActiveHover: {

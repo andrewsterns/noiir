@@ -95,7 +95,7 @@ export const Outline: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center' }}>
+    <Frame autoLayout={{ flow: 'vertical', gap: 120, alignment: 'center' }}>
       <Slider size="small" defaultValue={25} showValue />
       <Slider size="medium" defaultValue={50} showValue />
       <Slider size="large" defaultValue={75} showValue />

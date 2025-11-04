@@ -2,28 +2,27 @@ import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Check } from '../../../theme/icons/check';
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
+import { Transitions } from '../../frame/frame-properties/transition/transition';
 
 /**
  * Checkbox Component
  *
- * This component extends Frame and should leverage Frame's built-in props as much as possible.
- * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
- * instead of creating custom props for styling/behavior.
- *
- * For animations and state transitions, use ICON_VARIANTS with Frame's animate prop
- * instead of handling hover/click states in component logic.
- *
- * Example: animate={{ hover: { variant: 'checkHover' }, click: { variant: 'checked' } }}
- *
- * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
- *
- * @see FrameProps in src/components/frame/Frame.tsx for available props
- * @see ICON_VARIANTS in this file for available animation states
+ * Uses transition system for hover and checked states.
+ * State flow: unchecked ⟷ uncheckedHover (hover on base)
+ *            checked ⟷ checkedHover (hover on active)
+ * 
+ * - Hover states are visual overlays (temporary)
+ * - Checked state is the logical state (persistent)
+ * 
+ * @see ICON_VARIANTS for all state definitions
  */
 
 export interface CheckboxProps extends FrameProps {
+    checked?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
     sizes?: Record<string, any>;
     variants?: Record<string, any>;
+    transitions?: Transitions;
 }
 
 export const CHECKBOX_SIZES = {
@@ -46,6 +45,13 @@ export const ICON_VARIANTS = {
         appearance: { radius: 4 },
         iconStart: null,
     },
+    uncheckedHover: {
+        fill: { type: 'solid' as const, color: 'gray2' },
+        typography: { color: 'gray6' },
+        stroke: { type: 'solid' as const, color: 'gray5', weight: 2 },
+        appearance: { radius: 4 },
+        iconStart: null,
+    },
     checked: {
         fill: { type: 'solid' as const, color: 'blue5' },
         typography: { color: 'white3' },
@@ -53,26 +59,84 @@ export const ICON_VARIANTS = {
         appearance: { radius: 4 },
         iconStart: <Check />,
     },
-    checkHover: {
-        fill: { type: 'solid' as const, color: 'black4' },
+    checkedHover: {
+        fill: { type: 'solid' as const, color: 'blue6' },
         typography: { color: 'white2' },
-        stroke: { type: 'solid' as const, color: 'blue4', weight: 1, opacity: 0 },
+        stroke: { type: 'solid' as const, color: 'blue6', weight: 2 },
         appearance: { radius: 4 },
         iconStart: <Check />,
     },
 } satisfies ExtendVariant;
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
+    checked = false,
+    onCheckedChange,
     size = '2',
-    variant = 'unchecked',
+    variant,
     variants = ICON_VARIANTS,
     sizes = CHECKBOX_SIZES,
+    transitions,
+    onClick,
     ...props
 }, ref) => {
+
+    const defaultTransitions: Transitions = [
+        // Hover on unchecked state
+        { 
+            event: 'mouseEnter', 
+            targetId: 'checkboxId',
+            fromVariant: 'unchecked', 
+            toVariant: 'uncheckedHover', 
+            duration: '0.15s', 
+            curve: 'ease' 
+        },
+        { 
+            event: 'mouseLeave', 
+            targetId: 'checkboxId',
+            fromVariant: 'uncheckedHover', 
+            toVariant: 'unchecked', 
+            duration: '0.15s', 
+            curve: 'ease' 
+        },
+        // Click: Toggle between unchecked and checked
+        { 
+            event: 'click', 
+            targetId: 'checkboxId',
+            toggle: true, 
+            toggleVariants: ['unchecked', 'checked'], 
+            duration: '0.2s', 
+            curve: 'ease' 
+        },
+        // Hover on checked state
+        { 
+            event: 'mouseEnter', 
+            targetId: 'checkboxId',
+            fromVariant: 'checked', 
+            toVariant: 'checkedHover', 
+            duration: '0.15s', 
+            curve: 'ease' 
+        },
+        { 
+            event: 'mouseLeave', 
+            targetId: 'checkboxId',
+            fromVariant: 'checkedHover', 
+            toVariant: 'checked', 
+            duration: '0.15s', 
+            curve: 'ease' 
+        },
+    ];
+
+    const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+        if (onCheckedChange) {
+            onCheckedChange(!checked);
+        }
+        onClick?.(e);
+    };
 
     return (
         <Frame
             ref={ref}
+            id="checkboxId"
             as="button"
             autoLayout={{
                 flow: 'horizontal',
@@ -81,8 +145,10 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
             size={size}
             sizes={sizes}
             variants={variants}
-            variant={variant}
+            variant={variant ?? (checked ? 'checked' : 'unchecked')}
+            transitions={transitions ?? defaultTransitions}
             cursor="pointer"
+            onClick={handleClick}
             {...props}
         >
         </Frame>

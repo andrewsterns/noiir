@@ -1,10 +1,15 @@
 import React from 'react';
 
 export interface PositionProps {
+  type?: 'fixed' | 'absolute' | 'relative';
   alignment?: 'left' | 'center' | 'right' | 'justify';
   rotation?: number;
   x?: number;
   y?: number;
+  top?: number | string;
+  left?: number | string;
+  right?: number | string;
+  bottom?: number | string;
 }
 
 export interface ConstraintProps {
@@ -31,18 +36,22 @@ export const convertPositionProps = (
     return value;
   };
 
-  // Absolute positioning (x, y coordinates) - works regardless of autolayout
-  if (props.x !== undefined || props.y !== undefined) {
+  // Position type (fixed, absolute, relative)
+  if (props.type) {
+    styles.position = props.type;
+  } else if (props.x !== undefined || props.y !== undefined) {
     styles.position = 'absolute';
-    
-    if (props.x !== undefined) {
-      styles.left = normalizeUnit(props.x);
-    }
-    
-    if (props.y !== undefined) {
-      styles.top = normalizeUnit(props.y);
-    }
   }
+
+  // Top/left/right/bottom support
+  if (props.top !== undefined) styles.top = normalizeUnit(props.top);
+  if (props.left !== undefined) styles.left = normalizeUnit(props.left);
+  if (props.right !== undefined) styles.right = normalizeUnit(props.right);
+  if (props.bottom !== undefined) styles.bottom = normalizeUnit(props.bottom);
+
+  // x/y fallback for absolute positioning
+  if (props.x !== undefined) styles.left = normalizeUnit(props.x);
+  if (props.y !== undefined) styles.top = normalizeUnit(props.y);
   
   // Rotation transform - works regardless of autolayout
   if (props.rotation !== undefined) {

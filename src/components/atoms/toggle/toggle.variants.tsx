@@ -36,32 +36,32 @@ export const TOGGLE_SIZES = {
 };
 
 export const TOGGLE_VARIANTS: ExtendVariant = {
-    // Track (background) variants - control position and color
+    // Track (background) variants - control color only, not position
     primary: {
         fill: { type: 'solid', color: 'gray3', opacity: 1 },
         stroke: { type: 'solid', color: 'gray4', weight: 1 },
-        autoLayout: { alignment: 'centerLeft' },
+        autoLayout: { flow: 'vertical', alignment: 'centerLeft' },
         appearance: { radius: 12 },
     },
 
     primaryHover: {
         fill: { type: 'solid', color: 'gray4', opacity: 1 },
         stroke: { type: 'solid', color: 'gray5', weight: 1 },
-        autoLayout: { alignment: 'center' },
+        autoLayout: { flow: 'vertical', alignment: 'center' },
         appearance: { radius: 12 },
     },
 
     primaryActive: {
         fill: { type: 'solid', color: 'blue5', opacity: 1 },
         stroke: { type: 'solid', color: 'blue6', weight: 1 },
-        autoLayout: { alignment: 'centerRight' },
+        autoLayout: { flow: 'vertical', alignment: 'centerRight' },
         appearance: { radius: 12 },
     },
 
     primaryActiveHover: {
         fill: { type: 'solid', color: 'blue6', opacity: 1 },
         stroke: { type: 'solid', color: 'blue7', weight: 1 },
-        autoLayout: { alignment: 'centerRight' },
+        autoLayout: { flow: 'vertical', alignment: 'centerRight' },
         appearance: { radius: 12 },
     },
 

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { POPUP_VARIANTS } from './popup.variants';
+import Button from '../../atoms/button/button';
 
 /**
  * Popup Component
@@ -70,48 +72,51 @@ export const Popup = React.forwardRef<HTMLDivElement, PopupProps>(({
     }
   };
 
-  return (
-    <Frame
-      ref={ref}
-      variant="overlay"
-      variants={variants}
-      onClick={handleOverlayClick}
-      {...popupProps}
-    >
+    return createPortal(
       <Frame
-        variant={`${variant}-${size}`}
+        ref={ref}
+        variant="overlay"
         variants={variants}
-        autoLayout={{ flow: 'vertical', gap: 0 }}
+        onClick={handleOverlayClick}
+        zIndex={9999}
+        {...popupProps}
       >
-        {/* Header */}
-        {(title || showCloseButton) && (
-          <Frame variant="header" variants={variants}>
-            {title && (
-              <Frame variant="title" variants={variants}>
-                {title}
-              </Frame>
-            )}
-            {showCloseButton && (
-              <Frame
-                as="button"
-                variant="close-button"
-                variants={variants}
-                onClick={onClose}
-                aria-label="Close popup"
-              >
-                ×
-              </Frame>
-            )}
-          </Frame>
-        )}
+        <Frame
+          variant={`${variant}-${size}`}
+          variants={variants}
+          autoLayout={{ flow: 'vertical', gap: 0 }}
+          position={{ type: 'relative' }}
+        >
+          {/* Header */}
+          {(title || showCloseButton) && (
+            <Frame variant="header" variants={variants}>
+              {title && (
+                <Frame variant="title" variants={variants}>
+                  {title}
+                </Frame>
+              )}
+              {showCloseButton && (
+                <Button
+                  size='hug'
+                  iconStart={<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>}
+                  variant="close-button"
+                  variants={variants}
+                  onClick={onClose}
+                  aria-label="Close popup" children={undefined} />
+              )}
+            </Frame>
+          )}
 
-        {/* Content */}
-        <Frame variant="content" variants={variants}>
-          {children}
+          {/* Content */}
+          <Frame variant="content" variants={variants}>
+            {children}
+          </Frame>
         </Frame>
-      </Frame>
-    </Frame>
-  );
+      </Frame>,
+      document.body
+    );
 });
 
 Popup.displayName = 'Popup';

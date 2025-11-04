@@ -25,12 +25,14 @@ import { ExtendVariant } from '../../frame/frame-properties/variants/variants.pr
 export const POPUP_VARIANTS: ExtendVariant = {
   overlay: {
     fill: { type: 'solid', color: 'rgba(0, 0, 0, 0.5)' },
-    position: { x: 0, y: 0 },
+    position: { type: 'fixed', top: 0, left: 0, right: 0, bottom: 0 },
     autoLayout: {
       width: '100vw',
       height: '100vh',
-      alignment: 'center'
+      alignment: 'center',
+      flow: 'vertical'
     },
+    important: ['position', 'zIndex'],
   },
   'default-small': {
     fill: { type: 'solid', color: 'white1' },
@@ -95,7 +97,7 @@ export const POPUP_VARIANTS: ExtendVariant = {
   },
   'close-button': {
     fill: { type: 'solid', color: 'transparent' },
-    autoLayout: { width: 32, height: 32, alignment: 'center' },
+    autoLayout: { flow: 'horizontal', alignment: 'center', width: 32, height: 32 },
     typography: { fontSize: 24, color: 'gray6' },
     cursor: 'pointer',
     appearance: { radius: 4 },

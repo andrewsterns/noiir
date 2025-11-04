@@ -1,117 +1,176 @@
-import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
+import { ExtendVariant, FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
+import { VARIANT_STYLES } from '../../../theme/variant';
 
 /**
  * Navbar Variants Library
  *
- * This file contains variant configurations for the Navbar component.
- * Variants are imported into components via the 'variants' prop on Frame.
- *
- * Variants handle:
- * - Styling (fill, stroke, appearance, typography, effects)
- * - Animation states (hover, click, active)
- * - Layout properties (autoLayout, spacing)
- * - Interactive behavior (cursor, transitions)
- *
- * Instead of handling hover/click states in component logic,
- * define them as variant transitions using Frame's animate prop.
- *
- * Example usage:
- * <Frame variant="default" variants={NAVBAR_VARIANTS} />
+ * Uses solid variant styles from theme/variant.ts for consistent styling.
+ * Implements Radix-style navigation with transition-based interactions.
  *
  * @see FrameVariantConfig in variants.props.tsx for available properties
  * @see ExtendVariant type for variant collection structure
  */
 
 export const NAVBAR_VARIANTS: ExtendVariant = {
+  // Main navbar container
   default: {
-    fill: { type: 'solid', color: 'white1' },
-    stroke: { type: 'solid', color: 'gray4', weight: 1 },
-    autoLayout: { width: 'fill-container', height: 64 },
+    ...VARIANT_STYLES.solid as any,
+    autoLayout: { 
+      alignment: 'topCenter' as const,
+      width: 'hug', 
+      height: 87,
+      flow: 'horizontal' as const,
+      clipContent: false
+    },
+    appearance: { radius: 12 },
     effects: {
       dropShadow: [{
         x: 0,
         y: 2,
         blur: 8,
-        color: 'rgba(0, 0, 0, 0.1)',
+        color: 'rgba(0, 0, 0, 0.08)',
       }],
     },
   },
-  transparent: {
-    fill: { type: 'solid', color: 'transparent' },
-    autoLayout: { width: 'fill-container', height: 64 },
-  },
+  
+  // Inner container with horizontal layout
   container: {
     autoLayout: {
-      flow: 'horizontal',
-      alignment: 'center',
+      flow: 'horizontal' as const,
+      alignment: 'topCenter' as const,
       paddingHorizontal: 24,
-      paddingVertical: 12,
+      paddingVertical: 18,
+      gap: 24,
       width: 'fill-container',
-      height: 'fill-container'
     },
   },
+  
+  // Logo area
   logo: {
-    autoLayout: { width: 'hug', height: 'fill-container' },
-    typography: { fontSize: 24, fontWeight: 700, color: 'primary6' },
+    autoLayout: { width: 'hug', paddingVertical: 10 },
+    typography: { fontSize: 20, fontWeight: 700, color: 'primary7' },
   },
-  'desktop-menu': {
-    autoLayout: { width: 'fill-container', height: 'fill-container' },
-    display: 'flex',
+  
+  // Nav items container
+  'nav-items': {
+    autoLayout: { 
+      flow: 'horizontal' as const, 
+      gap: 8, 
+      alignment: 'topCenter' as const,
+      width: 'hug'
+    },
   },
-  'navbar-menu': {
-    autoLayout: { flow: 'horizontal', gap: 24, alignment: 'center' },
-  },
-  'item-default': {
-    fill: { type: 'solid', color: 'transparent' },
-    autoLayout: { paddingHorizontal: 12, paddingVertical: 8 },
-    typography: { fontSize: 16, color: 'gray8' },
-  },
-  'item-hover': {
-    fill: { type: 'solid', color: 'gray2' },
-    autoLayout: { paddingHorizontal: 12, paddingVertical: 8 },
-    typography: { fontSize: 16, color: 'primary6' },
-  },
-  actions: {
-    autoLayout: { flow: 'horizontal', gap: 12, alignment: 'center' },
-  },
-  'action-item': {
+  
+  'nav-item-wrapper': {
+    position: { type: 'relative' as const },
     autoLayout: { width: 'hug' },
   },
-  'mobile-toggle': {
-    display: 'none', // Hidden on desktop, shown on mobile via responsive variants
+  
+  // Nav item button - ghost style
+  navItem: {
+    fill: { type: 'none' as const },
+    stroke: { type: 'none' as const },
+    autoLayout: { paddingHorizontal: 12, paddingVertical: 8, width: 'hug', flow: 'vertical' as const },
+    typography: { fontSize: 14, fontWeight: 500, color: 'gray8' },
+    appearance: { radius: 6 },
+    effects: {},
   },
+  
+  navItemHover: {
+    fill: { type: 'solid' as const, color: 'primary1', opacity: 0.5 },
+    stroke: { type: 'none' as const },
+    autoLayout: { paddingHorizontal: 12, paddingVertical: 8, width: 'hug', flow: 'vertical' as const },
+    typography: { fontSize: 14, fontWeight: 500, color: 'primary7' },
+    appearance: { radius: 6 },
+    effects: { dropShadow: [{ x: 0, y: 2, blur: 6, color: 'rgba(0,0,0,0.05)' }] },
+  },
+  
+  // Actions area
+  actions: {
+    autoLayout: { flow: 'horizontal' as const, gap: 8, alignment: 'center' as const },
+  },
+  
+  // Mobile toggle button
+  mobileToggle: {
+    fill: { type: 'none' as const },
+    stroke: { type: 'none' as const },
+    autoLayout: { width: 40, height: 40, flow: 'vertical' as const, alignment: 'center' as const },
+    appearance: { radius: 6 },
+    display: 'none', // Hidden on desktop
+    cursor: 'pointer' as const,
+    effects: {},
+  },
+  
+  mobileToggleOpen: {
+    fill: { type: 'solid' as const, color: 'primary2', opacity: 0.5 },
+    stroke: { type: 'none' as const },
+    autoLayout: { width: 40, height: 40, flow: 'vertical' as const, alignment: 'center' as const },
+    appearance: { radius: 6 },
+    display: 'none',
+    cursor: 'pointer' as const,
+    effects: { dropShadow: [{ x: 0, y: 1, blur: 3, color: 'rgba(0,0,0,0.08)' }] },
+    typography: { color: 'primary9' },
+  },
+  
   hamburger: {
-    fill: { type: 'solid', color: 'transparent' },
-    autoLayout: { width: 24, height: 24, flow: 'vertical', gap: 4, alignment: 'center' },
-    cursor: 'pointer',
+    autoLayout: { flow: 'vertical' as const, gap: 4, width: 20, height: 16, alignment: 'center' as const },
   },
+  
   'hamburger-line': {
-    fill: { type: 'solid', color: 'gray8' },
-    autoLayout: { width: 20, height: 2 },
+    fill: { type: 'solid' as const, color: 'gray8' },
+    autoLayout: { width: 'fill-container', height: 2 },
     appearance: { radius: 1 },
   },
+  
+  // Mobile menu
   'mobile-menu': {
-    fill: { type: 'solid', color: 'white1' },
-    stroke: { type: 'solid', color: 'gray4', weight: 1 },
-    autoLayout: { flow: 'vertical', width: 'fill-container' },
-    position: { x: 0, y: 64 },
+    fill: { type: 'solid' as const, color: 'white2' },
+    stroke: { type: 'solid' as const, color: 'gray4', weight: 1 },
+    autoLayout: { 
+      flow: 'vertical' as const, 
+      width: 'fill-container',
+      padding: 16,
+      gap: 8
+    },
     effects: {
       dropShadow: [{
         x: 0,
         y: 4,
         blur: 12,
-        color: 'rgba(0, 0, 0, 0.15)',
+        color: 'rgba(0, 0, 0, 0.1)',
       }],
     },
   },
-  'mobile-menu-items': {
-    autoLayout: { flow: 'vertical', gap: 0, paddingHorizontal: 24, paddingVertical: 12 },
+  
+  'mobile-item-wrapper': {
+    autoLayout: { flow: 'vertical' as const, gap: 4, width: 'fill-container' },
   },
+  
+  mobileItem: {
+    fill: { type: 'none' as const },
+    stroke: { type: 'none' as const },
+    autoLayout: { paddingHorizontal: 16, paddingVertical: 12, width: 'fill-container', flow: 'vertical' as const },
+    typography: { fontSize: 16, fontWeight: 500, color: 'gray8' },
+    appearance: { radius: 6 },
+    effects: {},
+  },
+  
+  mobileItemHover: {
+    fill: { type: 'solid' as const, color: 'primary1', opacity: 0.5 },
+    stroke: { type: 'none' as const },
+    autoLayout: { paddingHorizontal: 16, paddingVertical: 12, width: 'fill-container', flow: 'vertical' as const },
+    typography: { fontSize: 16, fontWeight: 500, color: 'primary7' },
+    appearance: { radius: 6 },
+    effects: { dropShadow: [{ x: 0, y: 2, blur: 6, color: 'rgba(0,0,0,0.05)' }] },
+  },
+  
   'mobile-actions': {
-    autoLayout: { flow: 'vertical', gap: 12, paddingHorizontal: 24, paddingVertical: 12 },
-    stroke: { type: 'solid', color: 'gray4', weight: 1 },
+    autoLayout: { 
+      flow: 'vertical' as const, 
+      gap: 8, 
+      paddingTop: 16,
+      width: 'fill-container'
+    },
+    stroke: { type: 'solid' as const, color: 'gray3', weight: 1 },
   },
-  'mobile-action-item': {
-    autoLayout: { width: 'fill-container' },
-  },
-} satisfies ExtendVariant;
+} satisfies Record<string, FrameVariantConfig>;

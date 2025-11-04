@@ -6,43 +6,48 @@ export const Basic: Story = {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center', padding: 40 }}>
-        <Frame
-          as="button"
-          fill={{ type: 'solid', color: 'primary5' }}
-          autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-          typography={{ color: 'white1' }}
-          onClick={() => setIsOpen(true)}
+      <div style={{ position: 'relative', minHeight: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, padding: 40, background: '#f0f0f0' }}>
+        <button
+          style={{ background: '#2563eb', color: '#fff', padding: '8px 16px', borderRadius: 4, border: 'none', fontSize: 16, cursor: 'pointer', zIndex: 1, position: 'relative' }}
+          onClick={() => {
+            console.log('Opening popup');
+            setIsOpen(true);
+          }}
         >
           Open Popup
-        </Frame>
+        </button>
+
+        <div style={{ marginTop: 20, padding: 20, background: 'white', borderRadius: 8 }}>
+          <p>This is some content below the button.</p>
+          <p>The popup should appear OVER everything, including this text and the button above.</p>
+        </div>
 
         <Popup
           isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
+          onClose={() => {
+            console.log('Closing popup');
+            setIsOpen(false);
+          }}
           title="Basic Popup"
         >
-          <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
-            <div>This is a basic popup with some content.</div>
-            <Frame
-              as="button"
-              fill={{ type: 'solid', color: 'primary5' }}
-              autoLayout={{ paddingHorizontal: 16, paddingVertical: 8, width: 'hug' }}
-              typography={{ color: 'white1' }}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div>This is a basic popup with some content using Frame components.</div>
+            <button
+              style={{ background: '#2563eb', color: '#fff', padding: '8px 16px', borderRadius: 4, border: 'none', fontSize: 16, cursor: 'pointer' }}
               onClick={() => setIsOpen(false)}
             >
               Close
-            </Frame>
-          </Frame>
+            </button>
+          </div>
         </Popup>
-      </Frame>
+      </div>
     );
   },
 };
 // --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
 import { Popup } from './popup';
-import { Frame } from '../..';
+import { Button, Frame } from '../..';
 
 const meta: Meta<typeof Popup> = {
   title: 'Molecules/Popup',
@@ -81,15 +86,11 @@ export const Small: Story = {
 
     return (
       <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center', padding: 40 }}>
-        <Frame
-          as="button"
-          fill={{ type: 'solid', color: 'primary5' }}
-          autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-          typography={{ color: 'white1' }}
+        <Button
           onClick={() => setIsOpen(true)}
         >
           Open Small Popup
-        </Frame>
+        </Button>
 
         <Popup
           isOpen={isOpen}
@@ -110,15 +111,12 @@ export const Medium: Story = {
 
     return (
       <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center', padding: 40 }}>
-        <Frame
-          as="button"
-          fill={{ type: 'solid', color: 'primary5' }}
-          autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-          typography={{ color: 'white1' }}
+        <Button
           onClick={() => setIsOpen(true)}
+
         >
           Open Medium Popup
-        </Frame>
+        </Button>
 
         <Popup
           isOpen={isOpen}
@@ -126,30 +124,24 @@ export const Medium: Story = {
           title="Medium Popup"
           size="medium"
         >
-          <Frame autoLayout={{ flow: 'vertical', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>This is a medium-sized popup with more content space.</div>
             <div>You can put forms, images, or any content here.</div>
-            <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'right' }}>
-              <Frame
-                as="button"
-                fill={{ type: 'solid', color: 'gray3' }}
-                autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-                typography={{ color: 'gray8' }}
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+              <Button
                 onClick={() => setIsOpen(false)}
+                
               >
                 Cancel
-              </Frame>
-              <Frame
-                as="button"
-                fill={{ type: 'solid', color: 'primary5' }}
-                autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-                typography={{ color: 'white1' }}
+              </Button>
+              <Button
                 onClick={() => setIsOpen(false)}
+               
               >
                 Confirm
-              </Frame>
-            </Frame>
-          </Frame>
+              </Button>
+            </div>
+          </div>
         </Popup>
       </Frame>
     );
@@ -162,15 +154,12 @@ export const Large: Story = {
 
     return (
       <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center', padding: 40 }}>
-        <Frame
-          as="button"
-          fill={{ type: 'solid', color: 'primary5' }}
-          autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-          typography={{ color: 'white1' }}
+        <Button
           onClick={() => setIsOpen(true)}
+          
         >
           Open Large Popup
-        </Frame>
+        </Button>
 
         <Popup
           isOpen={isOpen}
@@ -178,34 +167,27 @@ export const Large: Story = {
           title="Large Popup"
           size="large"
         >
-          <Frame autoLayout={{ flow: 'vertical', gap: 20 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>This is a large popup with plenty of space for content.</div>
-            <Frame autoLayout={{ flow: 'vertical', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>Feature 1: Lots of space</div>
               <div>Feature 2: Can contain complex layouts</div>
               <div>Feature 3: Perfect for forms or detailed content</div>
-            </Frame>
-            <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'right' }}>
-              <Frame
-                as="button"
-                fill={{ type: 'solid', color: 'gray3' }}
-                autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-                typography={{ color: 'gray8' }}
+            </div>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+              <Button
                 onClick={() => setIsOpen(false)}
+                
               >
                 Cancel
-              </Frame>
-              <Frame
-                as="button"
-                fill={{ type: 'solid', color: 'primary5' }}
-                autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-                typography={{ color: 'white1' }}
+              </Button>
+              <Button
                 onClick={() => setIsOpen(false)}
-              >
+                >
                 Save Changes
-              </Frame>
-            </Frame>
-          </Frame>
+              </Button>
+            </div>
+          </div>
         </Popup>
       </Frame>
     );
@@ -218,34 +200,27 @@ export const WithoutTitle: Story = {
 
     return (
       <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center', padding: 40 }}>
-        <Frame
-          as="button"
-          fill={{ type: 'solid', color: 'primary5' }}
-          autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-          typography={{ color: 'white1' }}
+        <Button
           onClick={() => setIsOpen(true)}
+         
         >
           Open Minimal Popup
-        </Frame>
+        </Button>
 
         <Popup
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           showCloseButton={false}
         >
-          <Frame autoLayout={{ flow: 'vertical', gap: 16, alignment: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
             <div>🎉</div>
             <div>Success! Your action was completed.</div>
-            <Frame
-              as="button"
-              fill={{ type: 'solid', color: 'primary5' }}
-              autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-              typography={{ color: 'white1' }}
+            <Button
               onClick={() => setIsOpen(false)}
-            >
+             >
               OK
-            </Frame>
-          </Frame>
+            </Button>
+          </div>
         </Popup>
       </Frame>
     );
@@ -258,15 +233,12 @@ export const Fullscreen: Story = {
 
     return (
       <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center', padding: 40 }}>
-        <Frame
-          as="button"
-          fill={{ type: 'solid', color: 'primary5' }}
-          autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-          typography={{ color: 'white1' }}
+        <Button
           onClick={() => setIsOpen(true)}
+          
         >
           Open Fullscreen Popup
-        </Frame>
+        </Button>
 
         <Popup
           isOpen={isOpen}
@@ -274,30 +246,23 @@ export const Fullscreen: Story = {
           title="Fullscreen Modal"
           size="fullscreen"
         >
-          <Frame autoLayout={{ flow: 'vertical', gap: 20, padding: 40 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 40 }}>
             <div>This popup takes up the entire screen.</div>
             <div>Perfect for important dialogs or complex workflows.</div>
-            <Frame autoLayout={{ flow: 'horizontal', gap: 12, alignment: 'right' }}>
-              <Frame
-                as="button"
-                fill={{ type: 'solid', color: 'gray3' }}
-                autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-                typography={{ color: 'gray8' }}
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+              <Button
                 onClick={() => setIsOpen(false)}
+                
               >
                 Cancel
-              </Frame>
-              <Frame
-                as="button"
-                fill={{ type: 'solid', color: 'primary5' }}
-                autoLayout={{ paddingHorizontal: 16, paddingVertical: 8 }}
-                typography={{ color: 'white1' }}
+              </Button>
+              <Button
                 onClick={() => setIsOpen(false)}
-              >
+               >
                 Complete
-              </Frame>
-            </Frame>
-          </Frame>
+              </Button>
+            </div>
+          </div>
         </Popup>
       </Frame>
     );

@@ -29,20 +29,24 @@ export const BUTTON_SIZES = {
 
     '1': {
         typography: { type: 'h6', wrap: 'nowrap' },
-        autoLayout: { paddingHorizontal: 12, paddingVertical: 4, width: 'hug' },
+        autoLayout: {flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', paddingHorizontal: 12, paddingVertical: 4, width: 'hug' },
     },
     '2': {
         typography: { type: 'h5', wrap: 'nowrap' },
-        autoLayout: { paddingHorizontal: 16, paddingVertical: 8, width: 'hug' },
+        autoLayout: {flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', paddingHorizontal: 16, paddingVertical: 8, width: 'hug' },
     },
     '3': {
         typography: { type: 'h3', wrap: 'nowrap' },
-        autoLayout: { paddingHorizontal: 20, paddingVertical: 12, width: 'hug' },
+        autoLayout: {flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', paddingHorizontal: 20, paddingVertical: 12, width: 'hug' },
     },
     'fill': {
-        autoLayout: { width: 'fill-container', height: 'hug', paddingHorizontal: 20, paddingVertical: 12 },
+        autoLayout: {flow: 'horizontal', alignment: 'center', gap: 'fill', wrap: 'nowrap', width: 'fill-container', height: 'hug', paddingHorizontal: 20, paddingVertical: 12 },
         typography: { type: 'h5', wrap: 'nowrap' },
-    }
+    },
+    'hug': {
+        autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'hug', height: 'hug', paddingHorizontal: 4, paddingVertical: 4 },
+        typography: { type: 'h5', wrap: 'nowrap' },
+    },
 };
 
 
@@ -50,7 +54,6 @@ export const BUTTON_SIZES = {
 export const BUTTON_VARIANTS: ExtendVariant = {
     primary: {
         ...VARIANT_STYLES.solid as any,
-        autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyFace />,
 
@@ -58,13 +61,11 @@ export const BUTTON_VARIANTS: ExtendVariant = {
     },
     primaryHover: {
         ...VARIANT_STYLES.solidHover as any,
-        autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         iconStart: <HappyWink />,
     },
     primaryActive: {
         ...VARIANT_STYLES.solidActive as any,
-        autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
         iconStart: <HappyFace />,
 
@@ -72,11 +73,10 @@ export const BUTTON_VARIANTS: ExtendVariant = {
 
     primaryActiveHover: {
         ...VARIANT_STYLES.solid as any,
-        fill: { type: 'solid', color: 'black7', opacity: 1 },
-        autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
+        fill: { type: 'solid', color: 'primary9', opacity: 1 },
         appearance: { radius: 8 },
         typography: {
-            color: 'white4',
+            color: 'primary3',
             wrap: 'nowrap',
         },
         iconStart: <HappyWink />,
@@ -84,7 +84,6 @@ export const BUTTON_VARIANTS: ExtendVariant = {
 
     disabled: {
             fill: { type: 'none', color: 'transparent' },
-            autoLayout: { flow: 'grid', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
             stroke: { type: 'solid', color: 'gray8', weight: 4 },
             appearance: { radius: 6 },
             typography: {

@@ -76,11 +76,11 @@ const meta: Meta<typeof ProgressBar> = {
 export default meta;
 type Story = StoryObj<typeof ProgressBar>;
 
-export const Default: Story = {
+export const Medium: Story = {
   args: {
     progressValue: 75,
     max: 100,
-    size: 'default',
+    size: '2',
   },
 };
 
@@ -88,7 +88,7 @@ export const Small: Story = {
   args: {
     progressValue: 60,
     max: 100,
-    size: 'small',
+    size: '1',
   },
 };
 
@@ -96,7 +96,7 @@ export const Large: Story = {
   args: {
     progressValue: 40,
     max: 100,
-    size: 'large',
+    size: '3',
   },
 };
 
@@ -150,17 +150,17 @@ export const MultipleBars: Story = {
     <Frame autoLayout={{ flow: 'vertical', gap: 20, width: 300 }}>
       <Frame autoLayout={{ flow: 'vertical', gap: 8 }}>
         <div>Task 1</div>
-        <ProgressBar progressValue={100} max={100} variant="success" />
+        <ProgressBar progressValue={100} max={100} variant="success" size="2" />
       </Frame>
 
       <Frame autoLayout={{ flow: 'vertical', gap: 8 }}>
         <div>Task 2</div>
-        <ProgressBar progressValue={75} max={100} />
+        <ProgressBar progressValue={75} max={100} size="2"  />
       </Frame>
 
       <Frame autoLayout={{ flow: 'vertical', gap: 8 }}>
         <div>Task 3</div>
-        <ProgressBar progressValue={25} max={100} variant="warning" />
+        <ProgressBar progressValue={25} max={100} variant="warning" size="2" />
       </Frame>
 
       <Frame autoLayout={{ flow: 'vertical', gap: 8 }}>

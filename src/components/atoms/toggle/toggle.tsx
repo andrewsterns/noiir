@@ -44,13 +44,60 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
 }, ref) => {
 
   const defaultTransitions: Transitions = [
-    // Toggle track alignment on click
-    { event: 'click', targetId: 'trackId', toggle: true, toggleVariants: ['primary', 'primaryActive'], duration: '0.2s', curve: 'ease' },
-    // Toggle thumb variant on click
-    { event: 'click', targetId: 'thumbId', toggle: true, toggleVariants: ['solidThumb', 'solidThumbActive'], duration: '0.2s', curve: 'ease' },
-    // Track hover states
-    { event: 'mouseEnter', targetId: 'trackId', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.1s', curve: 'ease' },
-    { event: 'mouseLeave', targetId: 'trackId', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
+    // Click: Toggle between base states (primary <-> primaryActive)
+    { 
+      event: 'click', 
+      targetId: 'trackId', 
+      toggle: true, 
+      toggleVariants: ['primary', 'primaryActive'], 
+      duration: '0.2s', 
+      curve: 'ease' 
+    },
+    // Click: Toggle thumb size/position
+    { 
+      event: 'click', 
+      targetId: 'thumbId', 
+      toggle: true, 
+      toggleVariants: ['solidThumb', 'solidThumbActive'], 
+      duration: '0.2s', 
+      curve: 'ease' 
+    },
+    // MouseEnter: Apply hover overlay when entering primary state
+    { 
+      event: 'mouseEnter', 
+      targetId: 'trackId', 
+      fromVariant: 'primary', 
+      toVariant: 'primaryHover', 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    // MouseLeave: Remove hover overlay when leaving primary state
+    { 
+      event: 'mouseLeave', 
+      targetId: 'trackId', 
+      fromVariant: 'primaryHover', 
+      toVariant: 'primary', 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    // MouseEnter: Apply hover overlay when entering primaryActive state
+    { 
+      event: 'mouseEnter', 
+      targetId: 'trackId', 
+      fromVariant: 'primaryActive', 
+      toVariant: 'primaryActiveHover', 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    // MouseLeave: Remove hover overlay when leaving primaryActive state
+    { 
+      event: 'mouseLeave', 
+      targetId: 'trackId', 
+      fromVariant: 'primaryActiveHover', 
+      toVariant: 'primaryActive', 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
   ];
 
 

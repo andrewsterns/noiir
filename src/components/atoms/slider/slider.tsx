@@ -2,23 +2,19 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { SLIDER_VARIANTS, SLIDER_SIZES } from './slider.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
+import { Transitions } from '../../frame/frame-properties/transition/transition';
 
 /**
  * Slider Component
  *
- * This component extends Frame and should leverage Frame's built-in props as much as possible.
- * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
- * instead of creating custom props for styling/behavior.
- *
- * For animations and state transitions, use SLIDER_VARIANTS with Frame's animate prop
- * instead of handling hover/click states in component logic.
- *
- * Example: animate={{ hover: { variant: 'thumbHover' }, click: { variant: 'thumbActive' } }}
- *
- * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
- *
- * @see FrameProps in src/components/frame/Frame.tsx for available props
- * @see SLIDER_VARIANTS in slider.variants.tsx for available animation states
+ * A slider component that uses the transition system for smooth hover and drag states.
+ * State flow: thumb → thumbHover → thumbGrabbing → thumbGrabbingHover
+ * 
+ * - Hover states are visual overlays (temporary)
+ * - Grabbing state is the logical state (persistent until mouse release)
+ * - Uses 'grab' event (maps to mouseDown) to initiate drag
+ * 
+ * @see SLIDER_VARIANTS for all state definitions
  */
 
 export interface SliderProps extends Omit<FrameProps, 'onChange' | 'value'> {
@@ -30,6 +26,7 @@ export interface SliderProps extends Omit<FrameProps, 'onChange' | 'value'> {
   onChange?: (value: number) => void;
   showValue?: boolean;
   disabled?: boolean;
+  transitions?: Transitions;
 }
 
 export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
@@ -45,16 +42,17 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   variants = SLIDER_VARIANTS,
   size = 'medium',
   sizes = SLIDER_SIZES,
+  transitions,
   ...sliderProps
 }, ref) => {
   const [internalValue, setInternalValue] = useState(defaultValue);
-  const [isDragging, setIsDragging] = useState(false);
-  const [trackWidth, setTrackWidth] = useState(200); // Default width
+  const [trackWidth, setTrackWidth] = useState(200);
   const trackRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
 
   const value = controlledValue !== undefined ? controlledValue : internalValue;
 
-  // Determine variant suffixes based on the variant type
+  // Determine variant suffix based on the variant type
   const getVariantSuffix = (baseVariant: string) => {
     switch (variant) {
       case 'soft':
@@ -67,6 +65,78 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
         return baseVariant;
     }
   };
+
+  // Build transition rules for hover and grab/drag states
+  const defaultTransitions: Transitions = [
+    // Hover on base thumb state
+    { 
+      event: 'mouseEnter', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumb'), 
+      toVariant: getVariantSuffix('thumbHover'), 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    { 
+      event: 'mouseLeave', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumbHover'), 
+      toVariant: getVariantSuffix('thumb'), 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    // Grab: Initiate drag from base or hover state
+    { 
+      event: 'grab', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumb'), 
+      toVariant: getVariantSuffix('thumbGrabbing'), 
+      duration: '0.1s', 
+      curve: 'ease' 
+    },
+    { 
+      event: 'grab', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumbHover'), 
+      toVariant: getVariantSuffix('thumbGrabbing'), 
+      duration: '0.1s', 
+      curve: 'ease' 
+    },
+    // Release: Return to base state
+    { 
+      event: 'mouseUp', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumbGrabbing'), 
+      toVariant: getVariantSuffix('thumb'), 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    { 
+      event: 'mouseUp', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumbGrabbingHover'), 
+      toVariant: getVariantSuffix('thumb'), 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    // Hover while grabbing
+    { 
+      event: 'mouseEnter', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumbGrabbing'), 
+      toVariant: getVariantSuffix('thumbGrabbingHover'), 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+    { 
+      event: 'mouseLeave', 
+      targetId: 'thumbId',
+      fromVariant: getVariantSuffix('thumbGrabbingHover'), 
+      toVariant: getVariantSuffix('thumbGrabbing'), 
+      duration: '0.15s', 
+      curve: 'ease' 
+    },
+  ];
 
   const handleValueChange = useCallback((newValue: number) => {
     const clampedValue = Math.max(min, Math.min(max, newValue));
@@ -88,32 +158,40 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 
   const handleMouseDown = useCallback((event: React.MouseEvent) => {
     if (disabled) return;
-
-    setIsDragging(true);
+    isDraggingRef.current = true;
     const newValue = getValueFromPosition(event.clientX);
     handleValueChange(newValue);
   }, [disabled, getValueFromPosition, handleValueChange]);
 
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    if (!isDragging) return;
-    const newValue = getValueFromPosition(event.clientX);
-    handleValueChange(newValue);
-  }, [isDragging, getValueFromPosition, handleValueChange]);
-
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
+    isDraggingRef.current = false;
   }, []);
 
   React.useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+    const handleDocumentMouseMove = (event: MouseEvent) => {
+      if (!isDraggingRef.current) return;
+      const newValue = getValueFromPosition(event.clientX);
+      handleValueChange(newValue);
+    };
+
+    const handleDocumentMouseUp = () => {
+      if (!isDraggingRef.current) return;
+      handleMouseUp();
+      // Emit mouseUp to transition system for thumb state
+      const thumbElement = document.getElementById('thumbId');
+      if (thumbElement) {
+        thumbElement.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+      }
+    };
+
+    document.addEventListener('mousemove', handleDocumentMouseMove);
+    document.addEventListener('mouseup', handleDocumentMouseUp);
+    
+    return () => {
+      document.removeEventListener('mousemove', handleDocumentMouseMove);
+      document.removeEventListener('mouseup', handleDocumentMouseUp);
+    };
+  }, [getValueFromPosition, handleValueChange, handleMouseUp]);
 
   // Update track width when component mounts
   React.useEffect(() => {
@@ -169,6 +247,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
         {/* Track background */}
         <Frame
           variant={getVariantSuffix("track")}
+          variants={variants}
           autoLayout={{ width: 'fill-container', height: 'fill-container' }}
           appearance={{ radius: 3 }}
           position={{ x: 0, y: 0 }}
@@ -177,14 +256,18 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
         {/* Track fill - positioned over track background */}
         <Frame
           variant={getVariantSuffix("trackFill")}
+          variants={variants}
           autoLayout={{ width: `${Math.max(0, Math.min(100, percentage))}%`, height: 'fill-container' }}
           appearance={{ radius: 3 }}
           position={{ x: 0, y: 0 }}
         />
 
-        {/* Thumb - positioned based on percentage */}
+        {/* Thumb - uses transition system for hover/drag states */}
         <Frame
-          variant={isDragging ? getVariantSuffix("thumbActive") : getVariantSuffix("thumb")}
+          id="thumbId"
+          variant={getVariantSuffix("thumb")}
+          variants={variants}
+          transitions={transitions ?? defaultTransitions}
           autoLayout={{ width: 20, height: 20 }}
           appearance={{ radius: 10 }}
           cursor={disabled ? 'not-allowed' : 'grab'}

@@ -24,29 +24,42 @@ import { VARIANT_STYLES } from '../../../theme/variant';
  */
 
 export const PROGRESS_BAR_SIZES = {
-  small: {
-    autoLayout: { height: 4 },
+  '1': {
+    autoLayout: { height: 9, width: 250 },
     appearance: { radius: 2 },
   },
-  default: {
-    autoLayout: { height: 8 },
+  '2': {
+    autoLayout: { height: 14, width: 350 },
     appearance: { radius: 4 },
   },
-  large: {
-    autoLayout: { height: 12 },
+  '3': {
+    autoLayout: { height: 12, width: 500 },
     appearance: { radius: 6 },
   },
 };
 
 export const PROGRESS_BAR_VARIANTS: ExtendVariant = {
   default: {
-    fill: { type: 'solid', color: 'gray6' },
-    appearance: { radius: 4 },
-    autoLayout: { width: 'fill-container', height: 8 },
+    fill: { type: 'solid', color: 'gray3' },
+    autoLayout: { flow: 'horizontal' },
+  },
+  default1: {
+    fill: { type: 'solid', color: 'gray3' },
+    autoLayout: { flow: 'horizontal', ...PROGRESS_BAR_SIZES['1'].autoLayout },
+    appearance: PROGRESS_BAR_SIZES['1'].appearance,
+  },
+  default2: {
+    fill: { type: 'solid', color: 'gray3' },
+    autoLayout: { flow: 'horizontal', ...PROGRESS_BAR_SIZES['2'].autoLayout },
+    appearance: PROGRESS_BAR_SIZES['2'].appearance,
+  },
+  default3: {
+    fill: { type: 'solid', color: 'gray3' },
+    autoLayout: { flow: 'horizontal', ...PROGRESS_BAR_SIZES['3'].autoLayout },
+    appearance: PROGRESS_BAR_SIZES['3'].appearance,
   },
   progress: {
     fill: { type: 'solid', color: 'primary6' },
-    appearance: { radius: 4 },
     autoLayout: { height: 'fill-container', width: 'hug' },
     effects: {
       dropShadow: [{
@@ -63,22 +76,18 @@ export const PROGRESS_BAR_VARIANTS: ExtendVariant = {
       { color: 'primary6', position: 0.5 },
       { color: 'primary4', position: 1 },
     ]},
-    appearance: { radius: 4 },
     autoLayout: { height: 'fill-container', width: 'fill-container' },
   },
   success: {
     fill: { type: 'solid', color: 'success6' },
-    appearance: { radius: 4 },
     autoLayout: { height: 'fill-container', width: 'hug' },
   },
   warning: {
     fill: { type: 'solid', color: 'warning6' },
-    appearance: { radius: 4 },
     autoLayout: { height: 'fill-container', width: 'hug' },
   },
   error: {
     fill: { type: 'solid', color: 'error6' },
-    appearance: { radius: 4 },
     autoLayout: { height: 'fill-container', width: 'hug' },
   },
 } satisfies ExtendVariant;

@@ -2,40 +2,25 @@ import { ExtendVariant } from '../../frame/frame-properties/variants/variants.pr
 import { VARIANT_STYLES } from '../../../theme/variant';
 
 /**
- * Slider Variants Library
+ * Slider Variants
  *
- * This file contains variant configurations for the Slider component.
- * Variants are imported into components via the 'variants' prop on Frame.
+ * State flow:
+ * - thumb (base) ⟷ thumbHover (hover overlay)
+ * - thumb/thumbHover → thumbGrabbing (grab/drag state) ⟷ thumbGrabbingHover
+ * - thumbGrabbing/thumbGrabbingHover → thumb (release)
  *
- * Variants handle:
- * - Styling (fill, stroke, appearance, typography, effects)
- * - Animation states (hover, click, active)
- * - Layout properties (autoLayout, spacing)
- * - Interactive behavior (cursor, transitions)
- *
- * Instead of handling hover/click states in component logic,
- * define them as variant transitions using Frame's animate prop.
- *
- * Example usage:
- * <Frame variant="track" variants={SLIDER_VARIANTS} />
- * <Frame variant="thumb" variants={SLIDER_VARIANTS} animate={{ hover: { variant: 'thumbActive' } }} />
- *
- * @see FrameVariantConfig in variants.props.tsx for available properties
- * @see ExtendVariant type for variant collection structure
+ * Variants are suffixed by component variant: thumb, thumbSoft, thumbGhost, thumbOutline
  */
 
 export const SLIDER_SIZES = {
   small: {
-    typography: { type: 'caption' },
-    autoLayout: { height: 4 },
+    autoLayout: { height: 4 , width: 100},
   },
   medium: {
-    typography: { type: 'body', size: 'small' },
-    autoLayout: { height: 6 },
+    autoLayout: { height: 6, width: 180},
   },
   large: {
-    typography: { type: 'body' },
-    autoLayout: { height: 8 },
+    autoLayout: { height: 8, width: 300 },
   },
 };
 
@@ -76,7 +61,7 @@ export const SLIDER_VARIANTS: ExtendVariant = {
     autoLayout: { width: 'fill-container', height: 'fill-container' },
   },
 
-  // Thumb variants
+  // Thumb variants (base state)
   thumb: {
     ...VARIANT_STYLES.solid as any,
     effects: { dropShadow: [{ x: 0, y: 2, blur: 4, color: 'rgba(0,0,0,0.20)' }] },
@@ -95,22 +80,60 @@ export const SLIDER_VARIANTS: ExtendVariant = {
     effects: { dropShadow: [{ x: 0, y: 2, blur: 4, color: 'rgba(0,0,0,0.25)' }] },
   },
 
-  // Active thumb variants
-  thumbActive: {
+  // Thumb hover variants
+  thumbHover: {
+    ...VARIANT_STYLES.solidHover as any,
+    effects: { dropShadow: [{ x: 0, y: 3, blur: 6, color: 'rgba(0,0,0,0.25)' }] },
+  },
+  thumbSoftHover: {
+    ...VARIANT_STYLES.softHover as any,
+    effects: { dropShadow: [{ x: 0, y: 3, blur: 6, color: 'rgba(0,0,0,0.18)' }] },
+  },
+  thumbGhostHover: {
+    ...VARIANT_STYLES.ghostHover as any,
+    stroke: { type: 'solid', color: 'gray5', weight: 2 },
+    effects: { dropShadow: [{ x: 0, y: 2, blur: 4, color: 'rgba(0,0,0,0.12)' }] },
+  },
+  thumbOutlineHover: {
+    ...VARIANT_STYLES.outlineHover as any,
+    effects: { dropShadow: [{ x: 0, y: 3, blur: 6, color: 'rgba(0,0,0,0.28)' }] },
+  },
+
+  // Thumb grabbing variants (active/drag state)
+  thumbGrabbing: {
     ...VARIANT_STYLES.solidActive as any,
     effects: { dropShadow: [{ x: 0, y: 4, blur: 8, color: 'rgba(0,0,0,0.30)' }] },
   },
-  thumbSoftActive: {
+  thumbSoftGrabbing: {
     ...VARIANT_STYLES.softActive as any,
     effects: { dropShadow: [{ x: 0, y: 3, blur: 6, color: 'rgba(0,0,0,0.20)' }] },
   },
-  thumbGhostActive: {
+  thumbGhostGrabbing: {
     ...VARIANT_STYLES.ghostActive as any,
-    stroke: { type: 'solid', color: 'gray5', weight: 2 },
+    stroke: { type: 'solid', color: 'gray6', weight: 2 },
     effects: { dropShadow: [{ x: 0, y: 2, blur: 4, color: 'rgba(0,0,0,0.15)' }] },
   },
-  thumbOutlineActive: {
+  thumbOutlineGrabbing: {
     ...VARIANT_STYLES.outlineActive as any,
     effects: { dropShadow: [{ x: 0, y: 4, blur: 8, color: 'rgba(0,0,0,0.35)' }] },
+  },
+
+  // Thumb grabbing + hover variants
+  thumbGrabbingHover: {
+    ...VARIANT_STYLES.solidActive as any,
+    effects: { dropShadow: [{ x: 0, y: 5, blur: 10, color: 'rgba(0,0,0,0.35)' }] },
+  },
+  thumbSoftGrabbingHover: {
+    ...VARIANT_STYLES.softActive as any,
+    effects: { dropShadow: [{ x: 0, y: 4, blur: 8, color: 'rgba(0,0,0,0.25)' }] },
+  },
+  thumbGhostGrabbingHover: {
+    ...VARIANT_STYLES.ghostActive as any,
+    stroke: { type: 'solid', color: 'gray7', weight: 2 },
+    effects: { dropShadow: [{ x: 0, y: 3, blur: 6, color: 'rgba(0,0,0,0.18)' }] },
+  },
+  thumbOutlineGrabbingHover: {
+    ...VARIANT_STYLES.outlineActive as any,
+    effects: { dropShadow: [{ x: 0, y: 5, blur: 10, color: 'rgba(0,0,0,0.40)' }] },
   },
 } satisfies ExtendVariant;

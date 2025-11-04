@@ -43,7 +43,7 @@ export const Default: Story = {
     return (
       <Frame autoLayout={{ flow: 'vertical', gap: 10, alignment: 'center' }}>
         <Input {...args} value={value} onChange={setValue} />
-        <p>Current value: {value}</p>
+        <Frame>Current value: {value}</Frame>
       </Frame>
     );
   },

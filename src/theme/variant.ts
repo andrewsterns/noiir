@@ -2,20 +2,20 @@
 // Usage: Pass one of these variant names to a component to control its style
 
 // Default styles for each variant
-// Frame property-based variant tokens
+// Frame property-based variant tokens using semantic color states
 export const VARIANT_STYLES = {
 	solid: {
-		fill: { type: 'solid', color: 'white3', opacity: 1 },
+		fill: { type: 'solid', color: 'white2', opacity: 1 },
 		stroke: { type: 'none' },
 		autoLayout: { flow: 'vertical', gap: 8 },
         typography: {
-            color: 'gray7',
+            color: 'gray9',
             wrap: 'nowrap',
         },
 	},
 	surface: {
 		fill: { type: 'solid', color: 'white2' },
-		stroke: { type: 'solid', color: 'gray3', weight: 1 },
+		stroke: { type: 'solid', color: 'gray4', weight: 1 },
 		effects: { dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,0,0.04)' }] },
 		autoLayout: { flow: 'vertical', gap: 8 },
 	},
@@ -27,13 +27,13 @@ export const VARIANT_STYLES = {
 	},
 	outline: {
 		fill: { type: 'none', color: 'transparent' },
-		stroke: { type: 'solid', color: 'black4', weight: 1 },
+		stroke: { type: 'solid', color: 'primary6', weight: 1 },
 		effects: {},
 		autoLayout: { flow: 'vertical', gap: 8 },
 	},
 	soft: {
-		fill: { type: 'solid', color: 'white1', opacity: 0.25 },
-		stroke: { type: 'solid', color: 'white2', weight: 1, opacity: 0.4 },
+		fill: { type: 'solid', color: 'primary1', opacity: 0.25 },
+		stroke: { type: 'solid', color: 'primary2', weight: 1, opacity: 0.4 },
 		effects: { dropShadow: [
 			{ x: 0, y: 2, blur: 12, color: 'rgba(0,0,0,0.08)' },
 			{ x: 0, y: 6, blur: 24, color: 'rgba(0,0,0,0.04)' }
@@ -46,13 +46,13 @@ export const VARIANT_STYLES = {
 		stroke: { type: 'none' },
 		autoLayout: { flow: 'vertical', gap: 8 },
         typography: {
-            color: 'gray4',
+            color: 'gray7',
             wrap: 'nowrap',
         },
 	},
 	surfaceHover: {
 		fill: { type: 'solid', color: 'white1' },
-		stroke: { type: 'solid', color: 'gray3', weight: 1 },
+		stroke: { type: 'solid', color: 'gray5', weight: 1 },
 		effects: { dropShadow: [{ x: 0, y: 4, blur: 12, color: 'rgba(0,0,0,0.06)' }] },
 		autoLayout: { flow: 'vertical', gap: 8 },
 	},
@@ -64,13 +64,13 @@ export const VARIANT_STYLES = {
 	},
 	outlineHover: {
 		fill: { type: 'none', color: 'transparent' },
-		stroke: { type: 'solid', color: 'black7', weight: 1.5 },
+		stroke: { type: 'solid', color: 'primary8', weight: 1.5 },
 		effects: {},
 		autoLayout: { flow: 'vertical', gap: 8 },
 	},
 	softHover: {
-		fill: { type: 'solid', color: 'white1', opacity: 0.35 },
-		stroke: { type: 'solid', color: 'white2', weight: 1, opacity: 0.5 },
+		fill: { type: 'solid', color: 'primary2', opacity: 0.35 },
+		stroke: { type: 'solid', color: 'primary3', weight: 1, opacity: 0.5 },
 		effects: { dropShadow: [
 			{ x: 0, y: 3, blur: 16, color: 'rgba(0,0,0,0.10)' },
 			{ x: 0, y: 8, blur: 32, color: 'rgba(0,0,0,0.05)' }
@@ -79,22 +79,22 @@ export const VARIANT_STYLES = {
 	},
 	// Active variants
 	solidActive: {
-		fill: { type: 'solid', color: 'black5', opacity: 1 },
+		fill: { type: 'solid', color: 'primary7', opacity: 1 },
 		stroke: { type: 'none' },
 		effects: { dropShadow: [{ x: 0, y: 1, blur: 4, color: 'rgba(0,0,0,0.20)' }] },
 		autoLayout: { flow: 'vertical', gap: 8 },
         typography: {
-            color: 'gray2',
+            color: 'white1',
             wrap: 'nowrap',
         },
 	},
 	surfaceActive: {
-	fill: { type: 'solid', color: 'black7', opacity: 0.15 },
-		stroke: { type: 'solid', color: 'black7', weight: 1.5 },
+		fill: { type: 'solid', color: 'primary2', opacity: 0.5 },
+		stroke: { type: 'solid', color: 'primary8', weight: 1.5 },
 		effects: {},
 		autoLayout: { flow: 'vertical', gap: 8 },
-              typography: {
-            color: 'black2',
+        typography: {
+            color: 'primary9',
             wrap: 'nowrap',
         },
 	},
@@ -103,20 +103,20 @@ export const VARIANT_STYLES = {
 		stroke: { type: 'none' },
 		effects: { dropShadow: [{ x: 0, y: 1, blur: 3, color: 'rgba(0,0,0,0.08)' }] },
 		autoLayout: { flow: 'vertical', gap: 8 },
-              typography: {
-            color: 'black7',
+        typography: {
+            color: 'primary9',
             wrap: 'nowrap',
         },
 	},
 	outlineActive: {
-	fill: { type: 'none', color: 'transparent' },
-		stroke: { type: 'solid', color: 'black7', weight: 2 },
+		fill: { type: 'none', color: 'transparent' },
+		stroke: { type: 'solid', color: 'primary9', weight: 2 },
 		effects: {},
 		autoLayout: { flow: 'vertical', gap: 8 },
 	},
 	softActive: {
-		fill: { type: 'solid', color: 'white1', opacity: 0.15 },
-		stroke: { type: 'solid', color: 'white2', weight: 1, opacity: 0.3 },
+		fill: { type: 'solid', color: 'primary3', opacity: 0.4 },
+		stroke: { type: 'solid', color: 'primary4', weight: 1, opacity: 0.6 },
 		effects: { dropShadow: [
 			{ x: 0, y: 1, blur: 6, color: 'rgba(0,0,0,0.12)' },
 			{ x: 0, y: 3, blur: 12, color: 'rgba(0,0,0,0.06)' }

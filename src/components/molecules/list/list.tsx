@@ -3,6 +3,7 @@ import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
 import { LABEL_SIZES, LABEL_VARIANTS } from '../../atoms/label/label.variants';
 import { LIST_SIZES, LIST_VARIANTS } from './list.variants';
+import { FrameVariantConfig } from '../../frame/frame-properties';
 
 /**
  * List Component
@@ -38,6 +39,7 @@ export interface ListProps extends Omit<FrameProps, 'size'> {
   disabledVariant?: 'disabled';
   children?: React.ReactNode;
   renderItem?: (item: ListItem, index: number) => React.ReactNode;
+  size?: FrameVariantConfig | string;
 }
 
 export const List = React.forwardRef<HTMLDivElement, ListProps>(({
@@ -51,6 +53,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   disabledVariant = 'disabled',
   children,
   renderItem,
+  size='fill',
   as,
   ...frameProps
 }, ref) => {
@@ -84,11 +87,10 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
 
   return (
     <Frame
-      id='list'
       ref={ref}
       as={as || "div"}
       autoLayout={{ flow: 'vertical' }}
-      size="fill"
+      size={size}
       sizes={LIST_SIZES}
       variant='default'
       variants={LIST_VARIANTS}
@@ -106,7 +108,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
         // Default rendering using Label
         return (
           <Label
-            id={`list-item-${index}`}
+            id={frameProps.id ? `${frameProps.id}-item-${index}` : undefined}
             key={index}
             size="fill"
             variant={itemVariantValue}

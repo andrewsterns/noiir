@@ -29,13 +29,13 @@ export interface ListVariantConfig {
 }
 
 export const LIST_SIZES = {
-  1: {
+  '1': {
     autoLayout: { width: 150, height: 'hug' },
   },
-  2: {
+  '2': {
     autoLayout: { width: 250, height: 'hug', gap: 0 },
   },
-  3: {
+  '3': {
     autoLayout: { width: 350, height: 'hug' },
   },
   'fill': {

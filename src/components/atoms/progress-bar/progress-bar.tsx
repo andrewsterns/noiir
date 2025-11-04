@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { PROGRESS_BAR_VARIANTS } from './progress-bar.variants';
+import { PROGRESS_BAR_SIZES, PROGRESS_BAR_VARIANTS } from './progress-bar.variants';
 
 /**
  * Progress Bar Component
@@ -17,6 +17,8 @@ export interface ProgressBarProps extends Omit<FrameProps, 'value'> {
   max?: number;
   indeterminate?: boolean;
   variant?: string;
+  size?: string;
+
 }
 
 export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(({
@@ -25,7 +27,8 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(({
   indeterminate = false,
   variant = 'default',
   variants = PROGRESS_BAR_VARIANTS,
-  size = 'default',
+  size = '2',
+
   ...progressBarProps
 }, ref) => {
   const percentage = Math.min(Math.max((progressValue / max) * 100, 0), 100);
@@ -36,12 +39,14 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(({
       variant={variant}
       variants={variants}
       size={size}
+      sizes={PROGRESS_BAR_SIZES}
       {...progressBarProps}
     >
       <Frame
         variant={indeterminate ? 'indeterminate' : 'progress'}
         variants={variants}
         size={size}
+        sizes={PROGRESS_BAR_SIZES}
         autoLayout={{
           width: indeterminate ? 'fill-container' : `${percentage}%`,
           height: 'fill-container'

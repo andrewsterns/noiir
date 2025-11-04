@@ -21,6 +21,7 @@ import { Transitions } from '../../frame/frame-properties/transition/transition'
  */
 
 export interface ButtonProps extends FrameProps {
+  id?: string;
   children: ReactNode;
   variant?: string;
   size?: FrameVariantConfig | string;
@@ -29,6 +30,7 @@ export interface ButtonProps extends FrameProps {
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
+  id,
   variant = 'primary',
   variants = BUTTON_VARIANTS,
   size = '2',
@@ -39,7 +41,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   as,
   ...buttonProps
 }, ref) => {
-  const defaultTransitions: Transitions = variant ? [
+  // Frame will auto-generate unique ID if not provided
+  const defaultTransitions: Transitions = (variant === 'primary' && !transitions) ? [
     { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
     { event: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
     { event: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
@@ -52,7 +55,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
 
   return (
     <Frame
-    id='button'
+      id={id}
       ref={ref}
       as='button'
       type='button'

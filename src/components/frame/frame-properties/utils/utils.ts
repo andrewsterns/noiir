@@ -190,8 +190,8 @@ export const convertFramePropsToStyles = (
   // Base styles for frames
   const baseStyles: React.CSSProperties = {
     boxSizing: 'border-box',
-    // Only set position: relative if not using absolute positioning
-    ...((!position?.x && !position?.y) && { position: 'relative' })
+    // Only set position: relative if not using absolute or fixed positioning
+    ...((!position?.x && !position?.y && !position?.type) && { position: 'relative' })
   };
 
   // For gradient strokes, combine fill and stroke backgrounds using CSS background-clip technique

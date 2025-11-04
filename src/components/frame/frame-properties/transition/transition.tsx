@@ -1,7 +1,7 @@
 // src/components/frame/frame-properties/transition/transition.tsx
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
-export type EventType = 'click' | 'hover' | 'mouseEnter' | 'mouseLeave' | 'mouseDown' | 'mouseUp' | 'key' | 'hotKey' | 'delay' | 'close' | 'listen' | (() => void);
+export type EventType = 'click' | 'hover' | 'mouseEnter' | 'mouseLeave' | 'mouseDown' | 'mouseUp' | 'grab' | 'key' | 'hotKey' | 'delay' | 'close' | 'listen' | (() => void);
 
 export interface TransitionRule {
   event: EventType;
@@ -26,6 +26,7 @@ interface TransitionContextType {
   registerFrame: (id: string, initialVariant: string) => void;
   unregisterFrame: (id: string) => void;
   getVariant: (id: string) => string;
+  getVisualVariant: (id: string) => string;
   registerTransitions: (transitions: Transitions) => void;
   unregisterTransitions: (transitions: Transitions) => void;
   emitEvent: (sourceId: string, event: EventType, eventData?: any) => void;
@@ -58,7 +59,10 @@ export const parseTime = (time: string | number): number => {
 };
 
 export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // frames: stores the logical variant (base state)
+  // visualFrames: stores the visual variant (can be hover, etc.)
   const [frames, setFrames] = useState<Record<string, string>>({});
+  const [visualFrames, setVisualFrames] = useState<Record<string, string>>({});
   const [allTransitions, setAllTransitions] = useState<Transitions>([]);
   const timeoutsRef = useRef<Record<string, NodeJS.Timeout>>({});
 
@@ -74,7 +78,10 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
   }, []);
 
+  // getVariant: returns the logical variant (base state)
   const getVariant = useCallback((id: string) => frames[id] || '', [frames]);
+  // getVisualVariant: returns the visual variant (hover, etc.)
+  const getVisualVariant = useCallback((id: string) => visualFrames[id] || frames[id] || '', [visualFrames, frames]);
 
   const registerTransitions = useCallback((transitions: Transitions) => {
     setAllTransitions(prev => [...prev, ...transitions]);
@@ -87,6 +94,46 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const applyTransitionRef = useRef<(rule: TransitionRule, sourceId?: string) => boolean | undefined>();
 
   const emitEvent = useCallback((sourceId: string, event: EventType, eventData?: any) => {
+    // Handle grab event as mouseDown (initiates drag)
+    // The corresponding mouseUp will end the drag state
+    if (event === 'grab') {
+      event = 'mouseDown';
+    }
+
+    // Handle mouseEnter and mouseLeave as distinct events
+    if (event === 'mouseEnter' || event === 'mouseLeave') {
+      const relevant = allTransitions.filter(rule =>
+        rule.event === event && (!rule.sourceId || rule.sourceId === sourceId)
+      );
+
+      if (relevant.length === 0) return;
+
+      // Group rules by targetId (or sourceId if no targetId)
+      const byTarget: Record<string, TransitionRule[]> = {};
+      relevant.forEach(rule => {
+        const tId = rule.targetId || sourceId || '__global';
+        byTarget[tId] = byTarget[tId] || [];
+        byTarget[tId].push(rule);
+      });
+
+      Object.keys(byTarget).forEach(tId => {
+        const rules = byTarget[tId];
+        // Only apply the FIRST matching transition
+        for (const r of rules) {
+          if (typeof r.event === 'function') continue;
+          if (applyTransitionRef.current) {
+            const applied = applyTransitionRef.current(r, sourceId);
+            if (applied) {
+              // Stop after first successful transition
+              break;
+            }
+          }
+        }
+      });
+      return;
+    }
+
+    // Default event handling for all other events
     let relevant;
     if (event === 'listen') {
       relevant = allTransitions.filter(rule =>
@@ -98,17 +145,8 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       );
     }
 
-    console.log(`🚀 Emitting event: ${sourceId} -> ${event}`, {
-      sourceId,
-      event,
-      eventData,
-      allTransitionsCount: allTransitions.length,
-      relevantTransitions: relevant
-    });
-
     if (relevant.length === 0) return;
 
-    // Group rules by targetId (or sourceId if no targetId)
     const byTarget: Record<string, TransitionRule[]> = {};
     relevant.forEach(rule => {
       const tId = rule.targetId || sourceId || '__global';
@@ -116,31 +154,24 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       byTarget[tId].push(rule);
     });
 
-    // For each target, apply non-toggle (explicit) rules first, then toggles only if no explicit rule applied
     Object.keys(byTarget).forEach(tId => {
       const rules = byTarget[tId];
-      // filter key/hotKey mismatches
       const filtered = rules.filter(rule => {
         if ((event === 'key' || event === 'hotKey') && rule.key && eventData?.key !== rule.key) return false;
         if ((event === 'key' || event === 'hotKey') && rule.hotKey && eventData?.key !== rule.hotKey) return false;
         return true;
       });
-
       if (filtered.length === 0) return;
-
       const explicit = filtered.filter(r => !r.toggle);
       const toggles = filtered.filter(r => r.toggle);
-
       let explicitApplied = false;
       for (const r of explicit) {
-        // skip function events
         if (typeof r.event === 'function') continue;
         if (applyTransitionRef.current) {
           const applied = applyTransitionRef.current(r, sourceId);
           if (applied) explicitApplied = true;
         }
       }
-
       if (!explicitApplied) {
         for (const r of toggles) {
           if (typeof r.event === 'function') continue;
@@ -154,56 +185,70 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const applyTransition = useCallback((rule: TransitionRule, sourceId?: string) => {
     const targetId = rule.targetId || sourceId;
-    if (!targetId) return; // No target specified and no source available
+    if (!targetId) return false;
 
-    const currentVariant = frames[targetId];
+    const isHover = rule.event === 'mouseEnter' || rule.event === 'mouseLeave';
 
-    if (rule.fromVariant && currentVariant !== rule.fromVariant) {
-      return false;
-    }
+    if (isHover) {
+      // For hover: check if rule matches BEFORE updating state
+      const currentVisual = visualFrames[targetId] || frames[targetId];
 
-    let newVariant: string;
-    if (rule.toVariant) {
-      newVariant = rule.toVariant;
-    } else if (rule.toggle && rule.toggleVariants) {
-      const index = rule.toggleVariants.indexOf(currentVariant);
-      if (index !== -1) {
-        newVariant = rule.toggleVariants[(index + 1) % rule.toggleVariants.length];
-      } else {
-        newVariant = rule.toggleVariants[0];
+      if (rule.fromVariant && currentVisual !== rule.fromVariant) {
+        return false;
       }
+
+      const newVariant = rule.toVariant;
+      if (!newVariant) return false;
+      
+      // Update visual frames
+      setVisualFrames(prev => ({ ...prev, [targetId]: newVariant }));
+      return true;
     } else {
-      return;
+      // For click/grab/mouseDown/mouseUp: update logical frames and clear visual frames
+      let applied = false;
+      
+      setFrames(prev => {
+        const currentLogical = prev[targetId];
+
+        if (rule.fromVariant && currentLogical !== rule.fromVariant) {
+          return prev;
+        }
+
+        let newVariant: string;
+        if (rule.toVariant) {
+          newVariant = rule.toVariant;
+        } else if (rule.toggle && rule.toggleVariants) {
+          const index = rule.toggleVariants.indexOf(currentLogical);
+          newVariant = index !== -1 
+            ? rule.toggleVariants[(index + 1) % rule.toggleVariants.length]
+            : rule.toggleVariants[0];
+        } else {
+          return prev;
+        }
+
+        applied = true;
+
+        // Schedule listen event after state update
+        if (newVariant !== currentLogical) {
+          setTimeout(() => emitEvent(targetId, 'listen', { listenId: targetId, listenVariant: newVariant }), 0);
+        }
+
+        return { ...prev, [targetId]: newVariant };
+      });
+
+      // Clear visual state
+      setVisualFrames(prev => {
+        if (prev[targetId]) {
+          const copy = { ...prev };
+          delete copy[targetId];
+          return copy;
+        }
+        return prev;
+      });
+
+      return applied;
     }
-
-    console.log(`🎯 Applying transition to ${targetId}:`, {
-      from: currentVariant,
-      to: newVariant,
-      duration: rule.duration,
-      delay: rule.delay,
-      curve: rule.curve,
-      rule
-    });
-    // Handle delay for 'delay' event type
-    if (rule.event === 'delay' && rule.delay != null) {
-      const delayMs = parseTime(rule.delay as string | number);
-      const timeoutId = setTimeout(() => {
-        // Delay event completed
-      }, delayMs);
-      // targetId is guaranteed to exist due to earlier check
-      timeoutsRef.current[targetId as string] = timeoutId;
-    }
-
-    const oldVariant = frames[targetId];
-    setFrames(prev => ({ ...prev, [targetId]: newVariant }));
-
-    // Emit 'listen' event if variant changed
-    if (newVariant !== oldVariant) {
-      emitEvent(targetId, 'listen', { listenId: targetId, listenVariant: newVariant });
-    }
-
-    return true;
-  }, [frames, emitEvent]);
+  }, [frames, visualFrames, emitEvent]);
 
   applyTransitionRef.current = applyTransition;
 
@@ -235,7 +280,9 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     unregisterTransitions,
     emitEvent,
     getTransitionsForFrame,
-  }), [registerFrame, unregisterFrame, getVariant, registerTransitions, unregisterTransitions, emitEvent, getTransitionsForFrame]);
+    // Expose getVisualVariant for consumers if needed
+    getVisualVariant,
+  }), [registerFrame, unregisterFrame, getVariant, registerTransitions, unregisterTransitions, emitEvent, getTransitionsForFrame, getVisualVariant]);
 
   return (
     <TransitionContext.Provider value={contextValue}>

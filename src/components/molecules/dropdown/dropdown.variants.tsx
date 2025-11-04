@@ -31,7 +31,7 @@ export const DROPDOWN_SIZES = {
     autoLayout: { width: 150, height: 'hug', clipContent: true },
   },
   2: {
-    autoLayout: { width: 250, height: 'hug' },
+    autoLayout: { width: 250, height: 'hug', gap: 'fill' },
   },
   3: {
     autoLayout: { width: 350, height: 'hug' },
@@ -46,7 +46,7 @@ export const DROPDOWN_VARIANT = {
   default: {
     autoLayout: { 
       flow: 'vertical', 
-      gap: 0 
+  
     },
   },
 } satisfies ExtendVariant;

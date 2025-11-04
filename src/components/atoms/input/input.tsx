@@ -1,24 +1,18 @@
 import Frame from "../../frame/Frame";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
-import { VARIANT_STYLES } from '../../../theme/variant';
+import { Transitions } from '../../frame/frame-properties/transition/transition';
 
 /**
  * Input Component
  *
- * This component uses Frame internally and should leverage Frame's built-in props as much as possible.
- * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
- * instead of creating custom props for styling/behavior.
- *
- * For animations and state transitions, use INPUT_VARIANTS with Frame's animate prop
- * instead of handling hover/click states in component logic.
- *
- * Example: animate={{ hover: { variant: 'primaryHover' }, click: { variant: 'primaryActive' } }}
- *
- * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
- *
- * @see FrameProps in src/components/frame/Frame.tsx for available props
- * @see INPUT_VARIANTS in this file for available animation states
+ * Uses transition system for hover and focus states.
+ * State flow: primary ⟷ primaryHover ⟷ primaryFocus
+ * 
+ * - Hover state is a visual overlay (temporary)
+ * - Focus state is the logical state (persistent while focused)
+ * 
+ * @see INPUT_VARIANTS for all state definitions
  */
 
 interface InputProps {
@@ -31,6 +25,7 @@ interface InputProps {
     placeholder?: string;
     disabled?: boolean;
     autoFocus?: boolean;
+    transitions?: Transitions;
 }
 
 const INPUT_SIZES = {
@@ -54,19 +49,20 @@ const INPUT_SIZES = {
 
 const INPUT_VARIANTS = {
     primary: {
-        autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const, },
+        autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const },
         fill: { type: 'solid' as const, color: 'white2' },
-        stroke: { type: 'solid' as const, color: 'gray2', weight: .5 },
+        stroke: { type: 'solid' as const, color: 'gray2', weight: 0.5 },
     },
     primaryHover: {
-        autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const, },
-        fill: { type: 'solid' as const, color: 'white4' },
-        cursor: { type: 'text' as const },
-    },
-    primaryActive: {
-        autoLayout: { flow: 'horizontal' as const, gap: .15, alignment: 'centerLeft' as const, },
+        autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const },
         fill: { type: 'solid' as const, color: 'white3' },
-        stroke: { type: 'solid' as const, color: 'gray5', weight: 1 },
+        stroke: { type: 'solid' as const, color: 'gray3', weight: 0.5 },
+        cursor: 'text' as const,
+    },
+    primaryFocus: {
+        autoLayout: { flow: 'horizontal' as const, gap: 0.15, alignment: 'centerLeft' as const },
+        fill: { type: 'solid' as const, color: 'white3' },
+        stroke: { type: 'solid' as const, color: 'blue5', weight: 2 },
     },
 } satisfies ExtendVariant;
 
@@ -97,16 +93,33 @@ const Input = (props: InputProps) => {
         onChange,
         placeholder = '',
         disabled = false,
-        autoFocus = false } = props;
+        autoFocus = false,
+        transitions } = props;
 
     const [focused, setFocused] = useState(false);
 
-    useEffect(() => {
-        // console.log('focused changed to:', focused);
-    }, [focused]);
+    const defaultTransitions: Transitions = [
+        // Hover on base state
+        { 
+            event: 'mouseEnter', 
+            targetId: 'inputId',
+            fromVariant: 'primary', 
+            toVariant: 'primaryHover', 
+            duration: '0.15s', 
+            curve: 'ease' 
+        },
+        { 
+            event: 'mouseLeave', 
+            targetId: 'inputId',
+            fromVariant: 'primaryHover', 
+            toVariant: 'primary', 
+            duration: '0.15s', 
+            curve: 'ease' 
+        },
+        // Focus transitions (manual via onClick/onBlur)
+    ];
 
     const handleFocus = () => {
-        // console.log('handleFocus called, setting focused to true');
         setFocused(true);
     };
 
@@ -126,23 +139,21 @@ const Input = (props: InputProps) => {
         }
     };
 
-    const refText = value;
     return (
         <Frame
-            onClick={() => {
-                setFocused(true);
-            }}
+            id="inputId"
+            onClick={handleFocus}
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
             tabIndex={0}
             size={size}
             sizes={INPUT_SIZES}
-            variant={variant}
+            variant={focused ? 'primaryFocus' : variant}
             variants={variants}
+            transitions={transitions ?? defaultTransitions}
         >
-
-            {refText}
+            {value}
             <Frame
                 variant={focused ? 'blinkOn' : 'cursor'}
                 variants={CURSOR_VARIANTS}

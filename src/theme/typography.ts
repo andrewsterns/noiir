@@ -25,10 +25,10 @@ export { fonts };
  */
 export const typographyPresets = {
   Frame: {
-    fontFamily: fonts.geistMono.family,
+    fontFamily: fonts.geist.family,
     fontWeight: 300,
     lineHeight: 1.3,
-    letterSpacing: 0.5,
+    letterSpacing: 0.75,
   },
   // Headings
   h1: {

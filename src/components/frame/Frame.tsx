@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId as reactUseId } from 'react';
 import { PositionProps } from './frame-properties/position/position.props';
 import { AutoLayoutProps } from './frame-properties/layout/layout.props';
 import { AppearanceProps } from './frame-properties/appearance/appearance.props';
@@ -54,6 +54,7 @@ export interface FrameProps extends EventProps {
 
   display?: string;
   type?: string;
+  zIndex?: number;
   [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
@@ -109,6 +110,10 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     ...otherProps
   } = props;
 
+  // Generate unique ID if not provided
+  const generatedId = reactUseId();
+  const frameId = id || `frame-${generatedId}`;
+
   // Collect variant configurations from props starting with 'variant-' and variants prop
   const variants: Record<string, any> = { ...(variantsProp || {}) };
   Object.keys(otherProps).forEach(key => {
@@ -140,31 +145,31 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     unregisterTransitionsRef.current = transitionContext?.unregisterTransitions;
   }, [transitionContext]);
 
-  const effectiveVariant = id && transitionContext && transitionContext.getVariant(id) !== '' ? transitionContext.getVariant(id) : variant;
+  const effectiveVariant = frameId && transitionContext && transitionContext.getVisualVariant(frameId) !== '' ? transitionContext.getVisualVariant(frameId) : variant;
 
-  if (id) console.log('Frame', id, 'effectiveVariant:', effectiveVariant);
+  if (frameId) console.log('Frame', frameId, 'effectiveVariant:', effectiveVariant);
 
   // Register frame and transitions
   React.useEffect(() => {
-    if (registerFrameRef.current && unregisterFrameRef.current && id) {
+    if (registerFrameRef.current && unregisterFrameRef.current && frameId) {
       const initialVariant = typeof variant === 'string' ? variant : '';
-      registerFrameRef.current(id, initialVariant);
+      registerFrameRef.current(frameId, initialVariant);
       return () => {
-        unregisterFrameRef.current!(id);
+        unregisterFrameRef.current!(frameId);
       };
     }
-  }, [id, variant]);
+  }, [frameId, variant]);
 
   React.useEffect(() => {
-    if (registerTransitionsRef.current && unregisterTransitionsRef.current && transitions && id) {
+    if (registerTransitionsRef.current && unregisterTransitionsRef.current && transitions && frameId) {
       // For component-level transitions, set the sourceId to this component's id
-      const componentTransitions = transitions.map(t => ({ ...t, sourceId: t.sourceId || id }));
+      const componentTransitions = transitions.map(t => ({ ...t, sourceId: t.sourceId || frameId }));
       registerTransitionsRef.current(componentTransitions);
       return () => {
         unregisterTransitionsRef.current!(componentTransitions);
       };
     }
-  }, [transitions, id]);
+  }, [transitions, frameId]);
 
   // Collect variant configurations from props starting with 'variant-' and variants prop
 
@@ -314,10 +319,10 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
 
   // Collect transition properties for CSS transitions
   const transitionProps = React.useMemo(() => {
-    if (!transitionContext || !id) return null;
+    if (!transitionContext || !frameId) return null;
 
     // Find transitions that target this component
-    const relevantTransitions = transitionContext.getTransitionsForFrame(id);
+    const relevantTransitions = transitionContext.getTransitionsForFrame(frameId);
 
     if (!relevantTransitions || relevantTransitions.length === 0) return null;
 
@@ -328,7 +333,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     const delay = transition.delay ? parseTime(transition.delay) + 'ms' : '0ms';
     const curve = transition.curve || 'ease';
 
-    console.log(`Frame ${id} applying CSS transition:`, {
+    console.log(`Frame ${frameId} applying CSS transition:`, {
       duration,
       delay,
       curve,
@@ -336,7 +341,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     });
 
     return { duration, delay, curve };
-  }, [transitionContext, id]);
+  }, [transitionContext, frameId]);
 
   // Apply alignment-based transforms to children for smooth animation
   let alignedChildren = finalChildren;
@@ -461,8 +466,14 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     effects: finalEffects,
   }, hasAutoLayout);
 
+  // Add zIndex to styles if provided
+  if (props.zIndex !== undefined) {
+    finalStyles.zIndex = props.zIndex;
+  }
+
   // If this frame has alignment-based positioning for children, ensure it's positioned relatively
-  if (mergedAutoLayout?.alignment && mergedAutoLayout?.flow === 'vertical') {
+  // BUT don't override if position is already fixed or absolute
+  if (mergedAutoLayout?.alignment && mergedAutoLayout?.flow === 'vertical' && !finalStyles.position) {
     finalStyles.position = 'relative';
   }
 
@@ -503,38 +514,38 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   }, eventHandlers || {});
 
   const handleClick = (e: any) => {
-    if (transitionContext && id) {
-      transitionContext.emitEvent(id, 'click', e);
+    if (transitionContext && frameId) {
+      transitionContext.emitEvent(frameId, 'click', e);
     }
     finalOnClick?.(e);
   };
   const handleMouseEnter = (e: any) => {
-    console.log('MouseEnter on', id);
-    if (transitionContext && id) {
-      transitionContext.emitEvent(id, 'mouseEnter');
+    console.log('MouseEnter on', frameId);
+    if (transitionContext && frameId) {
+      transitionContext.emitEvent(frameId, 'mouseEnter');
     }
     composedHandlers.onMouseEnter?.(e);
   };
   const handleMouseLeave = (e: any) => {
-    if (transitionContext && id) {
-      transitionContext.emitEvent(id, 'mouseLeave');
+    if (transitionContext && frameId) {
+      transitionContext.emitEvent(frameId, 'mouseLeave');
     }
     composedHandlers.onMouseLeave?.(e);
   };
   const handleMouseDown = (e: any) => {
-    if (transitionContext && id) {
-      transitionContext.emitEvent(id, 'mouseDown');
+    if (transitionContext && frameId) {
+      transitionContext.emitEvent(frameId, 'mouseDown');
     }
     composedHandlers.onMouseDown?.(e);
   };
   const handleMouseUp = (e: any) => {
-    if (transitionContext && id) {
-      transitionContext.emitEvent(id, 'mouseUp');
+    if (transitionContext && frameId) {
+      transitionContext.emitEvent(frameId, 'mouseUp');
     }
     composedHandlers.onMouseUp?.(e);
   };
   const handleKeyDown = (e: any) => {
-    if (transitionContext && id) transitionContext.emitEvent(id, 'key', e);
+    if (transitionContext && frameId) transitionContext.emitEvent(frameId, 'key', e);
     composedHandlers.onKeyDown?.(e);
   };
 
@@ -545,7 +556,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
       as,
       {
         ref,
-        id,
+        id: frameId,
         className,
         style: {
           ...finalStyles,
@@ -580,7 +591,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     as,
     {
       ref,
-      id,
+      id: frameId,
       className,
       style: finalStyles,
       onClick: handleClick,

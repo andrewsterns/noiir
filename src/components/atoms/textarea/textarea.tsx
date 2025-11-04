@@ -2,23 +2,18 @@ import React, { useState } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { TEXTAREA_VARIANTS, TEXTAREA_SIZES } from './textarea.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
+import { Transitions } from '../../frame/frame-properties/transition/transition';
 
 /**
  * Textarea Component
  *
- * This component extends Frame and should leverage Frame's built-in props as much as possible.
- * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
- * instead of creating custom props for styling/behavior.
- *
- * For animations and state transitions, use TEXTAREA_VARIANTS with Frame's animate prop
- * instead of handling hover/click states in component logic.
- *
- * Example: animate={{ hover: { variant: 'solid-focus' }, focus: { variant: 'solid-focus' } }}
- *
- * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
- *
- * @see FrameProps in src/components/frame/Frame.tsx for available props
- * @see TEXTAREA_VARIANTS in textarea.variants.tsx for available animation states
+ * Uses transition system for hover and focus states.
+ * State flow: default → hover (visual overlay) → focus (logical state)
+ * 
+ * - Hover states are visual overlays (temporary)
+ * - Focus state updates the variant directly (persistent while focused)
+ * 
+ * @see TEXTAREA_VARIANTS for all state definitions
  */
 
 export interface TextareaProps extends Omit<FrameProps, 'onChange' | 'value' | 'placeholder' | 'onFocus' | 'onBlur'> {
@@ -42,6 +37,7 @@ export interface TextareaProps extends Omit<FrameProps, 'onChange' | 'value' | '
   wrap?: 'soft' | 'hard';
   error?: boolean;
   success?: boolean;
+  transitions?: Transitions;
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
