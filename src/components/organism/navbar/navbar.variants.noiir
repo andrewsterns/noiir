@@ -11,7 +11,7 @@ import { VARIANT_STYLES } from '../../../theme/variant';
  * @see ExtendVariant type for variant collection structure
  */
 
-export const NAVBAR_VARIANTS: ExtendVariant = {
+export variant NAVBAR_VARIANTS: extendVariant = {
   // Main navbar container
   default: {
     ...VARIANT_STYLES.solid as any,

@@ -1,6 +1,7 @@
 {
   "name": "figma-components-framework",
   "version": "1.0.0",
+  "type": "module",
   "description": "A React component framework that mirrors Figma design properties",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +9,9 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build:noiir": "node scripts/compile-noiir.js",
+    "watch:noiir": "chokidar 'src/**/*.noiir' -c 'npm run build:noiir'"
   },
   "keywords": [
     "react",
@@ -31,6 +34,8 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "chokidar-cli": "^3.0.0",
+    "glob": "^11.0.0",
     "storybook": "^7.5.3",
     "typescript": "^5.0.0",
     "vite": "^4.4.5"
