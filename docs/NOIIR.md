@@ -97,7 +97,7 @@ A VSCode task is available for quick compilation:
 
 Syntax highlighting is enabled via the Highlight extension with custom regex patterns.
 
-## Syntax Transformations
+## Syntax Rules
 
 ### Designer Syntax → TypeScript
 
@@ -106,9 +106,39 @@ Syntax highlighting is enabled via the Highlight extension with custom regex pat
 | `export group` | `export const` |
 | `export variant` | `export const` |
 | `interface Foo: {` | `interface Foo {` |
-| `function:` | `const logic = () =>` |
 | `<frame` | `<Frame` |
 | `extendVariant` | `ExtendVariant` |
+
+### Component Structure
+
+```tsx
+interface groupProps: {
+  logo?: React.ReactNode;
+}
+
+export group ComponentName = (props) => {
+  function: {
+    // Logic, event handlers, local functions
+    const handleClick = () => console.log("clicked");
+  }
+
+  render: (
+    // JSX-like component tree
+    <Frame variant="container">
+      <Frame variant="content">{props.logo}</Frame>
+      <Button onClick={handleClick}>Click me</Button>
+    </Frame>
+  )
+}
+```
+
+### Key Elements
+
+- **`interface groupProps:`** - Defines component props interface
+- **`export group`** - Declares a reusable component
+- **`function:`** - Contains logic, event handlers, local functions
+- **`render:`** - JSX-like tree describing component output
+- **`props`** - Standard React props, passed in by the wrapper
 
 ## Example: Navbar Component
 
@@ -123,15 +153,17 @@ interface groupProps: {
   logo?: React.ReactNode;
 }
 
-export group Navbar = (props: groupProps) => {
-  function: { console.log("toggle menu") }
+export group Navbar = (props) => {
+  function: {
+    const handleToggle = () => console.log("toggle menu");
+  }
 
-  return (
-    <frame variant="navbar" variants={{NAVBAR_VARIANTS}}>
-      <frame variant="logo">{props.logo}</frame>
-      <Button onClick={logic}>Toggle</Button>
-    </frame>
-  );
+  render: (
+    <Frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={{NAVBAR_VARIANTS}}>
+      <Frame variant="logo">{props.logo}</Frame>
+      <Button onClick={handleToggle}>Toggle</Button>
+    </Frame>
+  )
 }
 
 export variant NAVBAR_VARIANTS: extendVariant = {
@@ -208,10 +240,11 @@ To migrate an existing component:
 1. Copy your `.tsx` file to `.noiir`
 2. Replace `export const` with `export group` or `export variant`
 3. Replace `interface Name {` with `interface Name: {`
-4. Replace arrow functions with `function:` where desired
-5. Replace `<Frame` with `<frame` (lowercase)
-6. Run `npm run build:noiir` to generate the new `.tsx`
-7. Verify TypeScript compilation with `npm run build`
+4. Replace arrow function body with `function: { ... }` block
+5. Replace `return (` with `render: (`
+6. Replace `<Frame` with `<frame` (lowercase)
+7. Run `npm run build:noiir` to generate the new `.tsx`
+8. Verify TypeScript compilation with `npm run build`
 
 ---
 

@@ -7,6 +7,17 @@ function compileNoiirFile(inputPath) {
   const outputPath = inputPath.replace(/\.noiir$/, ".tsx");
   let code = fs.readFileSync(inputPath, "utf-8");
 
+  // Handle the new .noiir syntax structure
+  // Extract function block
+  const functionMatch = code.match(/function:\s*\{([\s\S]*?)\}/);
+  const functionLogic = functionMatch ? functionMatch[1].trim() : '';
+
+  // Replace function: block with the extracted logic
+  code = code.replace(/function:\s*\{[\s\S]*?\}/, functionLogic);
+
+  // Replace render: with return
+  code = code.replace(/\brender:\s*\(/, "return (");
+
   // Core replacements (designer-friendly -> TypeScript/React)
   code = code
     // export group / variant -> export const
@@ -14,8 +25,6 @@ function compileNoiirFile(inputPath) {
     .replace(/\bexport\s+variant\b/g, "export const")
     // interface Foo: { -> interface Foo {
     .replace(/\binterface\s+([A-Za-z0-9_]+)\s*:\s*\{/g, "interface $1 {")
-    // function: -> const logic = () =>
-    .replace(/\bfunction\s*:/g, "const logic = () =>")
     // <frame -> <Frame and closing tags
     .replace(/<frame\b/g, "<Frame")
     .replace(/<\/frame>/g, "</Frame>")

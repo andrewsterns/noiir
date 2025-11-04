@@ -7,14 +7,14 @@ interface groupProps {
 }
 
 export const Navbar = (props: groupProps) => {
-  const logic = () => { console.log("toggle menu") }
+  const handleToggle = () => console.log("toggle menu");
 
   return (
     <Frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={{ NAVBAR_VARIANTS }}>
       <Frame variant="logo">{props.logo}</Frame>
-      <Button onClick={logic}>Toggle</Button>
+      <Button onClick={handleToggle}>Toggle</Button>
     </Frame>
-  );
+  )
 }
 
 export const NAVBAR_VARIANTS: ExtendVariant = {

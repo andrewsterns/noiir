@@ -6,15 +6,17 @@ interface groupProps: {
   logo?: React.ReactNode;
 }
 
-export group Navbar = (props: groupProps) => {
-  function: { console.log("toggle menu") }
+export group Navbar = (props) => {
+  function: {
+    const handleToggle = () => console.log("toggle menu");
+  }
 
-  return (
-    <frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={{NAVBAR_VARIANTS}}>
-      <frame variant="logo">{props.logo}</frame>
-      <Button onClick={logic}>Toggle</Button>
-    </frame>
-  );
+  render: (
+    <Frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={{NAVBAR_VARIANTS}}>
+      <Frame variant="logo">{props.logo}</Frame>
+      <Button onClick={handleToggle}>Toggle</Button>
+    </Frame>
+  )
 }
 
 export variant NAVBAR_VARIANTS: extendVariant = {
