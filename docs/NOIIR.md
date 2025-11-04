@@ -58,6 +58,44 @@ npm run build:noiir
 import { Button } from './Button';
 ```
 
+## React Wrapper Components
+
+Noiir provides wrapper components to import `.noiir` files like normal React components:
+
+### Specific Wrapper
+
+```tsx
+// src/components/NavbarNoiirWrapper.tsx
+import React from 'react';
+import { parseNoiir } from '../noiir/parseNoiir';
+import NavbarNoiirText from './navbar/Navbar.noiir?raw';
+
+export const NavbarNoiirWrapper = (props: any) => parseNoiir(NavbarNoiirText, props);
+```
+
+### Generic Wrapper
+
+```tsx
+import { NoiirComponent, createNoiirComponent } from 'framework/noiir';
+
+// Using the component directly
+<NoiirComponent noiirText={noiirFileContent} props={componentProps} />
+
+// Creating a reusable component
+const MyComponent = createNoiirComponent(noiirFileContent);
+<MyComponent {...props} />
+```
+
+### Import Syntax
+
+Use Vite's `?raw` import to load `.noiir` files as strings:
+
+```tsx
+import MyComponentNoiir from './MyComponent.noiir?raw';
+```
+
+This allows `.noiir` files to be used seamlessly in React applications and Storybook.
+
 ## Compilation Usage (Original)
 
 ### Compiling Noiir Files
