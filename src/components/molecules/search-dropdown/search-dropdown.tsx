@@ -36,8 +36,12 @@ export interface SearchDropdownProps {
   searchPlaceholder?: string;
   onChange?: (selectedIndex: number, item: SearchItem) => void;
   disabled?: boolean;
-  buttonSize?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'elevated' | 'minimal' | 'glass';
+  buttonSize?: any;
+  buttonSizes?: Record<string, any>;
+  variant?: string;
+  variants?: Record<string, any>;
+  inputVariants?: Record<string, any>;
+  listVariants?: Record<string, any>;
 }
 
 export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownProps>(({
@@ -48,9 +52,18 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
   onChange,
   disabled = false,
   buttonSize = 'md',
+  buttonSizes: customButtonSizes,
   variant = 'default',
+  variants: customVariants,
+  inputVariants: customInputVariants,
+  listVariants: customListVariants,
   ...frameProps
 }, ref) => {
+  // Merge custom variants with defaults - these would come from default variant files
+  const variants = customVariants || {};
+  const inputVariants = customInputVariants || INPUT_VARIANTS;
+  const listVariants = customListVariants || {};
+  const buttonSizes = customButtonSizes || {};
   const [searchQuery, setSearchQuery] = useState('');
   const [internalSelectedIndex, setInternalSelectedIndex] = useState<number | undefined>(selectedIndex);
   const [isSearching, setIsSearching] = useState(false);
