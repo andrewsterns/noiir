@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { RADIO_BUTTON_VARIANTS, RADIO_BUTTON_SIZES, RADIO_BUTTON_FILL_SIZES } from '../../../../__variants__/atoms/radio-button/radio-button.variants';
-import { Transitions } from '../../frame/frame-properties/transition/transition';
+import { Transitions } from '../../frame/frame-properties/transition/transition.props';
 
 /**
  * Radio Button Component

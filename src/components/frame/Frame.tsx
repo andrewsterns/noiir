@@ -20,7 +20,7 @@ import {
   calculateHugDimensions,
   ChildStateMap
 } from '../../../packages/frame-core/src';
-import { useTransitionContext, Transitions, TransitionProvider, parseTime } from '../../../packages/frame-core/src/transition/transition';
+import { useTransitionContext, Transitions, TransitionProvider, parseTime } from '../../../packages/frame-core/src/transition/transition.props';
 
 // FRAME PROPS ARE PULLED IN FROM THEIR RESPECTIVE FILES
 // ROOT 'CORE' PROPS ARE PULLED IN FROM UTILS FILE
@@ -520,13 +520,14 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     finalOnClick?.(e);
   };
   const handleMouseEnter = (e: any) => {
-    console.log('MouseEnter on', frameId);
+    console.log('[Frame] MouseEnter on', frameId, 'with currentVariant:', currentVariant);
     if (transitionContext && frameId) {
       transitionContext.emitEvent(frameId, 'mouseEnter');
     }
     composedHandlers.onMouseEnter?.(e);
   };
   const handleMouseLeave = (e: any) => {
+    console.log('[Frame] MouseLeave on', frameId, 'with currentVariant:', currentVariant);
     if (transitionContext && frameId) {
       transitionContext.emitEvent(frameId, 'mouseLeave');
     }

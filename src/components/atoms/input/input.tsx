@@ -1,7 +1,7 @@
 import Frame from "../../frame/Frame";
 import { useState } from "react";
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
-import { Transitions } from '../../frame/frame-properties/transition/transition';
+import { Transitions } from '../../frame/frame-properties/transition/transition.props';
 
 /**
  * Input Component

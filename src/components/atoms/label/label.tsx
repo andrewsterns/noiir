@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
-import { Transitions } from '../../frame/frame-properties/transition/transition';
+import { Transitions } from '../../frame/frame-properties/transition/transition.props';
 
 /**
  * Label Component

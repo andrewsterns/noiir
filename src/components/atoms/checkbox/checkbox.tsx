@@ -2,7 +2,7 @@ import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Check } from '../../../theme/icons/check';
 import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
-import { Transitions } from '../../frame/frame-properties/transition/transition';
+import { Transitions } from '../../frame/frame-properties/transition/transition.props';
 
 /**
  * Checkbox Component

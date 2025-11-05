@@ -189,19 +189,42 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     const isHover = rule.event === 'mouseEnter' || rule.event === 'mouseLeave';
 
+    console.log('[Transition] applyTransition called:', {
+      event: rule.event,
+      targetId,
+      fromVariant: rule.fromVariant,
+      toVariant: rule.toVariant,
+      delay: rule.delay,
+      duration: rule.duration,
+      curve: rule.curve
+    });
+
     if (isHover) {
       // For hover: check if rule matches BEFORE updating state
       const currentVisual = visualFrames[targetId] || frames[targetId];
 
+      console.log('[Transition] Hover event - currentVisual:', currentVisual, 'expected fromVariant:', rule.fromVariant);
+
       if (rule.fromVariant && currentVisual !== rule.fromVariant) {
+        console.log('[Transition] Skipping - fromVariant mismatch');
         return false;
       }
 
       const newVariant = rule.toVariant;
       if (!newVariant) return false;
       
-      // Update visual frames
-      setVisualFrames(prev => ({ ...prev, [targetId]: newVariant }));
+      // Parse delay and apply if needed
+      const delayMs = rule.delay ? parseTime(rule.delay) : 0;
+      console.log('[Transition] Applying with delay:', delayMs, 'ms');
+
+      if (delayMs > 0) {
+        setTimeout(() => {
+          console.log('[Transition] Delay complete, updating to variant:', newVariant);
+          setVisualFrames(prev => ({ ...prev, [targetId]: newVariant }));
+        }, delayMs);
+      } else {
+        setVisualFrames(prev => ({ ...prev, [targetId]: newVariant }));
+      }
       return true;
     } else {
       // For click/grab/mouseDown/mouseUp: update logical frames and clear visual frames

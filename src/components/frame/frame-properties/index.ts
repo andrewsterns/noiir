@@ -9,4 +9,5 @@ export * from './typography/typography.props';
 export * from './events/event.props';
 export * from './variants/variants.props';
 export * from './variants/size.props';
+export * from './transition/transition.props';
 export * from './utils/utils';

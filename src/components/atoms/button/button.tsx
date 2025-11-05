@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { BUTTON_SIZES, BUTTON_VARIANTS } from '../../../../__variants__/atoms/button/button.variants';
 import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Button Component
