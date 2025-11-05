@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame } from '../../frame/Frame';
-import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
+import { ExtendVariant } from '../../../../packages/frame-core/src/variants/variants.props';
 
 /**
  * Avatar Component
@@ -88,3 +88,5 @@ export const Avatar: React.FC<AvatarProps> = ({
 };
 
 export default Avatar;
+
+

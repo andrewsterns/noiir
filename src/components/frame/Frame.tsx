@@ -522,14 +522,18 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   };
   const handleMouseEnter = (e: any) => {
     console.log('[Frame] MouseEnter on', frameId, 'with currentVariant:', currentVariant);
+    console.log('[Frame] transitionContext exists?', !!transitionContext, 'frameId exists?', !!frameId);
     if (transitionContext && frameId) {
+      console.log('[Frame] About to call emitEvent for mouseEnter');
       transitionContext.emitEvent(frameId, 'mouseEnter');
     }
     composedHandlers.onMouseEnter?.(e);
   };
   const handleMouseLeave = (e: any) => {
     console.log('[Frame] MouseLeave on', frameId, 'with currentVariant:', currentVariant);
+    console.log('[Frame] transitionContext exists?', !!transitionContext, 'frameId exists?', !!frameId);
     if (transitionContext && frameId) {
+      console.log('[Frame] About to call emitEvent for mouseLeave');
       transitionContext.emitEvent(frameId, 'mouseLeave');
     }
     composedHandlers.onMouseLeave?.(e);

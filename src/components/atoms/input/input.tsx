@@ -1,7 +1,7 @@
 import Frame from "../../frame/Frame";
 import { useState } from "react";
-import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
-import { Transitions } from '../../frame/frame-properties/transition/transition.props';
+import { ExtendVariant } from '../../../../packages/frame-core/src/variants/variants.props';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Input Component
@@ -169,4 +169,6 @@ const Input = (props: InputProps) => {
 };
 
 export { Input, INPUT_VARIANTS }; export type { InputProps };
+
+
 

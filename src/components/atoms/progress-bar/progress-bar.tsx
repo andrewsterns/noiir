@@ -63,3 +63,4 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(({
 ProgressBar.displayName = 'ProgressBar';
 
 export default ProgressBar;
+

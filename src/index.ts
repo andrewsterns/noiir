@@ -38,33 +38,33 @@ export {
   convertPositionProps,
   convertConstraintProps,
   convertPositionAndConstraints
-} from './components/frame/frame-properties/position/position.props';
+} from '../packages/frame-core/src/position/position.props';
 
 export {
   convertAutoLayoutProps
-} from './components/frame/frame-properties/layout/layout.props';
+} from '../packages/frame-core/src/layout/layout.props';
 
 export {
   convertAppearanceProps,
   convertCornerRadius,
   createAppearanceVariations
-} from './components/frame/frame-properties/appearance/appearance.props';
+} from '../packages/frame-core/src/appearance/appearance.props';
 
 export {
   convertTypographyProps,
   createTypographyScale,
   createTypographyPreset,
   createCommonPresets
-} from './components/frame/frame-properties';
+} from '../packages/frame-core/src';
 
 export {
   convertFillProps,
   createGradientString,
   createImageFillStyles,
   createMultipleFills
-} from './components/frame/frame-properties/appearance/fill.props';
+} from '../packages/frame-core/src/appearance/fill.props';
 
 export {
   convertStrokeProps,
   createStrokePattern
-} from './components/frame/frame-properties/appearance/stroke.props';
+} from '../packages/frame-core/src/appearance/stroke.props';

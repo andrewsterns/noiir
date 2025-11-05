@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { SLIDER_VARIANTS, SLIDER_SIZES } from '../../../../__variants__/atoms/slider/slider.variants';
-import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
-import { Transitions } from '../../frame/frame-properties/transition/transition.props';
+import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Slider Component
@@ -287,3 +287,5 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
 Slider.displayName = 'Slider';
 
 export default Slider;
+
+

@@ -1,7 +1,7 @@
 import React, { Children } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Avatar } from '../../atoms/avatar/avatar';
-import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
+import { ExtendVariant } from '../../../../packages/frame-core/src/variants/variants.props';
 
 /**
  * Card Component
@@ -137,3 +137,5 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(({
 Card.displayName = 'Card';
 
 export default Card;
+
+

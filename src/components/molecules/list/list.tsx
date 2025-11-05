@@ -3,7 +3,7 @@ import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
 import { LABEL_SIZES, LABEL_VARIANTS } from '../../atoms/label/label.variants';
 import { LIST_SIZES, LIST_VARIANTS } from './list.variants';
-import { FrameVariantConfig } from '../../frame/frame-properties';
+import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
 
 /**
  * List Component
@@ -137,3 +137,5 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
 List.displayName = 'List';
 
 export default List;
+
+

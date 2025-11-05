@@ -4,7 +4,7 @@ import {
   convertTypographyProps as convertTypographyPropsBase,
   applyTypographyPreset,
   mergeTypographyProps
-} from '../components/frame/frame-properties/typography/typography.props';
+} from '../../packages/frame-core/src/typography/typography.props';
 import { fonts } from './fonts';
 
 /**

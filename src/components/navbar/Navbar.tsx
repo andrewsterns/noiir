@@ -1,6 +1,6 @@
 import { Frame } from '../frame/Frame';
 import Button from '../atoms/button/button';
-import { ExtendVariant } from '../frame/frame-properties/variants/variants.props';
+import { ExtendVariant } from '../../../packages/frame-core/src/variants/variants.props';
 
 interface groupProps {
   logo?: React.ReactNode;
@@ -29,3 +29,4 @@ export const NAVBAR_VARIANTS: ExtendVariant = {
     typography: { fontSize: 14, fontWeight: 500, color: 'primary7' },
   },
 }
+

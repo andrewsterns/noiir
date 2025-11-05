@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { RADIO_BUTTON_VARIANTS, RADIO_BUTTON_SIZES, RADIO_BUTTON_FILL_SIZES } from '../../../../__variants__/atoms/radio-button/radio-button.variants';
-import { Transitions } from '../../frame/frame-properties/transition/transition.props';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Radio Button Component
@@ -162,3 +162,5 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
 RadioButton.displayName = 'RadioButton';
 
 export default RadioButton;
+
+

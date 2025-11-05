@@ -154,3 +154,4 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
 SearchDropdown.displayName = 'SearchDropdown';
 
 export default SearchDropdown;
+

@@ -94,6 +94,8 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const applyTransitionRef = useRef<(rule: TransitionRule, sourceId?: string) => boolean | undefined>();
 
   const emitEvent = useCallback((sourceId: string, event: EventType, eventData?: any) => {
+    console.log(`[Transition] emitEvent called: sourceId=${sourceId}, event=${event}, allTransitions.length=${allTransitions.length}`);
+    
     // Handle grab event as mouseDown (initiates drag)
     // The corresponding mouseUp will end the drag state
     if (event === 'grab') {
@@ -105,6 +107,7 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const relevant = allTransitions.filter(rule =>
         rule.event === event && (!rule.sourceId || rule.sourceId === sourceId)
       );
+      console.log(`[Transition] Found ${relevant.length} relevant transitions for ${event} on ${sourceId}`);
 
       if (relevant.length === 0) return;
 
@@ -184,6 +187,17 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, [allTransitions]);
 
   const applyTransition = useCallback((rule: TransitionRule, sourceId?: string) => {
+    console.log('[Transition] applyTransition called:', {
+      event: rule.event,
+      targetId: rule.targetId,
+      sourceId,
+      fromVariant: rule.fromVariant,
+      toVariant: rule.toVariant,
+      delay: rule.delay,
+      duration: rule.duration,
+      curve: rule.curve
+    });
+    
     const targetId = rule.targetId || sourceId;
     if (!targetId) return false;
 
@@ -194,6 +208,7 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const currentVisual = visualFrames[targetId] || frames[targetId];
 
       if (rule.fromVariant && currentVisual !== rule.fromVariant) {
+        console.log('[Transition] Skipping - fromVariant mismatch. Current:', currentVisual, 'Expected:', rule.fromVariant);
         return false;
       }
 

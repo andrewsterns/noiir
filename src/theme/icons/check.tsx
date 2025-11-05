@@ -17,3 +17,4 @@ export const Check: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <path d="M1 6L6 11L16 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
+

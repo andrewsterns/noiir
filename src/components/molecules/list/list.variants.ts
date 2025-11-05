@@ -1,4 +1,4 @@
-import { ExtendVariant } from "../../frame/frame-properties/variants/variants.props";
+import { ExtendVariant } from "../../../../packages/frame-core/src/variants/variants.props";
 
 /**
  * List Variants Library

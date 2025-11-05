@@ -1,8 +1,8 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Check } from '../../../theme/icons/check';
-import { ExtendVariant } from '../../frame/frame-properties/variants/variants.props';
-import { Transitions } from '../../frame/frame-properties/transition/transition.props';
+import { ExtendVariant } from '../../../../packages/frame-core/src/variants/variants.props';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Checkbox Component
@@ -163,3 +163,5 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
 Checkbox.displayName = 'Checkbox';
 
 export default Checkbox;
+
+

@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { TOGGLE_SIZES, TOGGLE_VARIANTS } from '../../../../__variants__/atoms/toggle/toggle.variants';
-import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
-import { Transitions } from '../../frame/frame-properties/transition/transition.props';
+import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Toggle Component
@@ -133,3 +133,5 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
 Toggle.displayName = 'Toggle';
 
 export default Toggle;
+
+

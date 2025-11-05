@@ -4,7 +4,7 @@ import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES, DROPDOWN_LIST_VARIANTS } from '../../../../__variants__/molecules/dropdown/dropdown.variants';
 import { BUTTON_SIZES } from '../../../../__variants__/atoms/button/button.variants';
-import { Transitions, useTransitionContext } from '../../frame/frame-properties/transition/transition.props';
+import { Transitions, useTransitionContext } from '../../../../packages/frame-core/src/transition/transition.props';
 import { LIST_SIZES } from '../list/list.variants';
 
 /**
@@ -155,3 +155,5 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
     </Frame>
   );
 });
+
+

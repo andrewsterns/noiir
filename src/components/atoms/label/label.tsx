@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
-import { Transitions } from '../../frame/frame-properties/transition/transition.props';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Label Component
@@ -81,3 +81,5 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
 Label.displayName = 'Label';
 
 export default Label;
+
+

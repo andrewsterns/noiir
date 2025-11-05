@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { TEXTAREA_VARIANTS, TEXTAREA_SIZES } from '../../../../__variants__/atoms/textarea/textarea.variants';
-import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
-import { Transitions } from '../../frame/frame-properties/transition/transition.props';
+import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
+import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
  * Textarea Component
@@ -131,3 +131,5 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
 Textarea.displayName = 'Textarea';
 
 export default Textarea;
+
+
