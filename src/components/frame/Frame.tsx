@@ -164,6 +164,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     if (registerTransitionsRef.current && unregisterTransitionsRef.current && transitions && frameId) {
       // For component-level transitions, set the sourceId to this component's id
       const componentTransitions = transitions.map(t => ({ ...t, sourceId: t.sourceId || frameId }));
+      console.log(`[Frame] Registering transitions for ${frameId}:`, componentTransitions);
       registerTransitionsRef.current(componentTransitions);
       return () => {
         unregisterTransitionsRef.current!(componentTransitions);

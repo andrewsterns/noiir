@@ -56,7 +56,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
     { event: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
   ] : [];
 
-  console.log('Button defaultTransitions:', defaultTransitions);
+  const finalTransitions = transitions ?? defaultTransitions;
+
+  console.log('Button variant:', variant, 'transitions:', finalTransitions);
 
   return (
     <Frame
@@ -71,7 +73,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
       cursor="pointer"
       iconStart={iconStart}
       iconEnd={iconEnd}
-      transitions={transitions ?? defaultTransitions}
+      transitions={finalTransitions}
       {...buttonProps}
     >
       {children}

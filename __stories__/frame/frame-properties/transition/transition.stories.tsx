@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
-import { Frame } from '@noiir/core';
+import { Frame } from '../../../../src/components/frame/Frame';
 import { TransitionProvider, Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
 
 /**
