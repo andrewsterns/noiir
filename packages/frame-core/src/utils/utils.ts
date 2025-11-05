@@ -6,7 +6,7 @@ import { TypographyProps, convertTypographyProps } from '../typography/typograph
 import { FillProps, convertFillProps } from '../appearance/fill.props';
 import { StrokeProps, convertStrokeProps } from '../appearance/stroke.props';
 import { EffectProps, convertEffectProps } from '../effects/effects.props';
-import { resolveColor, colorUtils } from '@theme/colors';
+import { resolveColor, colorUtils } from '../../../../src/theme/colors';
 
 //ALL CORE FRAME PROPS AND UTILITIES SHOULD GO IN THIS FILE
 //PROPS SUCH AS POSITION, AUTO LAYOUT, APPEARANCE, FILL, STROKE, EFFECTS, ETC SHOULD BE IMPORTED FROM THEIR RESPECTIVE FILES

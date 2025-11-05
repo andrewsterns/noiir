@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, colorUtils, resolveColor, type ColorKey, type ColorShade } from '@theme/colors';
+import { colors, colorUtils, resolveColor, type ColorKey, type ColorShade } from '../../../../src/theme/colors';
 
 /**
  * Simplified Fill Props with flattened gradient API

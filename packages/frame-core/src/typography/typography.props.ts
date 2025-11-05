@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { resolveColor } from '@theme/colors';
-import { typographyPresets } from '@theme/typography';
+import { resolveColor } from '../../../../src/theme/colors';
+import { typographyPresets } from '../../../../src/theme/typography';
 
 /**
  * Typography Properties
