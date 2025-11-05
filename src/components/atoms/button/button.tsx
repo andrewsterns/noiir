@@ -58,8 +58,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
 
   const finalTransitions = transitions ?? defaultTransitions;
 
-  console.log('Button variant:', variant, 'transitions:', finalTransitions);
-
   return (
     <Frame
       id={id}
