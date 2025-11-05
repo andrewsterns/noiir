@@ -2,8 +2,8 @@ import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
-import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES, DROPDOWN_LIST_VARIANTS } from './dropdown.variants';
-import { BUTTON_SIZES } from '../../atoms/button/button.variants';
+import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES, DROPDOWN_LIST_VARIANTS } from '../../../../__variants__/molecules/dropdown/dropdown.variants';
+import { BUTTON_SIZES } from '../../../../__variants__/atoms/button/button.variants';
 import { Transitions, useTransitionContext } from '../../frame/frame-properties/transition/transition';
 import { LIST_SIZES } from '../list/list.variants';
 

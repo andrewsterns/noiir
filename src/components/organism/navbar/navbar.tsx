@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { NAVBAR_VARIANTS } from './navbar.variants';
+import { NAVBAR_VARIANTS } from '../../../../__variants__/organism/navbar/navbar.variants';
 import Button from '../../atoms/button/button';
 import { Dropdown } from '../../molecules/dropdown/dropdown';
 

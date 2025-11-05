@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { TEXTAREA_VARIANTS, TEXTAREA_SIZES } from './textarea.variants';
+import { TEXTAREA_VARIANTS, TEXTAREA_SIZES } from '../../../../__variants__/atoms/textarea/textarea.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
 import { Transitions } from '../../frame/frame-properties/transition/transition';
 

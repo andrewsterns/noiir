@@ -1,17 +1,47 @@
 {
-  "name": "figma-components-framework",
+  "name": "noiir",
   "version": "1.0.0",
   "type": "module",
-  "description": "A React component framework that mirrors Figma design properties",
+  "description": "A React component framework that mirrors Figma design properties with Frame-based components",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./frame": {
+      "import": "./dist/frame.js",
+      "types": "./dist/frame.d.ts"
+    },
+    "./theme": {
+      "import": "./dist/theme.js",
+      "types": "./dist/theme.d.ts"
+    },
+    "./components": {
+      "import": "./dist/components.js",
+      "types": "./dist/components.d.ts"
+    },
+    "./variants": {
+      "import": "./dist/variants.js",
+      "types": "./dist/variants.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:clean && npm run build:tsc",
+    "build:clean": "rimraf dist",
+    "build:tsc": "tsc",
     "dev": "tsc --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build:noiir": "node scripts/compile-noiir.js",
-    "watch:noiir": "cross-env chokidar \"src/**/*.noiir\" -c \"npm run build:noiir\""
+    "watch:noiir": "cross-env chokidar \"src/**/*.noiir\" -c \"npm run build:noiir\"",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "react",

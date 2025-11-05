@@ -1,4 +1,4 @@
-import { ExtendVariant } from './src/components/frame/frame-properties/variants/variants.props';
+import { ExtendVariant } from './packages/frame-core/src/variants/variants.props';
 import { VARIANT_STYLES } from './src/theme/variant';
 
 /**

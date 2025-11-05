@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Button } from '../../atoms/button/button';
 import { Card } from '../card/card';
-import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
+import { BUTTON_VARIANTS } from '../../../../__variants__/atoms/button/button.variants';
 import { CARD_VARIANTS } from '../card/card';
 
 /**

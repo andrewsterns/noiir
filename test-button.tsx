@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from './src/components/atoms/button/button';
 import { Frame } from './src/components/frame/Frame';
-import { TransitionProvider } from './src/components/frame/frame-properties/transition/transition';
+import { TransitionProvider } from './packages/frame-core/src/transition/transition';
 import { TEST_BUTTON_V, TEST_FRAME_V } from './test-button.variants';
 
 interface TestButtonProps {

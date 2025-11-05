@@ -1,9 +1,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { noiirPlugin } from './vite.config.noiir';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react(), noiirPlugin()],
+  resolve: {
+    alias: {
+      '@noiir/frame-core': path.resolve(__dirname, './packages/frame-core/src'),
+      '@variants': path.resolve(__dirname, './__variants__'),
+      '@stories': path.resolve(__dirname, './__stories__'),
+      '@theme': path.resolve(__dirname, './src/theme'),
+    },
+  },
   build: {
     lib: {
       entry: 'src/index.ts',

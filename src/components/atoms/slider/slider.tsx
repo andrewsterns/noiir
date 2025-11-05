@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { SLIDER_VARIANTS, SLIDER_SIZES } from './slider.variants';
+import { SLIDER_VARIANTS, SLIDER_SIZES } from '../../../../__variants__/atoms/slider/slider.variants';
 import { FrameVariantConfig } from '../../frame/frame-properties/variants/variants.props';
 import { Transitions } from '../../frame/frame-properties/transition/transition';
 

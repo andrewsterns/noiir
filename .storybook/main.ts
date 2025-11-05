@@ -1,7 +1,12 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import { mergeConfig } from 'vite';
+import path from 'path';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)', '../*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    '../__stories__/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../*.stories.@(js|jsx|mjs|ts|tsx)'
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -10,6 +15,18 @@ const config: StorybookConfig = {
   framework: {
     name: '@storybook/react-vite',
     options: {},
+  },
+  async viteFinal(config) {
+    return mergeConfig(config, {
+      resolve: {
+        alias: {
+          '@noiir/frame-core': path.resolve(__dirname, '../packages/frame-core/src'),
+          '@variants': path.resolve(__dirname, '../__variants__'),
+          '@stories': path.resolve(__dirname, '../__stories__'),
+          '@theme': path.resolve(__dirname, '../src/theme'),
+        },
+      },
+    });
   },
   docs: {
     autodocs: 'tag',

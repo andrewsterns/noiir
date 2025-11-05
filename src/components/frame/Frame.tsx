@@ -1,17 +1,17 @@
 import React, { useId as reactUseId } from 'react';
-import { PositionProps } from './frame-properties/position/position.props';
-import { AutoLayoutProps } from './frame-properties/layout/layout.props';
-import { AppearanceProps } from './frame-properties/appearance/appearance.props';
-import { TypographyProps } from './frame-properties/typography/typography.props';
-import { FillProps } from './frame-properties/appearance/fill.props';
-import { StrokeProps } from './frame-properties/appearance/stroke.props';
-import { CursorProps } from './frame-properties/appearance/cursor.props';
-import { EffectProps } from './frame-properties/effects/effects.props';
-import { EventProps } from './frame-properties/events/event.props';
-import { samplePathPoints } from './frame-properties/layout/svgPathUtils';
-import { getCurvedLayoutChildren } from './frame-properties/layout/curvedLayout';
-import { mergeSizeProps } from './frame-properties/variants/size.props';
-import { mergeVariantAndSize, mergeSizeWithAnimation, FrameVariantConfig } from './frame-properties/variants/variants.props';
+import { PositionProps } from '../../../packages/frame-core/src/position/position.props';
+import { AutoLayoutProps } from '../../../packages/frame-core/src/layout/layout.props';
+import { AppearanceProps } from '../../../packages/frame-core/src/appearance/appearance.props';
+import { TypographyProps } from '../../../packages/frame-core/src/typography/typography.props';
+import { FillProps } from '../../../packages/frame-core/src/appearance/fill.props';
+import { StrokeProps } from '../../../packages/frame-core/src/appearance/stroke.props';
+import { CursorProps } from '../../../packages/frame-core/src/appearance/cursor.props';
+import { EffectProps } from '../../../packages/frame-core/src/effects/effects.props';
+import { EventProps } from '../../../packages/frame-core/src/events/event.props';
+import { samplePathPoints } from '../../../packages/frame-core/src/layout/svgPathUtils';
+import { getCurvedLayoutChildren } from '../../../packages/frame-core/src/layout/curvedLayout';
+import { mergeSizeProps } from '../../../packages/frame-core/src/variants/size.props';
+import { mergeVariantAndSize, mergeSizeWithAnimation, FrameVariantConfig } from '../../../packages/frame-core/src/variants/variants.props';
 import {
   applyChildStates,
   injectVariant,
@@ -19,8 +19,8 @@ import {
   convertFramePropsToStyles,
   calculateHugDimensions,
   ChildStateMap
-} from './frame-properties';
-import { useTransitionContext, Transitions, TransitionProvider, parseTime } from './frame-properties/transition/transition';
+} from '../../../packages/frame-core/src';
+import { useTransitionContext, Transitions, TransitionProvider, parseTime } from '../../../packages/frame-core/src/transition/transition';
 
 // FRAME PROPS ARE PULLED IN FROM THEIR RESPECTIVE FILES
 // ROOT 'CORE' PROPS ARE PULLED IN FROM UTILS FILE

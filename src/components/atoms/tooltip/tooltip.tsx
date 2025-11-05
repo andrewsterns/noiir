@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { TOOLTIP_VARIANTS } from './tooltip.variants';
+import { TOOLTIP_VARIANTS } from '../../../../__variants__/atoms/tooltip/tooltip.variants';
 
 /**
  * Tooltip Component

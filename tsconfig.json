@@ -16,14 +16,24 @@
     "module": "esnext",
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "baseUrl": ".",
+    "paths": {
+      "@noiir/frame-core": ["./packages/frame-core/src"],
+      "@noiir/frame-core/*": ["./packages/frame-core/src/*"],
+      "@variants/*": ["./__variants__/*"],
+      "@stories/*": ["./__stories__/*"],
+      "@theme/*": ["./src/theme/*"]
+    },
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "packages/**/*",
+    "__variants__/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "examples"
+    "examples",
+    "__stories__"
   ]
 }

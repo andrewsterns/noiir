@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { PROGRESS_BAR_SIZES, PROGRESS_BAR_VARIANTS } from './progress-bar.variants';
+import { PROGRESS_BAR_SIZES, PROGRESS_BAR_VARIANTS } from '../../../../__variants__/atoms/progress-bar/progress-bar.variants';
 
 /**
  * Progress Bar Component

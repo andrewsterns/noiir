@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { POPUP_VARIANTS } from './popup.variants';
+import { POPUP_VARIANTS } from '../../../../__variants__/molecules/popup/popup.variants';
 import Button from '../../atoms/button/button';
 
 /**

@@ -1,0 +1,153 @@
+import { ExtendVariant} from '../../../packages/frame-core/src/variants/variants.props';
+import { ArrowDown, ArrowUp } from '../../../src/theme/icons/arrows';
+import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
+// import { LIST_VARIANTS } from '../list/list.variants';  // TODO: Create list.variants.tsx
+// import { LABEL_VARIANTS } from '../../atoms/label/label.variants';  // TODO: Create label.variants.tsx
+
+/**
+ * Dropdown Variants Library
+ *
+ * This file contains variant configurations for the Dropdown component.
+ * Variants are imported into components via the 'variants' prop on Frame.
+ *
+ * Variants handle:
+ * - Styling (fill, stroke, appearance, typography, effects)
+ * - Animation states (hover, click, active)
+ * - Layout properties (autoLayout, spacing)
+ * - Interactive behavior (cursor, transitions)
+ *
+ * Instead of handling hover/click states in component logic,
+ * define them as variant transitions using Frame's animate prop.
+ *
+ * Example usage:
+ * <Frame variant="primary" variants={DROPDOWN_BUTTON_VARIANTS} animate={{ hover: { variant: 'primaryHover' } }} />
+ *
+ * @see FrameVariantConfig in variants.props.tsx for available properties
+ * @see ExtendVariant type for variant collection structure
+ */
+
+export const DROPDOWN_SIZES = {
+  1: {
+    autoLayout: { width: 150, height: 'hug', clipContent: true },
+  },
+  2: {
+    autoLayout: { width: 250, height: 'hug', gap: 'fill' },
+  },
+  3: {
+    autoLayout: { width: 350, height: 'hug' },
+  },
+  'fill': {
+    autoLayout: { width: 'fill-container', height: 'hug' },
+  },
+} satisfies ExtendVariant;
+
+// Dropdown container variant
+export const DROPDOWN_VARIANT = {
+  default: {
+    autoLayout: { 
+      flow: 'vertical', 
+  
+    },
+  },
+} satisfies ExtendVariant;
+
+// Dropdown-specific button variants
+export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
+  ...BUTTON_VARIANTS,
+  primary: {
+    ...BUTTON_VARIANTS.primary,
+    iconStart: null,
+    iconEnd: <ArrowDown />,
+  },
+
+  primaryHover: {
+    ...BUTTON_VARIANTS.primaryHover,
+    iconStart: null,
+    iconEnd: <ArrowDown />,
+  },
+
+  primaryActive: {
+    ...BUTTON_VARIANTS.primaryActive,
+    iconStart: null,
+    iconEnd: <ArrowUp />,
+  },
+
+  primaryActiveHover: {
+     ...BUTTON_VARIANTS.primaryActiveHover,
+     iconStart: null,
+     iconEnd: <ArrowUp />,
+  },
+
+  secondary: {
+    ...BUTTON_VARIANTS.secondary,
+    fill: { type: 'solid', color: 'white6', opacity: 0.9 },
+    autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
+    stroke: { type: 'none' },
+    appearance: { radius: 30 },
+    typography: {
+      fontWeight: 400,
+      textAlign: 'left',
+      color: 'gray4',
+    },
+    iconEnd: <ArrowDown />,
+  },
+
+  secondaryHover: {
+
+    fill: { type: 'none' },
+    autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
+    stroke: { type: 'solid', color: 'white7', weight: 1 },
+    appearance: { radius: 30 },
+    typography: {
+      fontSize: 14,
+      fontWeight: 400,
+      textAlign: 'left',
+      color: 'gray7',
+    },
+    iconEnd: <ArrowDown />,
+  },
+
+  secondaryOpen: {
+    fill: { type: 'none' },
+    autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
+    stroke: { type: 'solid', color: 'white7', weight: 1 },
+    appearance: { radius: 30 },
+    typography: {
+      fontSize: 14,
+      fontWeight: 400,
+      textAlign: 'left',
+      color: 'gray7',
+    },
+    iconEnd: <ArrowUp />,
+  },
+
+  disabled: {
+    fill: { type: 'none', color: 'transparent' },
+    autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
+    stroke: { type: 'solid', color: 'gray8', weight: 1 },
+    appearance: { radius: 8 },
+    typography: {
+      fontSize: 14,
+      fontWeight: 400,
+      textAlign: 'left',
+      color: 'gray7',
+    },
+    iconEnd: <ArrowDown />,
+    cursor: { type: 'not-allowed' }
+  },
+} satisfies ExtendVariant;
+
+// Dropdown-specific list variants for show/hide
+// TODO: Re-enable when LIST_VARIANTS is created
+export const DROPDOWN_LIST_VARIANTS = {
+  // ...LIST_VARIANTS,
+  hidden: {
+    display: 'none'
+  },
+  visible: {
+    // ...LIST_VARIANTS.default,
+    autoLayout: { height: 100, width: 'fill-container' },
+    fill: { type: 'solid', color: 'tomato4' },
+  },
+} satisfies ExtendVariant;
+
