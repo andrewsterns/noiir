@@ -20,14 +20,13 @@ import { ExtendVariant } from '../../frame/frame-properties/variants/variants.pr
  * @see AVATAR_VARIANTS in this file for available animation states
  */
 
-export type AvatarVariant = 'default' | 'softDark' | 'softLight' | 'outline';
-
 export interface AvatarProps {
   src?: string;
   alt?: string;
   size?: number;
   fallback?: React.ReactNode;
-  variant?: AvatarVariant;
+  variant?: string;
+  variants?: Record<string, any>; // Allow flexible variant definitions
 }
 
 const AVATAR_VARIANTS = {
@@ -56,7 +55,17 @@ const AVATAR_VARIANTS = {
   }
 } satisfies ExtendVariant;
 
-export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 40, fallback, variant = 'default' }) => {
+export const Avatar: React.FC<AvatarProps> = ({ 
+  src, 
+  alt, 
+  size = 40, 
+  fallback, 
+  variant = 'default',
+  variants: customVariants 
+}) => {
+  // Use custom variants if provided, otherwise use defaults
+  const variants = customVariants || AVATAR_VARIANTS;
+  
   // Create dynamic fill based on whether we have a src
   const fill = src ? {
     type: 'image' as const,
@@ -71,7 +80,7 @@ export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 40, fallback, v
     <Frame
       autoLayout={{ width: size, height: size, alignment: 'center' }}
       variant={variant}
-      variants={AVATAR_VARIANTS}
+      variants={variants}
       fill={fill}
     >
     </Frame>

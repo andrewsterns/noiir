@@ -37,6 +37,10 @@ export interface TextareaProps extends Omit<FrameProps, 'onChange' | 'value' | '
   wrap?: 'soft' | 'hard';
   error?: boolean;
   success?: boolean;
+  variant?: string;
+  variants?: Record<string, any>;
+  size?: any;
+  sizes?: Record<string, any>;
   transitions?: Transitions;
 }
 
@@ -62,11 +66,13 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
   error = false,
   success = false,
   variant = 'solid',
-  variants = TEXTAREA_VARIANTS,
+  variants: customVariants,
   size = 'medium',
-  sizes = TEXTAREA_SIZES,
+  sizes: customSizes,
   ...textareaProps
 }, ref) => {
+  const variants = customVariants || TEXTAREA_VARIANTS;
+  const sizes = customSizes || TEXTAREA_SIZES;
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [isFocused, setIsFocused] = useState(false);
 

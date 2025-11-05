@@ -16,10 +16,11 @@ import { Transitions } from '../../frame/frame-properties/transition/transition'
  */
 
 interface InputProps {
-    size?: string;
+    size?: any; // Allow flexible size definitions
+    sizes?: Record<string, any>; // Allow flexible size definitions
     type?: string;
     variant?: string;
-    variants?: Record<string, any>;
+    variants?: Record<string, any>; // Allow flexible variant definitions
     value?: string;
     onChange?: (value: string) => void;
     placeholder?: string;
@@ -86,15 +87,20 @@ const CURSOR_VARIANTS = {
 const Input = (props: InputProps) => {
     const {
         size = '2',
+        sizes: customSizes,
         type = 'text',
         variant = 'primary',
-        variants = INPUT_VARIANTS,
+        variants: customVariants,
         value = '',
         onChange,
         placeholder = '',
         disabled = false,
         autoFocus = false,
         transitions } = props;
+
+    // Use custom variants/sizes if provided, otherwise use defaults
+    const variants = customVariants || INPUT_VARIANTS;
+    const sizes = customSizes || INPUT_SIZES;
 
     const [focused, setFocused] = useState(false);
 
@@ -148,7 +154,7 @@ const Input = (props: InputProps) => {
             onKeyDown={handleKeyDown}
             tabIndex={0}
             size={size}
-            sizes={INPUT_SIZES}
+            sizes={sizes}
             variant={focused ? 'primaryFocus' : variant}
             variants={variants}
             transitions={transitions ?? defaultTransitions}

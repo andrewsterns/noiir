@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { colors } from './colors';
-import { fonts } from './fonts';
-import { typographyPresets, applyThemePreset } from './typography';
+import colors from '../../src/theme/colors';
+import { fonts } from '../../src/theme/fonts';
+import { typographyPresets } from '../../src/theme/typography';
+import { applyThemePreset } from '../../dist/src/theme';
 
 // Dummy component for the story
 const ThemeShowcase = () => null;

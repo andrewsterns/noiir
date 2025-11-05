@@ -25,8 +25,10 @@ export interface LabelProps extends FrameProps {
   children: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
-  variant?: 'primary'| 'primaryHover' | 'primaryActive' | 'primaryActiveHover' | 'disabled' | 'hidden';
-  size?: string;
+  variant?: string;
+  variants?: Record<string, any>; // Allow flexible variant definitions
+  size?: any; // Allow flexible size definitions
+  sizes?: Record<string, any>; // Allow flexible size definitions
   transitions?: Transitions;
 }
 
@@ -35,10 +37,16 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   onClick,
   disabled = false,
   variant = 'primary',
+  variants: customVariants,
   size = 'default',
+  sizes: customSizes,
   transitions,
   ...frameProps
 }, ref) => {
+  // Use custom variants if provided, otherwise use defaults
+  const variants = customVariants || LABEL_VARIANTS;
+  const sizes = customSizes || LABEL_SIZES;
+  
   // Determine effective variant based on disabled state
   const effectiveVariant = disabled ? 'disabled' : variant;
 
@@ -57,9 +65,9 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
       as='label'
       id='label'
       size={size}
-      sizes={LABEL_SIZES}
+      sizes={sizes}
       variant={variant}
-      variants={LABEL_VARIANTS}
+      variants={variants}
       cursor={'pointer'}
       onClick={disabled ? undefined : onClick}
       transitions={transitions ?? defaultTransitions}

@@ -27,6 +27,9 @@ export interface CardProps extends FrameProps {
   avatarSrc?: string;
   avatarAlt?: string;
   variant?: string;
+  variants?: Record<string, any>; // Allow flexible variant definitions
+  size?: any; // Allow flexible size definitions
+  sizes?: Record<string, any>; // Allow flexible size definitions
   children?: React.ReactNode;
 }
 
@@ -102,12 +105,16 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(({
   avatarSrc,
   avatarAlt,
   size = '2',
+  sizes: customSizes,
   variant = 'default',
-  variants = CARD_VARIANTS,
-  sizes = CARD_SIZES,
+  variants: customVariants,
   children,
   ...props
 }, ref) => {
+  // Use custom variants/sizes if provided, otherwise use defaults
+  const variants = customVariants || CARD_VARIANTS;
+  const sizes = customSizes || CARD_SIZES;
+  
   return (
     <Frame
       ref={ref}

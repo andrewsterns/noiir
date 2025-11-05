@@ -47,7 +47,7 @@ export interface FrameProps extends EventProps {
   iconEndColor?: string;
   size?: FrameVariantConfig | string;
   variant?: FrameVariantConfig | string;
-  variants?: Record<string, FrameVariantConfig>;
+  variants?: Record<string, FrameVariantConfig> | Record<string, any>;
   sizes?: Record<string, any>;
   pointerEvents?: string;
   transitions?: Transitions;

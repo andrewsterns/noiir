@@ -4,13 +4,15 @@ import { ExtendVariant } from '../frame/frame-properties/variants/variants.props
 
 interface groupProps {
   logo?: React.ReactNode;
+  variants?: Record<string, any>;
 }
 
 export const Navbar = (props: groupProps) => {
+  const variants = props.variants || { NAVBAR_VARIANTS };
   const handleToggle = () => console.log("toggle menu");
 
   return (
-    <Frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={{ NAVBAR_VARIANTS }}>
+    <Frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={variants}>
       <Frame variant="logo">{props.logo}</Frame>
       <Button onClick={handleToggle}>Toggle</Button>
     </Frame>

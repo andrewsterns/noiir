@@ -24,6 +24,9 @@ import { CARD_VARIANTS } from '../card/card';
 interface DialogProps extends FrameProps {
   open?: boolean;
   children: React.ReactNode;
+  buttonVariants?: Record<string, any>;
+  cardVariants?: Record<string, any>;
+  variants?: Record<string, any>;
 }
 
 const DIALOG_BUTTON_VARIANTS = {
@@ -49,9 +52,12 @@ const DIALOG_CARD_VARIANTS = {
   }
 };
 
-export const Dialog = ({ open = false, children, ...props }: DialogProps) => {
+export const Dialog = ({ open = false, children, buttonVariants: customButtonVariants, cardVariants: customCardVariants, ...props }: DialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  const buttonVariants = customButtonVariants || DIALOG_BUTTON_VARIANTS;
+  const cardVariants = customCardVariants || DIALOG_CARD_VARIANTS;
 
   const handleButtonClick = () => {
     setIsOpen(true);
@@ -82,7 +88,7 @@ export const Dialog = ({ open = false, children, ...props }: DialogProps) => {
     <Frame autoLayout={{ flow: 'vertical', gap: 16, paddingHorizontal: 20, paddingVertical: 20 }} onClick={handleFrameClick} {...props}>
       <Button
         variant="primary"
-        variants={DIALOG_BUTTON_VARIANTS}
+        variants={buttonVariants}
         onClick={handleButtonClick}
       >
         Open Dialog
@@ -90,13 +96,13 @@ export const Dialog = ({ open = false, children, ...props }: DialogProps) => {
       <Card
         ref={cardRef}
         variant={cardVariant}
-        variants={DIALOG_CARD_VARIANTS}
+        variants={cardVariants}
         tabIndex={0}
         onBlur={() => setIsOpen(false)}
       >
         <Button
           variant="primary"
-          variants={DIALOG_BUTTON_VARIANTS}
+          variants={buttonVariants}
           onClick={handleCloseClick}
         >
           Close

@@ -18,6 +18,7 @@ export interface TooltipProps extends Omit<FrameProps, 'position'> {
   trigger?: 'hover' | 'focus' | 'click';
   delay?: number;
   variant?: string;
+  variants?: Record<string, any>;
   children: React.ReactNode;
 }
 
@@ -27,10 +28,11 @@ export const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(({
   trigger = 'hover',
   delay = 300,
   variant = 'default',
-  variants = TOOLTIP_VARIANTS,
+  variants: customVariants,
   children,
   ...tooltipProps
 }, ref) => {
+  const variants = customVariants || TOOLTIP_VARIANTS;
   const [isVisible, setIsVisible] = useState(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const triggerRef = useRef<HTMLDivElement>(null);

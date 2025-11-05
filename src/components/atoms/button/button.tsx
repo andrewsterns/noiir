@@ -24,7 +24,9 @@ export interface ButtonProps extends FrameProps {
   id?: string;
   children: ReactNode;
   variant?: string;
-  size?: FrameVariantConfig | string;
+  variants?: Record<string, any>; // Allow flexible variant definitions
+  size?: any; // Allow flexible size definitions
+  sizes?: Record<string, any>; // Allow flexible size definitions
   transitions?: Transitions;
 }
 
@@ -32,15 +34,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   id,
   variant = 'primary',
-  variants = BUTTON_VARIANTS,
+  variants: customVariants,
   size = '2',
-  sizes = BUTTON_SIZES,
+  sizes: customSizes,
   iconStart,
   iconEnd,
   transitions,
   as,
   ...buttonProps
 }, ref) => {
+  // Use custom variants if provided, otherwise use defaults
+  const variants = customVariants || BUTTON_VARIANTS;
+  const sizes = customSizes || BUTTON_SIZES;
   // Frame will auto-generate unique ID if not provided
   const defaultTransitions: Transitions = (variant === 'primary' && !transitions) ? [
     { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },

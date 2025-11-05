@@ -26,6 +26,10 @@ export interface SliderProps extends Omit<FrameProps, 'onChange' | 'value'> {
   onChange?: (value: number) => void;
   showValue?: boolean;
   disabled?: boolean;
+  variant?: string;
+  variants?: Record<string, any>;
+  size?: any;
+  sizes?: Record<string, any>;
   transitions?: Transitions;
 }
 
@@ -39,12 +43,14 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   showValue = false,
   disabled = false,
   variant = 'solid',
-  variants = SLIDER_VARIANTS,
+  variants: customVariants,
   size = 'medium',
-  sizes = SLIDER_SIZES,
+  sizes: customSizes,
   transitions,
   ...sliderProps
 }, ref) => {
+  const variants = customVariants || SLIDER_VARIANTS;
+  const sizes = customSizes || SLIDER_SIZES;
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [trackWidth, setTrackWidth] = useState(200);
   const trackRef = useRef<HTMLDivElement>(null);

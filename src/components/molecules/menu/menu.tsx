@@ -25,6 +25,7 @@ export interface MenuItem {
 export interface MenuProps extends FrameProps {
   items: MenuItem[];
   variant?: string;
+  variants?: Record<string, any>;
   orientation?: 'horizontal' | 'vertical';
   onItemClick?: (item: MenuItem) => void;
 }
@@ -32,11 +33,12 @@ export interface MenuProps extends FrameProps {
 export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(({
   items,
   variant = 'default',
-  variants = MENU_VARIANTS,
+  variants: customVariants,
   orientation = 'vertical',
   onItemClick,
   ...menuProps
 }, ref) => {
+  const variants = customVariants || MENU_VARIANTS;
   const handleItemClick = (item: MenuItem) => {
     if (!item.disabled) {
       item.onClick?.();

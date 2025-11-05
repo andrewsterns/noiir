@@ -1,5 +1,5 @@
 ﻿import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../Frame';
+import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
 
 interface StrokeArgs extends Partial<FrameProps> {
   children?: React.ReactNode;

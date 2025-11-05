@@ -24,8 +24,11 @@ export interface RadioButtonProps extends Omit<FrameProps, 'value'> {
     onValueChange?: (value: string | number) => void;
     label?: string;
     variant?: string;
-    sizeRadio?: 'small' | 'medium' | 'large';
-    sizeFill?: 'small' | 'medium' | 'large';
+    variants?: Record<string, any>;
+    sizeRadio?: any;
+    sizeRadioSizes?: Record<string, any>;
+    sizeFill?: any;
+    sizeFillSizes?: Record<string, any>;
     transitions?: Transitions;
 }
 
@@ -37,13 +40,18 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
     onValueChange,
     label,
     variant,
-    variants = RADIO_BUTTON_VARIANTS,
+    variants: customVariants,
     sizeRadio = 'medium',
+    sizeRadioSizes: customRadioSizes,
     sizeFill = 'medium',
+    sizeFillSizes: customFillSizes,
     onClick,
     transitions,
     ...radioButtonProps
 }, ref) => {
+    const variants = customVariants || RADIO_BUTTON_VARIANTS;
+    const radioSizes = customRadioSizes || RADIO_BUTTON_SIZES;
+    const fillSizes = customFillSizes || RADIO_BUTTON_FILL_SIZES;
 
     // Default transition rules for radio button inner circle
     const defaultTransitions: Transitions = [
@@ -108,7 +116,7 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
             variant={checked ? 'radioBackgroundActive' : 'radioBackground'}
             variants={variants}
             size={sizeRadio}
-            sizes={RADIO_BUTTON_SIZES}
+            sizes={radioSizes}
             cursor={disabled ? 'not-allowed' : 'pointer'}
             disabled={disabled}
             autoLayout={{
@@ -123,7 +131,7 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
                 variants={variants}
                 transitions={transitions ?? defaultTransitions}
                 size={sizeFill}
-                sizes={RADIO_BUTTON_FILL_SIZES}
+                sizes={fillSizes}
                 cursor={disabled ? 'not-allowed' : 'pointer'}
                 disabled={disabled}
             />

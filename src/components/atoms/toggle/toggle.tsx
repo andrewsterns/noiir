@@ -23,8 +23,10 @@ import { Transitions } from '../../frame/frame-properties/transition/transition'
 export interface ToggleProps extends Omit<FrameProps, 'onChange'> {
   children?: ReactNode;
   variant?: string;
+  variants?: Record<string, any>; // Allow flexible variant definitions
   variantThumb?: string;
-  size?: FrameVariantConfig | string;
+  size?: any; // Allow flexible size definitions
+  sizes?: Record<string, any>; // Allow flexible size definitions
   transitions?: Transitions;
   checked?: boolean;
   onChange?: (checked: boolean) => void;
@@ -33,15 +35,18 @@ export interface ToggleProps extends Omit<FrameProps, 'onChange'> {
 export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
   children,
   variant = 'primary',
-  variants = TOGGLE_VARIANTS,
+  variants: customVariants,
   variantThumb = 'solidThumb',
   size = '2',
-  sizes = TOGGLE_SIZES,
+  sizes: customSizes,
   transitions,
   checked = false,
   onChange,
   ...toggleProps
 }, ref) => {
+  // Use custom variants/sizes if provided, otherwise use defaults
+  const variants = customVariants || TOGGLE_VARIANTS;
+  const sizes = customSizes || TOGGLE_SIZES;
 
   const defaultTransitions: Transitions = [
     // Click: Toggle between base states (primary <-> primaryActive)

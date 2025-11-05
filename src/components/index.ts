@@ -24,7 +24,6 @@ export { SearchDropdown } from './molecules/search-dropdown/search-dropdown';
 
 // Organism
 // export { Navbar } from './navbar/Navbar';
-export { Guage } from './organism/guage';
 // Only export Navbar (default export)
 export { Navbar } from './organism/navbar/navbar';
 

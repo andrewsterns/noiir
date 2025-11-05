@@ -36,9 +36,40 @@ export interface FrameVariantConfig {
 }
 
 /**
+ * Flexible variant configuration that allows any values (no strict typing)
+ * Use this when you want to define variants without TypeScript strictness
+ */
+export interface FlexibleFrameVariantConfig {
+  fill?: any;
+  stroke?: any;
+  appearance?: any;
+  autoLayout?: any;
+  typography?: any;
+  effects?: any;
+  cursor?: any;
+  position?: any;
+  constraints?: any;
+  size?: any;
+  sizeKey?: string;
+  iconStart?: React.ReactNode;
+  iconEnd?: React.ReactNode;
+  iconStartColor?: string;
+  iconEndColor?: string;
+  pointerEvents?: string;
+  transform?: string;
+  display?: string;
+  important?: string[];
+}
+
+/**
  * Type for a variant document, a collection of named variants
  */
 export type ExtendVariant = Record<string, FrameVariantConfig>;
+
+/**
+ * Type for a flexible variant document that allows any values
+ */
+export type FlexibleExtendVariant = Record<string, FlexibleFrameVariantConfig>;
 
 
 /**

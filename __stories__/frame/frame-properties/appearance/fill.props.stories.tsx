@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../Frame';
+import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
 
 //ALL FILL RELATED PROPS AND STORIES SHOULD GO IN THIS FILE
 

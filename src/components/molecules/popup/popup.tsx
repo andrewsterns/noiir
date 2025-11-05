@@ -24,6 +24,7 @@ export interface PopupProps extends FrameProps {
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;
   variant?: string;
+  variants?: Record<string, any>;
 }
 
 export const Popup = React.forwardRef<HTMLDivElement, PopupProps>(({
@@ -36,9 +37,10 @@ export const Popup = React.forwardRef<HTMLDivElement, PopupProps>(({
   closeOnOverlayClick = true,
   closeOnEscape = true,
   variant = 'default',
-  variants = POPUP_VARIANTS,
+  variants: customVariants,
   ...popupProps
 }, ref) => {
+  const variants = customVariants || POPUP_VARIANTS;
   useEffect(() => {
     if (!isOpen || !closeOnEscape) return;
 

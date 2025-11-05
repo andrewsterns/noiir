@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../Frame';
+import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
 
 // Position story controls interface
 interface PositionArgs extends Partial<FrameProps> {

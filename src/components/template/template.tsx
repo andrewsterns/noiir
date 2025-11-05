@@ -57,6 +57,20 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
     'Best Sellers'
   ];
 
+const buttonTransitions = [
+    { event: 'mouseEnter' as const, toVariant: 'primary2', fromVariant: 'primary1', duration: '0.2s', curve: 'ease' },
+    { event: 'mouseLeave' as const, toVariant: 'primary1', fromVariant: 'primary2', duration: '0.2s', curve: 'ease' },
+  ];
+
+  const TEMPLATE_BUTTON_V = {
+    primary1: {
+      fill: { type: 'solid', color: 'green6' },
+    },
+     primary2: {
+      fill: { type: 'solid', color: 'blue2' },
+    },
+  };
+
   const handleCategoryChange = (index: number, item: string | { label: string; value?: any; searchableText?: string }) => {
     const category = typeof item === 'string' ? item : item.label;
     setSelectedCategory(category);
@@ -137,22 +151,24 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
             autoLayout={{ flow: 'horizontal', gap: 8 }}
           >
             <Button
-              variant="primary"
-              size="md"
+              variant="primary1"
+              variants={TEMPLATE_BUTTON_V}
+              transitions={buttonTransitions}
+              size="2"
               onClick={() => onAction && onAction('refresh')}
             >
               Refresh
             </Button>
             <Button
               variant="secondary"
-              size="md"
+              size="2"
               onClick={() => onAction && onAction('export')}
             >
               Export
             </Button>
             <Button
               variant="secondary"
-              size="md"
+              size="2"
               onClick={() => onAction && onAction('settings')}
               iconEnd="⚙️"
             >
@@ -250,14 +266,14 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
               >
                 <Button
                   variant="secondary"
-                  size="sm"
+                  size="1"
                   onClick={() => onAction && onAction(`view-${item}`)}
                 >
                   View
                 </Button>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="1"
                   onClick={() => onAction && onAction(`edit-${item}`)}
                 >
                   Edit
@@ -297,14 +313,14 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
         <Frame />
         <Button
           variant="secondary"
-          size="sm"
+          size="1"
           onClick={() => onAction && onAction('help')}
         >
           Help
         </Button>
         <Button
           variant="secondary"
-          size="sm"
+          size="1"
           onClick={() => onAction && onAction('feedback')}
         >
           Feedback

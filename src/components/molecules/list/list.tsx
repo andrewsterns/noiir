@@ -34,12 +34,15 @@ export interface ListProps extends Omit<FrameProps, 'size'> {
   selectedIndices?: number[];
   multiSelect?: boolean;
   onItemClick?: (index: number, item: ListItem) => void;
-  itemVariant?: 'primary'| 'primaryHover' | 'primaryActive' | 'primaryActiveHover' | 'disabled';
-  selectedVariant?: 'primary' | 'primaryActive';
-  disabledVariant?: 'disabled';
+  itemVariant?: string;
+  itemVariants?: Record<string, any>;
+  selectedVariant?: string;
+  disabledVariant?: string;
   children?: React.ReactNode;
   renderItem?: (item: ListItem, index: number) => React.ReactNode;
-  size?: FrameVariantConfig | string;
+  size?: any;
+  sizes?: Record<string, any>;
+  variants?: Record<string, any>;
 }
 
 export const List = React.forwardRef<HTMLDivElement, ListProps>(({
@@ -49,14 +52,20 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   multiSelect = false,
   onItemClick,
   itemVariant = 'primary',
+  itemVariants: customItemVariants,
   selectedVariant = 'primary',
   disabledVariant = 'disabled',
   children,
   renderItem,
   size='fill',
+  sizes: customSizes,
+  variants: customVariants,
   as,
   ...frameProps
 }, ref) => {
+  const sizes = customSizes || LIST_SIZES;
+  const variants = customVariants || LIST_VARIANTS;
+  const itemVariants = customItemVariants || LABEL_VARIANTS;
   const handleItemClick = (index: number, item: ListItem) => {
     if (isItemDisabled(item)) return;
     if (onItemClick) {
@@ -64,7 +73,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
     }
   };
 
-  const getItemVariant = (index: number, item: ListItem): 'primary'| 'primaryHover' | 'primaryActive' | 'primaryActiveHover' | 'disabled' => {
+  const getItemVariant = (index: number, item: ListItem): string => {
     if (typeof item === 'object' && item.disabled) {
       return disabledVariant;
     }
@@ -91,9 +100,9 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
       as={as || "div"}
       autoLayout={{ flow: 'vertical' }}
       size={size}
-      sizes={LIST_SIZES}
+      sizes={sizes}
       variant='default'
-      variants={LIST_VARIANTS}
+      variants={variants}
 
       {...frameProps}
     >
@@ -111,7 +120,9 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
             id={frameProps.id ? `${frameProps.id}-item-${index}` : undefined}
             key={index}
             size="fill"
+            sizes={LABEL_SIZES}
             variant={itemVariantValue}
+            variants={itemVariants}
             disabled={disabled}
             onClick={() => handleItemClick(index, item)}
           >

@@ -37,11 +37,17 @@ export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant' | 
   onChange?: (selectedIndex: number, item: ListItem) => void;
   onMultiChange?: (selectedIndices: number[], items: ListItem[]) => void;
   disabled?: boolean;
-  variant?: string | keyof typeof DROPDOWN_VARIANT;
+  variant?: string;
+  variants?: Record<string, any>;
   listVariant?: string;
-  size?: '1' | '2' | '3' | 'fill';
-  buttonSize?: '1' | '2' | '3' |'fill';
-  listSize?: '1' | '2' | '3' | 'fill';
+  listVariants?: Record<string, any>;
+  buttonVariants?: Record<string, any>;
+  size?: any;
+  sizes?: Record<string, any>;
+  buttonSize?: any;
+  buttonSizes?: Record<string, any>;
+  listSize?: any;
+  listSizes?: Record<string, any>;
   buttonProps?: Partial<React.ComponentProps<typeof Button>>;
   transitions?: Transitions;
   id?: string;
@@ -56,16 +62,28 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   onChange,
   onMultiChange,
   disabled = false,
+  variant = 'default',
+  variants: customVariants,
   listVariant = 'hidden',
+  listVariants: customListVariants,
+  buttonVariants: customButtonVariants,
   size = '2',
+  sizes: customSizes,
   buttonSize = '2',
+  buttonSizes: customButtonSizes,
   listSize = '2',
-  
+  listSizes: customListSizes,
   buttonProps,
   transitions,
   id,
   ...frameProps
 }, ref) => {
+  const variants = customVariants || DROPDOWN_VARIANT;
+  const sizes = customSizes || DROPDOWN_SIZES;
+  const buttonVariants = customButtonVariants || DROPDOWN_BUTTON_VARIANTS;
+  const buttonSizes = customButtonSizes || BUTTON_SIZES;
+  const listVariants = customListVariants || DROPDOWN_LIST_VARIANTS;
+  const listSizes = customListSizes || LIST_SIZES;
 
   const getSelectedLabel = () => {
     if (multiSelect) {
@@ -105,19 +123,19 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
 
   return (
     <Frame
-      variants={DROPDOWN_VARIANT}
-      variant="default"
+      variants={variants}
+      variant={variant}
       size={size}
-      sizes={DROPDOWN_SIZES}
+      sizes={sizes}
       transitions={[]}
       {...frameProps}
     >
       <Button
         id={buttonId}
         variant='primary'
-        variants={DROPDOWN_BUTTON_VARIANTS}
+        variants={buttonVariants}
         size={buttonSize}
-        sizes={BUTTON_SIZES}
+        sizes={buttonSizes}
         autoLayout={{alignment: 'left', gap: 'fill', paddingRight: 18}}
         transitions={openCloseTransitions}
         {...buttonProps}
@@ -128,10 +146,10 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         <List
           id={listId}
           size={listSize}
-          sizes={LIST_SIZES}
+          sizes={listSizes}
           items={items}
           variant={listVariant}
-          variants={DROPDOWN_LIST_VARIANTS}
+          variants={listVariants}
         />
       </ItemClickHandler>
     </Frame>

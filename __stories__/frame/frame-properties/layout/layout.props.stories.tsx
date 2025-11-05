@@ -95,7 +95,7 @@ export const HorizontalVsFreeform: LayoutStory = {
   }
 };
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../Frame';
+import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
 
 // Layout story controls interface
 interface LayoutArgs extends Partial<FrameProps> {

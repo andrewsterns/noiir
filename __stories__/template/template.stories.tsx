@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Template } from './template';
+import { Template } from '../../src/components/template/template';
 
 const meta: Meta<typeof Template> = {
   title: 'Templates/Dashboard',

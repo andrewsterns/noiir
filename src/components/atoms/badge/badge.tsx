@@ -25,13 +25,23 @@ export interface BadgeProps {
   color?: string;
   size?: number;
   variant?: string;
+  variants?: Record<string, any>; // Allow flexible variant definitions
 }
 
-export const Badge: React.FC<BadgeProps> = ({ children, color, size = 20, variant = 'neutral' }) => {
+export const Badge: React.FC<BadgeProps> = ({ 
+  children, 
+  color, 
+  size = 20, 
+  variant = 'neutral',
+  variants: customVariants 
+}) => {
+  // Use custom variants if provided, otherwise use defaults
+  const variants = customVariants || BADGE_VARIANTS;
+  
   return (
     <Frame
       variant={variant}
-      variants={BADGE_VARIANTS}
+      variants={variants}
       autoLayout={{ width: 'hug', height: size, paddingHorizontal: 8, alignment: 'center' }}
       fill={color ? { type: 'solid', color } : undefined}
       appearance={{ radius: size / 2 }}

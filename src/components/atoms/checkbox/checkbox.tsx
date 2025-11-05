@@ -20,8 +20,10 @@ import { Transitions } from '../../frame/frame-properties/transition/transition'
 export interface CheckboxProps extends FrameProps {
     checked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
-    sizes?: Record<string, any>;
-    variants?: Record<string, any>;
+    size?: any; // Allow flexible size definitions
+    sizes?: Record<string, any>; // Allow flexible size definitions
+    variant?: string;
+    variants?: Record<string, any>; // Allow flexible variant definitions
     transitions?: Transitions;
 }
 
@@ -72,13 +74,16 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
     checked = false,
     onCheckedChange,
     size = '2',
+    sizes: customSizes,
     variant,
-    variants = ICON_VARIANTS,
-    sizes = CHECKBOX_SIZES,
+    variants: customVariants,
     transitions,
     onClick,
     ...props
 }, ref) => {
+    // Use custom variants/sizes if provided, otherwise use defaults
+    const variants = customVariants || ICON_VARIANTS;
+    const sizes = customSizes || CHECKBOX_SIZES;
 
     const defaultTransitions: Transitions = [
         // Hover on unchecked state
