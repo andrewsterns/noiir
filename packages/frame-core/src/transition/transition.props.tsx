@@ -84,11 +84,34 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const getVisualVariant = useCallback((id: string) => visualFrames[id] || frames[id] || '', [visualFrames, frames]);
 
   const registerTransitions = useCallback((transitions: Transitions) => {
-    setAllTransitions(prev => [...prev, ...transitions]);
+    // Split 'hover' events into 'mouseEnter' and 'mouseLeave'
+    const expandedTransitions = transitions.flatMap(t => {
+      if (t.event === 'hover') {
+        // Create two rules: one for mouseEnter, one for mouseLeave
+        return [
+          { ...t, event: 'mouseEnter' as EventType },
+          { ...t, event: 'mouseLeave' as EventType }
+        ];
+      }
+      return [t];
+    });
+    
+    setAllTransitions(prev => [...prev, ...expandedTransitions]);
   }, []);
 
   const unregisterTransitions = useCallback((transitions: Transitions) => {
-    setAllTransitions(prev => prev.filter(t => !transitions.some(rt => rt === t)));
+    // Split 'hover' events the same way for matching
+    const expandedTransitions = transitions.flatMap(t => {
+      if (t.event === 'hover') {
+        return [
+          { ...t, event: 'mouseEnter' as EventType },
+          { ...t, event: 'mouseLeave' as EventType }
+        ];
+      }
+      return [t];
+    });
+    
+    setAllTransitions(prev => prev.filter(t => !expandedTransitions.some(rt => rt === t)));
   }, []);
 
   const applyTransitionRef = useRef<(rule: TransitionRule, sourceId?: string) => boolean | undefined>();
