@@ -104,7 +104,7 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     // Handle mouseEnter and mouseLeave as distinct events
     if (event === 'mouseEnter' || event === 'mouseLeave') {
-      console.log('[Transition] All transitions:', allTransitions.map(t => ({ event: t.event, sourceId: t.sourceId, targetId: t.targetId })));
+      console.log('[Transition] All transitions:', JSON.stringify(allTransitions.map(t => ({ event: t.event, sourceId: t.sourceId, targetId: t.targetId })), null, 2));
       
       const relevant = allTransitions.filter(rule =>
         rule.event === event && (!rule.sourceId || rule.sourceId === sourceId)
