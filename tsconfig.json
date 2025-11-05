@@ -13,7 +13,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "module": "esnext",
+    "module": "commonjs",
     "declaration": true,
     "outDir": "./dist",
     "baseUrl": ".",

@@ -307,9 +307,16 @@ Build the package:
 npm run build
 ```
 
-## License
 
-MIT
+## License & Commercial Use
+
+Noiir is open source under the Business Source License (BSL).
+Free for non-commercial use.
+For commercial use, contact andrewsterns@gmail.com for licensing.
+
+Copyright (c) 2025 Andrew Sterns. All rights reserved.
+
+See LICENSE for full terms.
 
 ## Contributing
 

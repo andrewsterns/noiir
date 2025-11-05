@@ -1,30 +1,34 @@
 {
-  "name": "noiir",
+  "name": "@noiir/core",
   "version": "1.0.0",
-  "type": "module",
-  "description": "A React component framework that mirrors Figma design properties with Frame-based components",
-  "main": "dist/index.js",
+  "description": "Your description",
+  "main": "dist/src/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/src/index.js",
+      "require": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
     },
     "./frame": {
-      "import": "./dist/frame.js",
-      "types": "./dist/frame.d.ts"
+      "import": "./dist/src/frame.js",
+      "require": "./dist/src/frame.js",
+      "types": "./dist/src/frame.d.ts"
     },
     "./theme": {
-      "import": "./dist/theme.js",
-      "types": "./dist/theme.d.ts"
+      "import": "./dist/src/theme.js",
+      "require": "./dist/src/theme.js",
+      "types": "./dist/src/theme.d.ts"
     },
     "./components": {
-      "import": "./dist/components.js",
-      "types": "./dist/components.d.ts"
+      "import": "./dist/src/components.js",
+      "require": "./dist/src/components.js",
+      "types": "./dist/src/components.d.ts"
     },
     "./variants": {
-      "import": "./dist/variants.js",
-      "types": "./dist/variants.d.ts"
+      "import": "./dist/src/variants.js",
+      "require": "./dist/src/variants.js",
+      "types": "./dist/src/variants.d.ts"
     }
   },
   "files": [
@@ -70,5 +74,8 @@
     "storybook": "^7.5.3",
     "typescript": "^5.0.0",
     "vite": "^4.4.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

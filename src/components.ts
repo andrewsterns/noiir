@@ -5,5 +5,5 @@
  * import { Button, Input, Card, etc. } from 'noiir/components'
  */
 
-// Export all components
-export * from './components';
+// Export all components from components/index
+export * from './components/index';
