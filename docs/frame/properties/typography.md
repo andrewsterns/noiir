@@ -681,36 +681,6 @@ typography={{
 }}
 ```
 
-## Animation with Typography
-
-Typography properties can be smoothly animated:
-
-```tsx
-<Frame
-  animate={{
-    trigger: 'hover',
-    duration: '0.2s',
-    timeline: {
-      '@0s': {
-        typography: { 
-          fontSize: 16, 
-          color: 'neutral8',
-          letterSpacing: 0
-        }
-      },
-      '@0.2s': {
-        typography: { 
-          fontSize: 18, 
-          color: 'primary6',
-          letterSpacing: 1
-        }
-      }
-    }
-  }}
->
-  Hover to animate typography
-</Frame>
-```
 
 ## Accessibility Considerations
 

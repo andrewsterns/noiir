@@ -20,7 +20,7 @@ import {
   calculateHugDimensions,
   ChildStateMap
 } from '../../../packages/frame-core/src';
-import { useTransitionContext, Transitions, TransitionProvider, parseTime } from '../../../packages/frame-core/src/transition/transition.props';
+import { useAnimateContext, Animate, AnimateProvider, parseTime } from '../../../packages/frame-core/src/animate/animate.props';
 
 // FRAME PROPS ARE PULLED IN FROM THEIR RESPECTIVE FILES
 // ROOT 'CORE' PROPS ARE PULLED IN FROM UTILS FILE
@@ -50,7 +50,7 @@ export interface FrameProps extends EventProps {
   variants?: Record<string, FrameVariantConfig> | Record<string, any>;
   sizes?: Record<string, any>;
   pointerEvents?: string;
-  transitions?: Transitions;
+  animate?: Animate;
 
   display?: string;
   type?: string;
@@ -100,7 +100,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     variants: variantsProp,
     sizes: sizesProp,
     pointerEvents,
-    transitions,
+    animate,
 
     display,
     type,
@@ -125,31 +125,31 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
 
   const sizes: Record<string, any> = { ...(sizesProp || {}) };
 
-  // Transition context
-  let transitionContext: ReturnType<typeof useTransitionContext> | null = null;
+  // Animate context
+  let animateContext: ReturnType<typeof useAnimateContext> | null = null;
   try {
-    transitionContext = useTransitionContext();
+    animateContext = useAnimateContext();
   } catch (e) {
-    // No transition context
+    // No animate context
   }
 
-  const registerFrameRef = React.useRef(transitionContext?.registerFrame);
-  const unregisterFrameRef = React.useRef(transitionContext?.unregisterFrame);
-  const registerTransitionsRef = React.useRef(transitionContext?.registerTransitions);
-  const unregisterTransitionsRef = React.useRef(transitionContext?.unregisterTransitions);
+  const registerFrameRef = React.useRef(animateContext?.registerFrame);
+  const unregisterFrameRef = React.useRef(animateContext?.unregisterFrame);
+  const registerAnimationsRef = React.useRef(animateContext?.registerAnimations);
+  const unregisterAnimationsRef = React.useRef(animateContext?.unregisterAnimations);
 
   React.useEffect(() => {
-    registerFrameRef.current = transitionContext?.registerFrame;
-    unregisterFrameRef.current = transitionContext?.unregisterFrame;
-    registerTransitionsRef.current = transitionContext?.registerTransitions;
-    unregisterTransitionsRef.current = transitionContext?.unregisterTransitions;
-  }, [transitionContext]);
+    registerFrameRef.current = animateContext?.registerFrame;
+    unregisterFrameRef.current = animateContext?.unregisterFrame;
+    registerAnimationsRef.current = animateContext?.registerAnimations;
+    unregisterAnimationsRef.current = animateContext?.unregisterAnimations;
+  }, [animateContext]);
 
-  const effectiveVariant = frameId && transitionContext && transitionContext.getVisualVariant(frameId) !== '' ? transitionContext.getVisualVariant(frameId) : variant;
+  const effectiveVariant = frameId && animateContext && animateContext.getVisualVariant(frameId) !== '' ? animateContext.getVisualVariant(frameId) : variant;
 
   if (frameId) console.log('Frame', frameId, 'effectiveVariant:', effectiveVariant);
 
-  // Register frame and transitions
+  // Register frame and animate
   React.useEffect(() => {
     if (registerFrameRef.current && unregisterFrameRef.current && frameId) {
       const initialVariant = typeof variant === 'string' ? variant : '';
@@ -161,15 +161,15 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   }, [frameId, variant]);
 
   React.useEffect(() => {
-    if (registerTransitionsRef.current && unregisterTransitionsRef.current && transitions && frameId) {
-      // For component-level transitions, set the sourceId to this component's id
-      const componentTransitions = transitions.map(t => ({ ...t, sourceId: t.sourceId || frameId }));
-      registerTransitionsRef.current(componentTransitions);
+    if (registerAnimationsRef.current && unregisterAnimationsRef.current && animate && frameId) {
+      // For component-level animate, set the sourceId to this component's id
+      const componentanimate = animate.map(t => ({ ...t, sourceId: t.sourceId || frameId }));
+      registerAnimationsRef.current(componentanimate);
       return () => {
-        unregisterTransitionsRef.current!(componentTransitions);
+        unregisterAnimationsRef.current!(componentanimate);
       };
     }
-  }, [transitions, frameId]);
+  }, [animate, frameId]);
 
   // Collect variant configurations from props starting with 'variant-' and variants prop
 
@@ -317,21 +317,21 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   // If currentVariant is set, inject it as a prop to children (if they accept 'variant')
   const finalChildren = injectVariant(processedChildren, childCurrentVariant);
 
-  // Collect transition properties for CSS transitions
-  const transitionProps = React.useMemo(() => {
-    if (!transitionContext || !frameId) return null;
+  // Collect animation properties for CSS animate
+  const animateProps = React.useMemo(() => {
+    if (!animateContext || !frameId) return null;
 
-    // Find transitions that target this component
-    const relevantTransitions = transitionContext.getTransitionsForFrame(frameId);
+    // Find animations that target this component
+    const relevantAnimations = animateContext.getAnimationsForFrame(frameId);
 
-    if (!relevantTransitions || relevantTransitions.length === 0) return null;
+    if (!relevantAnimations || relevantAnimations.length === 0) return null;
 
-    // Use the first transition's animation properties (could be enhanced to merge multiple)
-    const transition = relevantTransitions[0];
+    // Use the first animation's properties (could be enhanced to merge multiple)
+    const animation = relevantAnimations[0];
 
-    const duration = transition.duration ? parseTime(transition.duration) + 'ms' : '300ms';
-    const delay = transition.delay ? parseTime(transition.delay) + 'ms' : '0ms';
-    const curve = transition.curve || 'ease';
+    const duration = animation.duration ? parseTime(animation.duration) + 'ms' : '300ms';
+    const delay = animation.delay ? parseTime(animation.delay) + 'ms' : '0ms';
+    const curve = animation.curve || 'ease';
 
     console.log(`Frame ${frameId} applying CSS transition:`, {
       duration,
@@ -341,7 +341,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     });
 
     return { duration, delay, curve };
-  }, [transitionContext, frameId]);
+  }, [animateContext, frameId]);
 
   // Apply alignment-based transforms to children for smooth animation
   let alignedChildren = finalChildren;
@@ -405,8 +405,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     if (top !== undefined || left !== undefined) {
       alignedChildren = React.Children.map(finalChildren, (child, index) => {
         if (React.isValidElement(child)) {
-          const transitionStr = transitionProps 
-            ? `${top ? `top ${transitionProps.duration} ${transitionProps.curve} ${transitionProps.delay}, ` : ''}${left ? `left ${transitionProps.duration} ${transitionProps.curve} ${transitionProps.delay}, ` : ''}transform ${transitionProps.duration} ${transitionProps.curve} ${transitionProps.delay}`
+          const animatetr = animateProps 
+            ? `${top ? `top ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}, ` : ''}${left ? `left ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}, ` : ''}transform ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}`
             : undefined;
           
           return React.cloneElement(child, {
@@ -417,7 +417,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
               ...(top && { top }),
               ...(left && { left }),
               transform,
-              ...(transitionStr && { transition: transitionStr })
+              ...(animatetr && { transition: animatetr })
             }
           });
         }
@@ -500,8 +500,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   }
 
   // Add transition to styles if transition props exist
-  if (transitionProps) {
-    finalStyles.transition = `all ${transitionProps.duration} ${transitionProps.curve} ${transitionProps.delay}`;
+  if (animateProps) {
+    finalStyles.transition = `all ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}`;
   }
 
   // Compose event handlers: Frame's animation handlers take precedence but call original handlers too
@@ -514,37 +514,37 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   }, eventHandlers || {});
 
   const handleClick = (e: any) => {
-    if (transitionContext && frameId) {
-      transitionContext.emitEvent(frameId, 'click', e);
+    if (animateContext && frameId) {
+      animateContext.emitEvent(frameId, 'click', e);
     }
     finalOnClick?.(e);
   };
   const handleMouseEnter = (e: any) => {
-    if (transitionContext && frameId) {
-      transitionContext.emitEvent(frameId, 'mouseEnter');
+    if (animateContext && frameId) {
+      animateContext.emitEvent(frameId, 'mouseEnter');
     }
     composedHandlers.onMouseEnter?.(e);
   };
   const handleMouseLeave = (e: any) => {
-    if (transitionContext && frameId) {
-      transitionContext.emitEvent(frameId, 'mouseLeave');
+    if (animateContext && frameId) {
+      animateContext.emitEvent(frameId, 'mouseLeave');
     }
     composedHandlers.onMouseLeave?.(e);
   };
   const handleMouseDown = (e: any) => {
-    if (transitionContext && frameId) {
-      transitionContext.emitEvent(frameId, 'mouseDown');
+    if (animateContext && frameId) {
+      animateContext.emitEvent(frameId, 'mouseDown');
     }
     composedHandlers.onMouseDown?.(e);
   };
   const handleMouseUp = (e: any) => {
-    if (transitionContext && frameId) {
-      transitionContext.emitEvent(frameId, 'mouseUp');
+    if (animateContext && frameId) {
+      animateContext.emitEvent(frameId, 'mouseUp');
     }
     composedHandlers.onMouseUp?.(e);
   };
   const handleKeyDown = (e: any) => {
-    if (transitionContext && frameId) transitionContext.emitEvent(frameId, 'key', e);
+    if (animateContext && frameId) animateContext.emitEvent(frameId, 'key', e);
     composedHandlers.onKeyDown?.(e);
   };
 
@@ -620,14 +620,14 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
 export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(props, ref) {
   let hasContext = false;
   try {
-    useTransitionContext();
+    useAnimateContext();
     hasContext = true;
   } catch (e) {
     // No context
   }
-  const isTransitionRoot = !!props.transitions && !hasContext;
-  if (isTransitionRoot) {
-    return <TransitionProvider><FrameInner {...props} ref={ref} /></TransitionProvider>;
+  const isAnimateRoot = !!props.animate && !hasContext;
+  if (isAnimateRoot) {
+    return <AnimateProvider><FrameInner {...props} ref={ref} /></AnimateProvider>;
   } else {
     return <FrameInner {...props} ref={ref} />;
   }

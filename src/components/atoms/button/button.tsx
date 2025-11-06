@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { BUTTON_SIZES, BUTTON_VARIANTS } from '../../../../__variants__/atoms/button/button.variants';
 import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Button Component
@@ -11,7 +11,7 @@ import { Transitions } from '../../../../packages/frame-core/src/transition/tran
  * Prefer using Frame props (appearance, typography, fill, stroke, effects, cursor, etc.)
  * instead of creating custom props for styling/behavior.
  *
- * For animations and state transitions, use BUTTON_VARIANTS with Frame's animate prop
+ * For animations and state Animate, use BUTTON_VARIANTS with Frame's animate prop
  * instead of handling hover/click states in component logic.
  *
  * Only add new props if they provide unique functionality not covered by Frame's extensive prop system.
@@ -27,7 +27,7 @@ export interface ButtonProps extends FrameProps {
   variants?: Record<string, any>; // Allow flexible variant definitions
   size?: any; // Allow flexible size definitions
   sizes?: Record<string, any>; // Allow flexible size definitions
-  transitions?: Transitions;
+  animate?: Animate;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
@@ -39,7 +39,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   sizes: customSizes,
   iconStart,
   iconEnd,
-  transitions,
+  animate,
   as,
   ...buttonProps
 }, ref) => {
@@ -47,16 +47,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   const variants = customVariants || BUTTON_VARIANTS;
   const sizes = customSizes || BUTTON_SIZES;
   // Frame will auto-generate unique ID if not provided
-  const defaultTransitions: Transitions = (variant === 'primary' && !transitions) ? [
-    { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
-    { event: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
-    { event: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
-    { event: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
-    { event: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
-    { event: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
+  const defaultAnimate: Animate = (variant === 'primary' && !animate) ? [
+    { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
+    { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
+    { trigger: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
+    { trigger: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
+    { trigger: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
+    { trigger: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
   ] : [];
 
-  const finalTransitions = transitions ?? defaultTransitions;
+  const finalAnimate = animate ?? defaultAnimate;
 
   return (
     <Frame
@@ -71,7 +71,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
       cursor="pointer"
       iconStart={iconStart}
       iconEnd={iconEnd}
-      transitions={finalTransitions}
+      animate={finalAnimate}
       {...buttonProps}
     >
       {children}

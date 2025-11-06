@@ -4,15 +4,13 @@ import { ExtendVariant } from '../../../packages/frame-core/src/variants/variant
 
 interface groupProps {
   logo?: React.ReactNode;
-  variants?: Record<string, any>;
 }
 
 export const Navbar = (props: groupProps) => {
-  const variants = props.variants || { NAVBAR_VARIANTS };
   const handleToggle = () => console.log("toggle menu");
 
   return (
-    <Frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={variants}>
+    <Frame autoLayout={{flow:'horizontal'}} fill={{color: 'primary1'}} variant="navbar" variants={{ NAVBAR_VARIANTS }}>
       <Frame variant="logo">{props.logo}</Frame>
       <Button onClick={handleToggle}>Toggle</Button>
     </Frame>
@@ -29,4 +27,3 @@ export const NAVBAR_VARIANTS: ExtendVariant = {
     typography: { fontSize: 14, fontWeight: 500, color: 'primary7' },
   },
 }
-

@@ -2,7 +2,7 @@ import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Check } from '../../../theme/icons/check';
 import { ExtendVariant } from '../../../../packages/frame-core/src/variants/variants.props';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Checkbox Component
@@ -24,7 +24,7 @@ export interface CheckboxProps extends FrameProps {
     sizes?: Record<string, any>; // Allow flexible size definitions
     variant?: string;
     variants?: Record<string, any>; // Allow flexible variant definitions
-    transitions?: Transitions;
+    transitions?: Animate;
 }
 
 export const CHECKBOX_SIZES = {
@@ -85,10 +85,10 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
     const variants = customVariants || ICON_VARIANTS;
     const sizes = customSizes || CHECKBOX_SIZES;
 
-    const defaultTransitions: Transitions = [
+    const defaultTransitions: Animate = [
         // Hover on unchecked state
         { 
-            event: 'mouseEnter', 
+            trigger: 'mouseEnter', 
             targetId: 'checkboxId',
             fromVariant: 'unchecked', 
             toVariant: 'uncheckedHover', 
@@ -96,7 +96,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
             curve: 'ease' 
         },
         { 
-            event: 'mouseLeave', 
+            trigger: 'mouseLeave', 
             targetId: 'checkboxId',
             fromVariant: 'uncheckedHover', 
             toVariant: 'unchecked', 
@@ -105,7 +105,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
         },
         // Click: Toggle between unchecked and checked
         { 
-            event: 'click', 
+            trigger: 'click', 
             targetId: 'checkboxId',
             toggle: true, 
             toggleVariants: ['unchecked', 'checked'], 
@@ -114,7 +114,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
         },
         // Hover on checked state
         { 
-            event: 'mouseEnter', 
+            trigger: 'mouseEnter', 
             targetId: 'checkboxId',
             fromVariant: 'checked', 
             toVariant: 'checkedHover', 
@@ -122,7 +122,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
             curve: 'ease' 
         },
         { 
-            event: 'mouseLeave', 
+            trigger: 'mouseLeave', 
             targetId: 'checkboxId',
             fromVariant: 'checkedHover', 
             toVariant: 'checked', 
@@ -151,7 +151,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
             sizes={sizes}
             variants={variants}
             variant={variant ?? (checked ? 'checked' : 'unchecked')}
-            transitions={transitions ?? defaultTransitions}
+            animate={transitions ?? defaultTransitions}
             cursor="pointer"
             onClick={handleClick}
             {...props}

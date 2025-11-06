@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { RADIO_BUTTON_VARIANTS, RADIO_BUTTON_SIZES, RADIO_BUTTON_FILL_SIZES } from '../../../../__variants__/atoms/radio-button/radio-button.variants';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Radio Button Component
@@ -29,7 +29,7 @@ export interface RadioButtonProps extends Omit<FrameProps, 'value'> {
     sizeRadioSizes?: Record<string, any>;
     sizeFill?: any;
     sizeFillSizes?: Record<string, any>;
-    transitions?: Transitions;
+    transitions?: Animate;
 }
 
 export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>(({
@@ -54,10 +54,10 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
     const fillSizes = customFillSizes || RADIO_BUTTON_FILL_SIZES;
 
     // Default transition rules for radio button inner circle
-    const defaultTransitions: Transitions = [
+    const defaultTransitions: Animate = [
         // Hover on unchecked state
         { 
-            event: 'mouseEnter', 
+            trigger: 'mouseEnter', 
             targetId: 'radioFillId',
             fromVariant: 'unchecked', 
             toVariant: 'uncheckedHover', 
@@ -65,7 +65,7 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
             curve: 'ease' 
         },
         { 
-            event: 'mouseLeave', 
+            trigger: 'mouseLeave', 
             targetId: 'radioFillId',
             fromVariant: 'uncheckedHover', 
             toVariant: 'unchecked', 
@@ -74,7 +74,7 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
         },
         // Click: Toggle between unchecked and checked
         { 
-            event: 'click', 
+            trigger: 'click', 
             targetId: 'radioFillId',
             toggle: true, 
             toggleVariants: ['unchecked', 'checked'], 
@@ -83,7 +83,7 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
         },
         // Hover on checked state
         { 
-            event: 'mouseEnter', 
+            trigger: 'mouseEnter', 
             targetId: 'radioFillId',
             fromVariant: 'checked', 
             toVariant: 'checkedHover', 
@@ -91,7 +91,7 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
             curve: 'ease' 
         },
         { 
-            event: 'mouseLeave', 
+            trigger: 'mouseLeave', 
             targetId: 'radioFillId',
             fromVariant: 'checkedHover', 
             toVariant: 'checked', 
@@ -129,7 +129,7 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
                 id="radioFillId"
                 variant={checked ? 'checked' : 'unchecked'}
                 variants={variants}
-                transitions={transitions ?? defaultTransitions}
+                animate={transitions ?? defaultTransitions}
                 size={sizeFill}
                 sizes={fillSizes}
                 cursor={disabled ? 'not-allowed' : 'pointer'}

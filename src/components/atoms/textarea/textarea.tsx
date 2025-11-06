@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { TEXTAREA_VARIANTS, TEXTAREA_SIZES } from '../../../../__variants__/atoms/textarea/textarea.variants';
 import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Textarea Component
@@ -41,7 +41,7 @@ export interface TextareaProps extends Omit<FrameProps, 'onChange' | 'value' | '
   variants?: Record<string, any>;
   size?: any;
   sizes?: Record<string, any>;
-  transitions?: Transitions;
+  transitions?: Animate;
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({

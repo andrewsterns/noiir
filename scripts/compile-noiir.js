@@ -1,7 +1,7 @@
 // scripts/compile-noiir.js
-import fs from "fs";
-import path from "path";
-import { glob } from "glob";
+const fs = require("fs");
+const path = require("path");
+const { glob } = require("glob");
 
 function compileNoiirFile(inputPath) {
   const outputPath = inputPath.replace(/\.noiir$/, ".tsx");
@@ -38,9 +38,11 @@ function compileNoiirFile(inputPath) {
   console.log(`Compiled: ${path.relative(process.cwd(), inputPath)} → ${path.relative(process.cwd(), outputPath)}`);
 }
 
-const files = await glob("src/**/*.noiir");
-if (files.length === 0) {
-  console.log("No .noiir files found in src/");
-  process.exit(0);
-}
-files.forEach(compileNoiirFile);
+(async () => {
+  const files = await glob("src/**/*.noiir");
+  if (files.length === 0) {
+    console.log("No .noiir files found in src/");
+    process.exit(0);
+  }
+  files.forEach(compileNoiirFile);
+})();

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { TOGGLE_SIZES, TOGGLE_VARIANTS } from '../../../../__variants__/atoms/toggle/toggle.variants';
 import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Toggle Component
@@ -27,7 +27,7 @@ export interface ToggleProps extends Omit<FrameProps, 'onChange'> {
   variantThumb?: string;
   size?: any; // Allow flexible size definitions
   sizes?: Record<string, any>; // Allow flexible size definitions
-  transitions?: Transitions;
+  transitions?: Animate;
   checked?: boolean;
   onChange?: (checked: boolean) => void;
 }
@@ -48,10 +48,10 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
   const variants = customVariants || TOGGLE_VARIANTS;
   const sizes = customSizes || TOGGLE_SIZES;
 
-  const defaultTransitions: Transitions = [
+  const defaultTransitions: Animate = [
     // Click: Toggle between base states (primary <-> primaryActive)
     { 
-      event: 'click', 
+      trigger: 'click', 
       targetId: 'trackId', 
       toggle: true, 
       toggleVariants: ['primary', 'primaryActive'], 
@@ -60,7 +60,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
     },
     // Click: Toggle thumb size/position
     { 
-      event: 'click', 
+      trigger: 'click', 
       targetId: 'thumbId', 
       toggle: true, 
       toggleVariants: ['solidThumb', 'solidThumbActive'], 
@@ -69,7 +69,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
     },
     // MouseEnter: Apply hover overlay when entering primary state
     { 
-      event: 'mouseEnter', 
+      trigger: 'mouseEnter', 
       targetId: 'trackId', 
       fromVariant: 'primary', 
       toVariant: 'primaryHover', 
@@ -78,7 +78,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
     },
     // MouseLeave: Remove hover overlay when leaving primary state
     { 
-      event: 'mouseLeave', 
+      trigger: 'mouseLeave', 
       targetId: 'trackId', 
       fromVariant: 'primaryHover', 
       toVariant: 'primary', 
@@ -87,7 +87,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
     },
     // MouseEnter: Apply hover overlay when entering primaryActive state
     { 
-      event: 'mouseEnter', 
+      trigger: 'mouseEnter', 
       targetId: 'trackId', 
       fromVariant: 'primaryActive', 
       toVariant: 'primaryActiveHover', 
@@ -96,7 +96,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
     },
     // MouseLeave: Remove hover overlay when leaving primaryActive state
     { 
-      event: 'mouseLeave', 
+      trigger: 'mouseLeave', 
       targetId: 'trackId', 
       fromVariant: 'primaryActiveHover', 
       toVariant: 'primaryActive', 
@@ -116,7 +116,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(({
       variants={variants}
       size={size}
       sizes={sizes}
-      transitions={transitions ?? defaultTransitions}
+      animate={transitions ?? defaultTransitions}
  
       {...toggleProps}
       >

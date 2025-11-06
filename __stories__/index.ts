@@ -40,5 +40,5 @@ export { default as StrokePropsStories } from './frame/frame-properties/appearan
 export { default as EffectsPropsStories } from './frame/frame-properties/effects/effects.props.stories';
 export { default as LayoutPropsStories } from './frame/frame-properties/layout/layout.props.stories';
 export { default as PositionPropsStories } from './frame/frame-properties/position/position.props.stories';
-export { default as TransitionStories } from './frame/frame-properties/transition/transition.stories';
+export { default as AnimateStories } from './frame/frame-properties/animate/animate.stories';
 export { default as TypographyPropsStories } from './frame/frame-properties/typography/typography.props.stories';

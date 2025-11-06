@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { SLIDER_VARIANTS, SLIDER_SIZES } from '../../../../__variants__/atoms/slider/slider.variants';
 import { FrameVariantConfig } from '../../../../packages/frame-core/src/variants/variants.props';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Slider Component
@@ -30,7 +30,7 @@ export interface SliderProps extends Omit<FrameProps, 'onChange' | 'value'> {
   variants?: Record<string, any>;
   size?: any;
   sizes?: Record<string, any>;
-  transitions?: Transitions;
+  transitions?: Animate;
 }
 
 export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
@@ -73,10 +73,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   };
 
   // Build transition rules for hover and grab/drag states
-  const defaultTransitions: Transitions = [
+  const defaultTransitions: Animate = [
     // Hover on base thumb state
     { 
-      event: 'mouseEnter', 
+      trigger: 'mouseEnter', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumb'), 
       toVariant: getVariantSuffix('thumbHover'), 
@@ -84,7 +84,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
       curve: 'ease' 
     },
     { 
-      event: 'mouseLeave', 
+      trigger: 'mouseLeave', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumbHover'), 
       toVariant: getVariantSuffix('thumb'), 
@@ -93,7 +93,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
     },
     // Grab: Initiate drag from base or hover state
     { 
-      event: 'grab', 
+      trigger: 'grab', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumb'), 
       toVariant: getVariantSuffix('thumbGrabbing'), 
@@ -101,7 +101,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
       curve: 'ease' 
     },
     { 
-      event: 'grab', 
+      trigger: 'grab', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumbHover'), 
       toVariant: getVariantSuffix('thumbGrabbing'), 
@@ -110,7 +110,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
     },
     // Release: Return to base state
     { 
-      event: 'mouseUp', 
+      trigger: 'mouseUp', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumbGrabbing'), 
       toVariant: getVariantSuffix('thumb'), 
@@ -118,7 +118,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
       curve: 'ease' 
     },
     { 
-      event: 'mouseUp', 
+      trigger: 'mouseUp', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumbGrabbingHover'), 
       toVariant: getVariantSuffix('thumb'), 
@@ -127,7 +127,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
     },
     // Hover while grabbing
     { 
-      event: 'mouseEnter', 
+      trigger: 'mouseEnter', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumbGrabbing'), 
       toVariant: getVariantSuffix('thumbGrabbingHover'), 
@@ -135,7 +135,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
       curve: 'ease' 
     },
     { 
-      event: 'mouseLeave', 
+      trigger: 'mouseLeave', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumbGrabbingHover'), 
       toVariant: getVariantSuffix('thumbGrabbing'), 
@@ -162,10 +162,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
     return min + (max - min) * percentage;
   }, [min, max, value]);
 
-  const handleMouseDown = useCallback((event: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (disabled) return;
     isDraggingRef.current = true;
-    const newValue = getValueFromPosition(event.clientX);
+    const newValue = getValueFromPosition(e.clientX);
     handleValueChange(newValue);
   }, [disabled, getValueFromPosition, handleValueChange]);
 
@@ -174,9 +174,9 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   }, []);
 
   React.useEffect(() => {
-    const handleDocumentMouseMove = (event: MouseEvent) => {
+    const handleDocumentMouseMove = (e: MouseEvent) => {
       if (!isDraggingRef.current) return;
-      const newValue = getValueFromPosition(event.clientX);
+      const newValue = getValueFromPosition(e.clientX);
       handleValueChange(newValue);
     };
 
@@ -273,7 +273,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
           id="thumbId"
           variant={getVariantSuffix("thumb")}
           variants={variants}
-          transitions={transitions ?? defaultTransitions}
+          animate={transitions ?? defaultTransitions}
           autoLayout={{ width: 20, height: 20 }}
           appearance={{ radius: 10 }}
           cursor={disabled ? 'not-allowed' : 'grab'}

@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+import { normalizeCSSUnit } from '../utils/css-units';
 
 //ALL APPEARANCE RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
 
@@ -29,17 +30,6 @@ export const convertAppearanceProps = (props: AppearanceProps): React.CSSPropert
   if (props.visible === false) {
     styles.visibility = 'hidden';
   }
-  
-  // Utility to normalize units
-  const normalizeUnit = (value: any) => {
-    if (typeof value === 'number') return `${value}px`;
-    if (typeof value === 'string') {
-      if (/^(\d+)$/.test(value)) return `${value}px`;
-      if (/^(\d+(px|%|em|rem))$/.test(value)) return value;
-      return value; // fallback for other valid CSS units
-    }
-    return value;
-  };
 
   // Handle border radius - individual corners take precedence over uniform radius
   const hasIndividualCorners = (props.radiusTopLeft && props.radiusTopLeft !== 0) || 
@@ -49,14 +39,14 @@ export const convertAppearanceProps = (props: AppearanceProps): React.CSSPropert
 
   if (hasIndividualCorners) {
     // Use individual corner values, defaulting to 0 if not specified
-    const topLeft = props.radiusTopLeft !== undefined ? normalizeUnit(props.radiusTopLeft) : '0px';
-    const topRight = props.radiusTopRight !== undefined ? normalizeUnit(props.radiusTopRight) : '0px';
-    const bottomRight = props.radiusBottomRight !== undefined ? normalizeUnit(props.radiusBottomRight) : '0px';
-    const bottomLeft = props.radiusBottomLeft !== undefined ? normalizeUnit(props.radiusBottomLeft) : '0px';
+    const topLeft = props.radiusTopLeft !== undefined ? normalizeCSSUnit(props.radiusTopLeft) : '0px';
+    const topRight = props.radiusTopRight !== undefined ? normalizeCSSUnit(props.radiusTopRight) : '0px';
+    const bottomRight = props.radiusBottomRight !== undefined ? normalizeCSSUnit(props.radiusBottomRight) : '0px';
+    const bottomLeft = props.radiusBottomLeft !== undefined ? normalizeCSSUnit(props.radiusBottomLeft) : '0px';
     styles.borderRadius = `${topLeft} ${topRight} ${bottomRight} ${bottomLeft}`;
   } else if (props.radius !== undefined) {
     // Use uniform radius
-    styles.borderRadius = normalizeUnit(props.radius);
+    styles.borderRadius = normalizeCSSUnit(props.radius);
   }
   
   return styles;
@@ -75,15 +65,14 @@ export const convertCornerRadius = (
   const styles: React.CSSProperties = {};
   
   if (typeof radius === 'number' || typeof radius === 'string') {
-    const radiusValue = typeof radius === 'number' ? `${radius}px` : radius;
-    styles.borderRadius = radiusValue;
+    styles.borderRadius = normalizeCSSUnit(radius);
   } else {
     const { topLeft = 0, topRight = 0, bottomRight = 0, bottomLeft = 0 } = radius;
     const corners = [
-      typeof topLeft === 'number' ? `${topLeft}px` : topLeft,
-      typeof topRight === 'number' ? `${topRight}px` : topRight,
-      typeof bottomRight === 'number' ? `${bottomRight}px` : bottomRight,
-      typeof bottomLeft === 'number' ? `${bottomLeft}px` : bottomLeft
+      normalizeCSSUnit(topLeft),
+      normalizeCSSUnit(topRight),
+      normalizeCSSUnit(bottomRight),
+      normalizeCSSUnit(bottomLeft)
     ];
     styles.borderRadius = corners.join(' ');
   }

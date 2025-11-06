@@ -4,7 +4,7 @@ import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES, DROPDOWN_LIST_VARIANTS } from '../../../../__variants__/molecules/dropdown/dropdown.variants';
 import { BUTTON_SIZES } from '../../../../__variants__/atoms/button/button.variants';
-import { Transitions, useTransitionContext } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate, useAnimateContext } from '../../../../packages/frame-core/src/animate/animate.props';
 import { LIST_SIZES } from '../list/list.variants';
 
 /**
@@ -49,7 +49,7 @@ export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant' | 
   listSize?: any;
   listSizes?: Record<string, any>;
   buttonProps?: Partial<React.ComponentProps<typeof Button>>;
-  transitions?: Transitions;
+  animate?: Animate;
   id?: string;
 }
 
@@ -74,7 +74,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   listSize = '2',
   listSizes: customListSizes,
   buttonProps,
-  transitions,
+  animate,
   id,
   ...frameProps
 }, ref) => {
@@ -102,16 +102,16 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   const buttonId = id ? `${id}-button` : undefined;
   const listId = id ? `${id}-list` : undefined;
 
-  const openCloseTransitions: Transitions = [
-    { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s' },
-    { event: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s' },
-    { event: 'click', targetId: listId, toggle: true, toggleVariants: ['visible', 'hidden'], duration: '0.3s' },
-    { event: 'listen', listenId: listId, listenVariant: 'visible', targetId: buttonId, toVariant: 'primaryActive' },
-    { event: 'listen', listenId: listId, listenVariant: 'hidden', targetId: buttonId, toVariant: 'primary' },
+  const openCloseTransitions: Animate = [
+    { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s' },
+    { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s' },
+    { trigger: 'click', targetId: listId, toggle: true, toggleVariants: ['visible', 'hidden'], duration: '0.3s' },
+    { trigger: 'listen', listenId: listId, listenVariant: 'visible', targetId: buttonId, toVariant: 'primaryActive' },
+    { trigger: 'listen', listenId: listId, listenVariant: 'hidden', targetId: buttonId, toVariant: 'primary' },
   ];
 
   const ItemClickHandler = ({ children }: { children: React.ReactElement }) => {
-    const transitionContext = useTransitionContext();
+    const animateContext = useAnimateContext();
 
     const handleItemClick = (index: number, item: ListItem) => {
       onChange?.(index, item);
@@ -127,7 +127,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
       variant={variant}
       size={size}
       sizes={sizes}
-      transitions={[]}
+      animate={[]}
       {...frameProps}
     >
       <Button
@@ -137,7 +137,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
         size={buttonSize}
         sizes={buttonSizes}
         autoLayout={{alignment: 'left', gap: 'fill', paddingRight: 18}}
-        transitions={openCloseTransitions}
+        animate={openCloseTransitions}
         {...buttonProps}
       >
         {getSelectedLabel()}

@@ -58,8 +58,8 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
   ];
 
 const buttonTransitions = [
-    { event: 'mouseEnter' as const, toVariant: 'primary2', fromVariant: 'primary1', duration: '5s', curve: 'ease-in-out', delay: '1s' },
-    { event: 'mouseLeave' as const, toVariant: 'primary1', fromVariant: 'primary2', duration: '0.2s', curve: 'ease' },
+    { trigger: 'mouseEnter' as const, toVariant: 'primary2', fromVariant: 'primary1', duration: '5s', curve: 'ease-in-out', delay: '1s' },
+    { trigger: 'mouseLeave' as const, toVariant: 'primary1', fromVariant: 'primary2', duration: '0.2s', curve: 'ease' },
   ];
 
   const TEMPLATE_BUTTON_V = {
@@ -153,7 +153,7 @@ const buttonTransitions = [
             <Button
               variant="primary1"
               variants={TEMPLATE_BUTTON_V}
-              transitions={buttonTransitions}
+              animate={buttonTransitions}
               size="2"
               onClick={() => onAction && onAction('refresh')}
             >

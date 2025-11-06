@@ -1,4 +1,5 @@
 import React from 'react';
+import { CSSUnit, DimensionValue, GridConfig, normalizeCSSUnit, normalizeSpacing, spacingToCSS, gridConfigToCSS } from '../utils/css-units';
 
 //ALL LAYOUT RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
 // EXCEPTION Curved layout is handled in files within this folder
@@ -8,30 +9,34 @@ export interface AutoLayoutProps {
   flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';
   alignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'top' | 'center' | 'bottom' | 'left' | 'right';
   path?: { d: string };
-  // Dimensions
-  width?: string | number | 'hug' | 'fill-container';
-  height?: string | number | 'hug' | 'fill-container';
-  minWidth?: string | number;
-  maxWidth?: string | number;
-  minHeight?: string | number;
-  maxHeight?: string | number;
+  
+  // Grid configuration (when flow is 'grid')
+  grid?: GridConfig | string; // e.g., "3x4" or { columns: 3, rows: 4 }
+  
+  // Dimensions - now support all CSS units
+  width?: DimensionValue;
+  height?: DimensionValue;
+  minWidth?: CSSUnit;
+  maxWidth?: CSSUnit;
+  minHeight?: CSSUnit;
+  maxHeight?: CSSUnit;
   overflow?: string;
 
   
-  // Spacing
-  gap?: number | 'full' | 'none' | 'hug' | 'fill';
+  // Spacing - now support all CSS units
+  gap?: CSSUnit | 'full' | 'none' | 'hug' | 'fill';
 
-  // Margin (new)
-  margin?: number | { top?: number; right?: number; bottom?: number; left?: number };
+  // Margin - now support all CSS units
+  margin?: CSSUnit | { top?: CSSUnit; right?: CSSUnit; bottom?: CSSUnit; left?: CSSUnit };
   
-  // Padding
-  padding?: number | { top?: number; right?: number; bottom?: number; left?: number };
-  paddingHorizontal?: number | string;
-  paddingVertical?: number | string;
-  paddingLeft?: number | string;
-  paddingRight?: number | string;
-  paddingTop?: number | string;
-  paddingBottom?: number | string;
+  // Padding - now support all CSS units
+  padding?: CSSUnit | { top?: CSSUnit; right?: CSSUnit; bottom?: CSSUnit; left?: CSSUnit };
+  paddingHorizontal?: CSSUnit;
+  paddingVertical?: CSSUnit;
+  paddingLeft?: CSSUnit;
+  paddingRight?: CSSUnit;
+  paddingTop?: CSSUnit;
+  paddingBottom?: CSSUnit;
   
   // Wrapping and clipping
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
@@ -42,39 +47,34 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
   if (!props) return {};
   const styles: React.CSSProperties = {};
 
-  // Utility to normalize units
-  const normalizeUnit = (value: any) => {
-    if (typeof value === 'number') return `${value}px`;
-    if (typeof value === 'string') {
-      if (/^(\d+)$/.test(value)) return `${value}px`;
-      if (/^(\d+(px|%|em|rem))$/.test(value)) return value;
-      return value; // fallback for other valid CSS units
-    }
-    return value;
-  };
-  // Special: For freeform flow, if width or height is 'hug', calculate bounding box of children
   // Padding - like Figma's padding controls (always apply for freeform)
-  let padLeft = 0, padRight = 0, padTop = 0, padBottom = 0;
+  let padLeft = '0px', padRight = '0px', padTop = '0px', padBottom = '0px';
+  
   if (props.padding !== undefined) {
-    if (typeof props.padding === 'number' || typeof props.padding === 'string') {
-      padLeft = padRight = padTop = padBottom = normalizeUnit(props.padding);
-    } else {
-      padTop = normalizeUnit(props.padding.top || 0);
-      padRight = normalizeUnit(props.padding.right || 0);
-      padBottom = normalizeUnit(props.padding.bottom || 0);
-      padLeft = normalizeUnit(props.padding.left || 0);
+    const paddingResult = normalizeSpacing(props.padding);
+    if (paddingResult) {
+      if (typeof paddingResult === 'string') {
+        padLeft = padRight = padTop = padBottom = paddingResult;
+      } else {
+        padTop = paddingResult.top;
+        padRight = paddingResult.right;
+        padBottom = paddingResult.bottom;
+        padLeft = paddingResult.left;
+      }
     }
   }
-  if (props.paddingLeft !== undefined) padLeft = normalizeUnit(props.paddingLeft);
-  if (props.paddingRight !== undefined) padRight = normalizeUnit(props.paddingRight);
-  if (props.paddingTop !== undefined) padTop = normalizeUnit(props.paddingTop);
-  if (props.paddingBottom !== undefined) padBottom = normalizeUnit(props.paddingBottom);
+  
+  // Override with specific padding props
+  if (props.paddingLeft !== undefined) padLeft = normalizeCSSUnit(props.paddingLeft);
+  if (props.paddingRight !== undefined) padRight = normalizeCSSUnit(props.paddingRight);
+  if (props.paddingTop !== undefined) padTop = normalizeCSSUnit(props.paddingTop);
+  if (props.paddingBottom !== undefined) padBottom = normalizeCSSUnit(props.paddingBottom);
   if (props.paddingHorizontal !== undefined) {
-    const hPad = normalizeUnit(props.paddingHorizontal);
+    const hPad = normalizeCSSUnit(props.paddingHorizontal);
     padLeft = padRight = hPad;
   }
   if (props.paddingVertical !== undefined) {
-    const vPad = normalizeUnit(props.paddingVertical);
+    const vPad = normalizeCSSUnit(props.paddingVertical);
     padTop = padBottom = vPad;
   }
   // Special: For freeform flow, if width or height is 'hug', calculate bounding box of children
@@ -101,8 +101,16 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
         maxBottom = Math.max(maxBottom, y + h);
       }
     });
-    if (props.width === 'hug') styles.width = normalizeUnit(maxRight + padLeft + padRight);
-    if (props.height === 'hug') styles.height = normalizeUnit(maxBottom + padTop + padBottom);
+    if (props.width === 'hug') {
+      const padLeftNum = parseFloat(padLeft) || 0;
+      const padRightNum = parseFloat(padRight) || 0;
+      styles.width = `calc(${maxRight}px + ${padLeft} + ${padRight})`;
+    }
+    if (props.height === 'hug') {
+      const padTopNum = parseFloat(padTop) || 0;
+      const padBottomNum = parseFloat(padBottom) || 0;
+      styles.height = `calc(${maxBottom}px + ${padTop} + ${padBottom})`;
+    }
     // Always apply padding for freeform or when there are positioned children
     if (props.flow === 'freeform' || hasPositionedChildren) {
       styles.paddingTop = padTop;
@@ -113,11 +121,11 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
   }
   // Margin - like Figma's margin controls
   if (props.margin !== undefined) {
-    if (typeof props.margin === 'number' || typeof props.margin === 'string') {
-      styles.margin = normalizeUnit(props.margin);
-    } else {
-      const { top, right, bottom, left } = props.margin;
-      styles.margin = `${normalizeUnit(top || 0)} ${normalizeUnit(right || 0)} ${normalizeUnit(bottom || 0)} ${normalizeUnit(left || 0)}`;
+    const marginResult = normalizeSpacing(props.margin);
+    if (typeof marginResult === 'string') {
+      styles.margin = marginResult;
+    } else if (marginResult) {
+      styles.margin = spacingToCSS(marginResult);
     }
   }
   
@@ -136,6 +144,11 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     case 'grid':
       styles.display = 'grid';
       if (hasPositionedChildren) styles.position = 'relative';
+      // Apply grid configuration if provided
+      if (props.grid) {
+        const gridStyles = gridConfigToCSS(props.grid);
+        Object.assign(styles, gridStyles);
+      }
       break;
     case 'curved':
       // Curved layout handled in Frame, not here
@@ -258,10 +271,20 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
         styles.width = 'fit-content';
         break;
       case 'fill-container':
+      case 'fill':
         styles.width = '100%';
         break;
+      case 'auto':
+        styles.width = 'auto';
+        break;
+      case 'full':
+        styles.width = '100%';
+        break;
+      case 'none':
+        styles.width = 'none';
+        break;
       default:
-        styles.width = normalizeUnit(props.width);
+        styles.width = normalizeCSSUnit(props.width);
         break;
     }
   }
@@ -272,28 +295,38 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
         styles.height = 'fit-content';
         break;
       case 'fill-container':
+      case 'fill':
         styles.height = '100%';
         break;
+      case 'auto':
+        styles.height = 'auto';
+        break;
+      case 'full':
+        styles.height = '100%';
+        break;
+      case 'none':
+        styles.height = 'none';
+        break;
       default:
-        styles.height = normalizeUnit(props.height);
+        styles.height = normalizeCSSUnit(props.height);
         break;
     }
   }
 
   if (props.maxHeight !== undefined) {
-    styles.maxHeight = normalizeUnit(props.maxHeight);
+    styles.maxHeight = normalizeCSSUnit(props.maxHeight);
   }
 
   if (props.minWidth !== undefined) {
-    styles.minWidth = normalizeUnit(props.minWidth);
+    styles.minWidth = normalizeCSSUnit(props.minWidth);
   }
 
   if (props.maxWidth !== undefined) {
-    styles.maxWidth = normalizeUnit(props.maxWidth);
+    styles.maxWidth = normalizeCSSUnit(props.maxWidth);
   }
 
   if (props.minHeight !== undefined) {
-    styles.minHeight = normalizeUnit(props.minHeight);
+    styles.minHeight = normalizeCSSUnit(props.minHeight);
   }
   
   if (props.overflow !== undefined) {
@@ -332,46 +365,51 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
       default:
         if (typeof props.gap === 'number') {
           styles.gap = `${props.gap}px`;
+        } else if (typeof props.gap === 'string') {
+          styles.gap = normalizeCSSUnit(props.gap);
         }
         break;
     }
   }
   
   
-  // Padding - like Figma's padding controls
-  if (props.padding !== undefined) {
-    if (typeof props.padding === 'number') {
-      styles.padding = `${props.padding}px`;
-    } else {
-      const { top, right, bottom, left } = props.padding;
-      styles.padding = `${top || 0}px ${right || 0}px ${bottom || 0}px ${left || 0}px`;
+  // Note: Padding is already handled at the top of the function for freeform/positioned children
+  // Only apply padding styles here if NOT already set
+  if (!styles.paddingTop && !styles.paddingLeft && !styles.paddingRight && !styles.paddingBottom) {
+    if (props.padding !== undefined) {
+      const paddingResult = normalizeSpacing(props.padding);
+      if (typeof paddingResult === 'string') {
+        styles.padding = paddingResult;
+      } else if (paddingResult) {
+        styles.padding = spacingToCSS(paddingResult);
+      }
     }
-  }
-  
-  // Horizontal and vertical padding shortcuts (applied before individual controls)
-  if (props.paddingHorizontal !== undefined) {
-    const hPadding = typeof props.paddingHorizontal === 'number' ? `${props.paddingHorizontal}px` : props.paddingHorizontal;
-    styles.paddingLeft = hPadding;
-    styles.paddingRight = hPadding;
-  }
-  if (props.paddingVertical !== undefined) {
-    const vPadding = typeof props.paddingVertical === 'number' ? `${props.paddingVertical}px` : props.paddingVertical;
-    styles.paddingTop = vPadding;
-    styles.paddingBottom = vPadding;
-  }
-  
-  // Individual padding controls (override shortcuts and general padding)
-  if (props.paddingTop !== undefined) {
-    styles.paddingTop = typeof props.paddingTop === 'number' ? `${props.paddingTop}px` : props.paddingTop;
-  }
-  if (props.paddingRight !== undefined) {
-    styles.paddingRight = typeof props.paddingRight === 'number' ? `${props.paddingRight}px` : props.paddingRight;
-  }
-  if (props.paddingBottom !== undefined) {
-    styles.paddingBottom = typeof props.paddingBottom === 'number' ? `${props.paddingBottom}px` : props.paddingBottom;
-  }
-  if (props.paddingLeft !== undefined) {
-    styles.paddingLeft = typeof props.paddingLeft === 'number' ? `${props.paddingLeft}px` : props.paddingLeft;
+    
+    // Horizontal and vertical padding shortcuts (applied before individual controls)
+    if (props.paddingHorizontal !== undefined) {
+      const hPadding = normalizeCSSUnit(props.paddingHorizontal);
+      styles.paddingLeft = hPadding;
+      styles.paddingRight = hPadding;
+    }
+    if (props.paddingVertical !== undefined) {
+      const vPadding = normalizeCSSUnit(props.paddingVertical);
+      styles.paddingTop = vPadding;
+      styles.paddingBottom = vPadding;
+    }
+    
+    // Individual padding controls (override shortcuts and general padding)
+    if (props.paddingTop !== undefined) {
+      styles.paddingTop = normalizeCSSUnit(props.paddingTop);
+    }
+    if (props.paddingRight !== undefined) {
+      styles.paddingRight = normalizeCSSUnit(props.paddingRight);
+    }
+    if (props.paddingBottom !== undefined) {
+      styles.paddingBottom = normalizeCSSUnit(props.paddingBottom);
+    }
+    if (props.paddingLeft !== undefined) {
+      styles.paddingLeft = normalizeCSSUnit(props.paddingLeft);
+    }
   }
   
   // Wrapping behavior (flex-wrap)

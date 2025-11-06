@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Label Component
@@ -29,7 +29,7 @@ export interface LabelProps extends FrameProps {
   variants?: Record<string, any>; // Allow flexible variant definitions
   size?: any; // Allow flexible size definitions
   sizes?: Record<string, any>; // Allow flexible size definitions
-  transitions?: Transitions;
+  transitions?: Animate;
 }
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
@@ -50,13 +50,13 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   // Determine effective variant based on disabled state
   const effectiveVariant = disabled ? 'disabled' : variant;
 
-  const defaultTransitions: Transitions = [
-    { event: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
-    { event: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
-    { event: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
-    { event: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
-    { event: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
-    { event: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
+  const defaultTransitions: Animate = [
+    { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
+    { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
+    { trigger: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
+    { trigger: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
+    { trigger: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
+    { trigger: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
   ];
 
   return (
@@ -70,7 +70,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
       variants={variants}
       cursor={'pointer'}
       onClick={disabled ? undefined : onClick}
-      transitions={transitions ?? defaultTransitions}
+      animate={transitions ?? defaultTransitions}
       {...frameProps}
     >
       {children}

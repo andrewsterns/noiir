@@ -1,13 +1,13 @@
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import { Frame } from '../../../../src/components/frame/Frame';
-import { TransitionProvider, Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { AnimateProvider, Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
- * Transition Stories
+ * Animate Stories
  * 
- * Demonstrates the transition system for Frame components.
- * The transition system manages state changes between variants based on events.
+ * Demonstrates the Animate system for Frame components.
+ * The Animate system manages state changes between variants based on events.
  * 
  * Key concepts:
  * - Logical State: The base variant (e.g., 'primary', 'active') - persistent state
@@ -15,10 +15,10 @@ import { TransitionProvider, Transitions } from '../../../../packages/frame-core
  * - Hover events only affect visual state, click events change logical state
  * 
  * FIXES APPLIED:
- * 1. Added getVisualVariant() to TransitionContextType interface
+ * 1. Added getVisualVariant() to AnimateContextType interface
  * 2. Updated Frame.tsx to use getVisualVariant() instead of getVariant()
  * 3. Removed unnecessary key event checks in mouseEnter/mouseLeave handler
- * 4. Added debug logging to help diagnose transition issues
+ * 4. Added debug logging to help diagnose Animate issues
  * 
  * How it works:
  * - Frame uses getVisualVariant() which returns visualFrames[id] || frames[id]
@@ -27,13 +27,13 @@ import { TransitionProvider, Transitions } from '../../../../packages/frame-core
  */
 
 const meta: Meta = {
-  title: 'Frame/Properties/Transitions',
+  title: 'Frame/Properties/animate',
   component: Frame,
   decorators: [
     (Story) => (
-      <TransitionProvider>
+      <AnimateProvider>
         <Story />
-      </TransitionProvider>
+      </AnimateProvider>
     ),
   ],
   parameters: {
@@ -50,9 +50,9 @@ type Story = StoryObj;
  */
 export const ClickToggle: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       {
-        event: 'click',
+        trigger: 'click',
         targetId: 'box1',
         toggle: true,
         toggleVariants: ['blue', 'red'],
@@ -77,21 +77,21 @@ export const ClickToggle: Story = {
             appearance: { radius: 8 },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       />
     );
   },
 };
 
 /**
- * Hover Transition
+ * Hover Animate
  * Hover over the box to see it change color
  */
-export const HoverTransition: Story = {
+export const HoverAnimate: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'box2',
         fromVariant: 'default',
         toVariant: 'hovered',
@@ -99,7 +99,7 @@ export const HoverTransition: Story = {
         curve: 'ease',
       },
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'box2',
         fromVariant: 'hovered',
         toVariant: 'default',
@@ -124,7 +124,7 @@ export const HoverTransition: Story = {
             appearance: { radius: 8 },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       />
     );
   },
@@ -136,9 +136,9 @@ export const HoverTransition: Story = {
  */
 export const MouseEnterLeave: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       {
-        event: 'mouseEnter',
+        trigger: 'mouseEnter',
         targetId: 'box3',
         fromVariant: 'idle',
         toVariant: 'active',
@@ -146,7 +146,7 @@ export const MouseEnterLeave: Story = {
         curve: 'ease-in',
       },
       {
-        event: 'mouseLeave',
+        trigger: 'mouseLeave',
         targetId: 'box3',
         fromVariant: 'active',
         toVariant: 'idle',
@@ -173,7 +173,7 @@ export const MouseEnterLeave: Story = {
             effects: { dropShadow: [{ x: 0, y: 4, blur: 12, color: 'rgba(0,0,0,0.2)' }] },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       />
     );
   },
@@ -186,19 +186,19 @@ export const MouseEnterLeave: Story = {
  */
 export const ClickWithHover: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       // Click toggles between off and on
       {
-        event: 'click',
+        trigger: 'click',
         targetId: 'box4',
         toggle: true,
         toggleVariants: ['off', 'on'],
         duration: '0.2s',
         curve: 'ease',
       },
-      // Hover transitions from off to offHover
+      // Hover animate from off to offHover
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'box4',
         fromVariant: 'off',
         toVariant: 'offHover',
@@ -206,16 +206,16 @@ export const ClickWithHover: Story = {
         curve: 'ease',
       },
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'box4',
         fromVariant: 'offHover',
         toVariant: 'off',
         duration: '0.1s',
         curve: 'ease',
       },
-      // Hover transitions from on to onHover
+      // Hover animate from on to onHover
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'box4',
         fromVariant: 'on',
         toVariant: 'onHover',
@@ -223,7 +223,7 @@ export const ClickWithHover: Story = {
         curve: 'ease',
       },
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'box4',
         fromVariant: 'onHover',
         toVariant: 'on',
@@ -262,7 +262,7 @@ export const ClickWithHover: Story = {
             typography: { color: 'white1', fontSize: 14, fontWeight: 500 },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       >
         Click to toggle, hover for feedback
       </Frame>
@@ -276,10 +276,10 @@ export const ClickWithHover: Story = {
  */
 export const ListenEvent: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       // Controller toggles on click
       {
-        event: 'click',
+        trigger: 'click',
         sourceId: 'controller',
         targetId: 'controller',
         toggle: true,
@@ -289,7 +289,7 @@ export const ListenEvent: Story = {
       },
       // Listener responds to controller's active state
       {
-        event: 'listen',
+        trigger: 'listen',
         listenId: 'controller',
         listenVariant: 'active',
         targetId: 'listener',
@@ -299,7 +299,7 @@ export const ListenEvent: Story = {
       },
       // Listener responds to controller's inactive state
       {
-        event: 'listen',
+        trigger: 'listen',
         listenId: 'controller',
         listenVariant: 'inactive',
         targetId: 'listener',
@@ -330,7 +330,7 @@ export const ListenEvent: Story = {
               typography: { color: 'white1', fontSize: 14, fontWeight: 500 },
             },
           }}
-          transitions={transitions}
+          animate={animations}
         >
           Controller (Click me)
         </Frame>
@@ -352,7 +352,7 @@ export const ListenEvent: Story = {
               typography: { color: 'white1', fontSize: 14, fontWeight: 500 },
             },
           }}
-          transitions={transitions}
+          animate={animations}
         >
           Listener (Responds)
         </Frame>
@@ -362,15 +362,15 @@ export const ListenEvent: Story = {
 };
 
 /**
- * Multi-Target Transitions
+ * Multi-Target animate
  * One click affects multiple frames
  */
 export const MultiTarget: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       // Clicking button affects box1
       {
-        event: 'click',
+        trigger: 'click',
         sourceId: 'button',
         targetId: 'box1',
         toggle: true,
@@ -380,7 +380,7 @@ export const MultiTarget: Story = {
       },
       // Clicking button also affects box2
       {
-        event: 'click',
+        trigger: 'click',
         sourceId: 'button',
         targetId: 'box2',
         toggle: true,
@@ -406,7 +406,7 @@ export const MultiTarget: Story = {
               typography: { color: 'white1', fontSize: 14, fontWeight: 500 },
             },
           }}
-          transitions={transitions}
+          animate={animations}
         >
           Click to affect both boxes
         </Frame>
@@ -427,7 +427,7 @@ export const MultiTarget: Story = {
                 appearance: { radius: 8 },
               },
             }}
-            transitions={transitions}
+            animate={animations}
           />
 
           <Frame
@@ -445,7 +445,7 @@ export const MultiTarget: Story = {
                 appearance: { radius: 4 },
               },
             }}
-            transitions={transitions}
+            animate={animations}
           />
         </Frame>
       </Frame>
@@ -459,9 +459,9 @@ export const MultiTarget: Story = {
  */
 export const SequentialToggle: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       {
-        event: 'click',
+        trigger: 'click',
         targetId: 'trafficLight',
         toggle: true,
         toggleVariants: ['red', 'yellow', 'green'],
@@ -494,7 +494,7 @@ export const SequentialToggle: Story = {
             typography: { color: 'white1', fontSize: 16, fontWeight: 600 },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       >
         Click to cycle
       </Frame>
@@ -508,9 +508,9 @@ export const SequentialToggle: Story = {
  */
 export const MouseDownUp: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       {
-        event: 'mouseDown',
+        trigger: 'mouseDown',
         targetId: 'pressable',
         fromVariant: 'idle',
         toVariant: 'pressed',
@@ -518,7 +518,7 @@ export const MouseDownUp: Story = {
         curve: 'ease-in',
       },
       {
-        event: 'mouseUp',
+        trigger: 'mouseUp',
         targetId: 'pressable',
         fromVariant: 'pressed',
         toVariant: 'idle',
@@ -547,7 +547,7 @@ export const MouseDownUp: Story = {
             effects: { dropShadow: [{ x: 0, y: 1, blur: 2, color: 'rgba(0,0,0,0.3)' }] },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       >
         Press me
       </Frame>
@@ -561,10 +561,10 @@ export const MouseDownUp: Story = {
  */
 export const ComplexInteraction: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       // Click toggle
       {
-        event: 'click',
+        trigger: 'click',
         targetId: 'complex',
         toggle: true,
         toggleVariants: ['stateA', 'stateB', 'stateC'],
@@ -573,7 +573,7 @@ export const ComplexInteraction: Story = {
       },
       // Hover from stateA
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'complex',
         fromVariant: 'stateA',
         toVariant: 'stateAHover',
@@ -581,7 +581,7 @@ export const ComplexInteraction: Story = {
         curve: 'ease',
       },
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'complex',
         fromVariant: 'stateAHover',
         toVariant: 'stateA',
@@ -590,7 +590,7 @@ export const ComplexInteraction: Story = {
       },
       // Hover from stateB
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'complex',
         fromVariant: 'stateB',
         toVariant: 'stateBHover',
@@ -598,7 +598,7 @@ export const ComplexInteraction: Story = {
         curve: 'ease',
       },
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'complex',
         fromVariant: 'stateBHover',
         toVariant: 'stateB',
@@ -607,7 +607,7 @@ export const ComplexInteraction: Story = {
       },
       // Hover from stateC
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'complex',
         fromVariant: 'stateC',
         toVariant: 'stateCHover',
@@ -615,7 +615,7 @@ export const ComplexInteraction: Story = {
         curve: 'ease',
       },
       {
-        event: 'hover',
+        trigger: 'hover',
         targetId: 'complex',
         fromVariant: 'stateCHover',
         toVariant: 'stateC',
@@ -669,7 +669,7 @@ export const ComplexInteraction: Story = {
             effects: { dropShadow: [{ x: 0, y: 2, blur: 8, color: 'rgba(0,0,255,0.3)' }] },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       >
         Click to cycle • Hover for feedback
       </Frame>
@@ -678,15 +678,15 @@ export const ComplexInteraction: Story = {
 };
 
 /**
- * Conditional Transition (fromVariant)
- * Only transitions when in a specific variant
+ * Conditional Animate (fromVariant)
+ * Only animate when in a specific variant
  */
-export const ConditionalTransition: Story = {
+export const ConditionalAnimate: Story = {
   render: () => {
-    const transitions: Transitions = [
+    const animations: Animate = [
       // First click: locked -> unlocked
       {
-        event: 'click',
+        trigger: 'click',
         targetId: 'lock',
         fromVariant: 'locked',
         toVariant: 'unlocked',
@@ -695,7 +695,7 @@ export const ConditionalTransition: Story = {
       },
       // Second click: unlocked -> open (only works when unlocked)
       {
-        event: 'click',
+        trigger: 'click',
         targetId: 'lock',
         fromVariant: 'unlocked',
         toVariant: 'open',
@@ -704,7 +704,7 @@ export const ConditionalTransition: Story = {
       },
       // Third click: open -> locked (resets)
       {
-        event: 'click',
+        trigger: 'click',
         targetId: 'lock',
         fromVariant: 'open',
         toVariant: 'locked',
@@ -737,7 +737,7 @@ export const ConditionalTransition: Story = {
             typography: { color: 'white1', fontSize: 14, fontWeight: 500, textAlign: 'center' },
           },
         }}
-        transitions={transitions}
+        animate={animations}
       >
         🔒 Locked → 🔓 Unlocked → ✅ Open
       </Frame>

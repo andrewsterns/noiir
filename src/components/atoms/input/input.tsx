@@ -1,7 +1,7 @@
 import Frame from "../../frame/Frame";
 import { useState } from "react";
 import { ExtendVariant } from '../../../../packages/frame-core/src/variants/variants.props';
-import { Transitions } from '../../../../packages/frame-core/src/transition/transition.props';
+import { Animate } from '../../../../packages/frame-core/src/animate/animate.props';
 
 /**
  * Input Component
@@ -26,7 +26,7 @@ interface InputProps {
     placeholder?: string;
     disabled?: boolean;
     autoFocus?: boolean;
-    transitions?: Transitions;
+    transitions?: Animate;
 }
 
 const INPUT_SIZES = {
@@ -104,10 +104,10 @@ const Input = (props: InputProps) => {
 
     const [focused, setFocused] = useState(false);
 
-    const defaultTransitions: Transitions = [
+    const defaultTransitions: Animate = [
         // Hover on base state
         { 
-            event: 'mouseEnter', 
+            trigger: 'mouseEnter', 
             targetId: 'inputId',
             fromVariant: 'primary', 
             toVariant: 'primaryHover', 
@@ -115,7 +115,7 @@ const Input = (props: InputProps) => {
             curve: 'ease' 
         },
         { 
-            event: 'mouseLeave', 
+            trigger: 'mouseLeave', 
             targetId: 'inputId',
             fromVariant: 'primaryHover', 
             toVariant: 'primary', 
@@ -157,7 +157,7 @@ const Input = (props: InputProps) => {
             sizes={sizes}
             variant={focused ? 'primaryFocus' : variant}
             variants={variants}
-            transitions={transitions ?? defaultTransitions}
+            animate={transitions ?? defaultTransitions}
         >
             {value}
             <Frame

@@ -58,7 +58,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(({
       variants={variants}
       position={position ? { type: position } : undefined}
       zIndex={position === 'fixed' ? 100 : undefined}
-      transitions={[]}
+      animate={[]}
       {...navbarProps}
     >
       {/* Desktop Layout */}
@@ -98,9 +98,9 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(({
                   variant="navItem"
                   variants={variants}
                   onClick={item.onClick}
-                  transitions={[
-                    { event: 'mouseEnter', toVariant: 'navItemHover', sourceId: `nav-item-${index}` },
-                    { event: 'mouseLeave', toVariant: 'navItem', sourceId: `nav-item-${index}` },
+                  animate={[
+                    { trigger: 'mouseEnter', toVariant: 'navItemHover', sourceId: `nav-item-${index}` },
+                    { trigger: 'mouseLeave', toVariant: 'navItem', sourceId: `nav-item-${index}` },
                   ]}
                 >
                   {item.label}
@@ -126,8 +126,8 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(({
           variants={variants}
           onClick={toggleMobileMenu}
           aria-label="Toggle mobile menu"
-          transitions={[
-            { event: 'click', toVariant: mobileMenuOpen ? 'mobileToggle' : 'mobileToggleOpen' },
+          animate={[
+            { trigger: 'click', toVariant: mobileMenuOpen ? 'mobileToggle' : 'mobileToggleOpen' },
           ]}
         >
           <Frame variant="hamburger" variants={variants}>
@@ -165,9 +165,9 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(({
                     item.onClick?.();
                     setMobileMenuOpen(false);
                   }}
-                  transitions={[
-                    { event: 'mouseEnter', toVariant: 'mobileItemHover', sourceId: `mobile-item-${index}` },
-                    { event: 'mouseLeave', toVariant: 'mobileItem', sourceId: `mobile-item-${index}` },
+                  animate={[
+                    { trigger: 'mouseEnter', toVariant: 'mobileItemHover', sourceId: `mobile-item-${index}` },
+                    { trigger: 'mouseLeave', toVariant: 'mobileItem', sourceId: `mobile-item-${index}` },
                   ]}
                 >
                   {item.label}

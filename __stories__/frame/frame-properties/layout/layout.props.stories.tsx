@@ -102,15 +102,15 @@ interface LayoutArgs extends Partial<FrameProps> {
   children?: React.ReactNode;
   flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';
   alignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'top' | 'center' | 'bottom' | 'left' | 'right';
-  gap: number;
-  padding: number;
+  gap: number | string | 'hug' | 'fill';
+  padding: number | string;
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
   clipContent: boolean;
   width?: string | number | 'hug' | 'fill-container';
   height?: string | number | 'hug' | 'fill-container';
   // Child frame controls
-  childWidth: number;
-  childHeight: number;
+  childWidth: number | string | 'hug' | 'fill';
+  childHeight: number | string | 'hug' | 'fill';
   childAlignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight';
   path?: { d: string };
 }
@@ -552,6 +552,58 @@ export const WrapAndClip: LayoutStory = {
     docs: {
       description: {
         story: 'Demonstrates wrapping (children flow to next line) and clipping (overflow hidden) with fixed width container.'
+      }
+    },
+    controls: {
+      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave', 'flow', 'alignment', 'padding', 'gap', 'height', 'childHeight', 'childAlignment', 'path']
+    }
+  }
+};
+
+export const GridLayoutDemo: LayoutStory = {
+  args: {
+    fill: { type: 'solid', color: 'white2', opacity: 0.95 },
+    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
+    appearance: { radius: 12 },
+    width: '100%',
+    height: 320,
+    gap: '1rem',
+    padding: '2rem',
+    flow: 'grid',
+    childWidth: 'hug',
+    childHeight: 'hug',
+  },
+  render: (args: LayoutArgs) => (
+    <Frame
+      autoLayout={{
+        flow: 'grid',
+        grid: '3x2', // 3 columns, 2 rows
+        gap: '1rem',
+        padding: '2rem',
+        width: '100%',
+        height: 320,
+      }}
+      fill={args.fill}
+      stroke={args.stroke}
+      appearance={args.appearance}
+    >
+      {[...Array(6)].map((_, i) => (
+        <Frame
+          key={i}
+          fill={{ type: 'solid', color: i % 2 === 0 ? 'blue6' : 'tomato6', opacity: 0.85 }}
+          appearance={{ radius: 8 }}
+          autoLayout={{ width: 'hug', height: 'hug', alignment: 'center', padding: '1rem' }}
+          typography={{ type: 'h6', color: 'white2', textAlign: 'center' }}
+        >
+          {`Grid Item ${i + 1}`}
+        </Frame>
+      ))}
+    </Frame>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates grid layout with 3 columns and 2 rows using the new CSS unit and grid support.'
       }
     },
     controls: {
