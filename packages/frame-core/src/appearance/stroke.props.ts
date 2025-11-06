@@ -3,6 +3,14 @@ import { resolveColor, colorUtils } from '../../../../src/theme/colors';
 
 //ALL STROKE RELATED PROPS AND HOOKS SHOULD GO IN THIS FILE
 
+export interface IndividualStroke {
+  type?: 'none' | 'solid' | 'gradient';
+  color?: string;
+  weight?: number;
+  opacity?: number;
+  dashPattern?: number[];
+}
+
 export interface StrokeProps {
   type?: 'none' | 'solid' | 'gradient';
   color?: string; // Either hex like '#333333' or theme color like 'primary3'
@@ -17,7 +25,32 @@ export interface StrokeProps {
   stops?: Array<{ color: string; position: number; opacity?: number }>;
   gradientType?: 'linear' | 'radial' | 'angular';
   angle?: number; // For linear and angular gradients
+  
+  // Individual strokes (like Figma)
+  top?: IndividualStroke;
+  bottom?: IndividualStroke;
+  left?: IndividualStroke;
+  right?: IndividualStroke;
 }
+
+/**
+ * Convert individual stroke to CSS border string
+ */
+const convertIndividualStroke = (stroke: IndividualStroke): string => {
+  if (!stroke || stroke.type === 'none') return 'none';
+  
+  const weight = stroke.weight || 1;
+  let color = stroke.color ? resolveColor(stroke.color) : '#000000';
+  
+  // Apply opacity if specified
+  if (stroke.opacity !== undefined && stroke.opacity < 1 && color !== 'transparent') {
+    color = colorUtils.hexToRgba(color, stroke.opacity);
+  }
+  
+  const style = stroke.dashPattern && stroke.dashPattern.length > 0 ? 'dashed' : 'solid';
+  
+  return `${weight}px ${style} ${color}`;
+};
 
 /**
  * Convert stroke props to CSS styles
@@ -26,6 +59,27 @@ export const convertStrokeProps = (props: StrokeProps): React.CSSProperties => {
   if (!props) return {};
   
   const styles: React.CSSProperties = {};
+  
+  // Check if individual strokes are defined
+  const hasIndividualStrokes = props.top || props.bottom || props.left || props.right;
+  
+  if (hasIndividualStrokes) {
+    // Use individual border properties
+    if (props.top) {
+      styles.borderTop = convertIndividualStroke(props.top);
+    }
+    if (props.bottom) {
+      styles.borderBottom = convertIndividualStroke(props.bottom);
+    }
+    if (props.left) {
+      styles.borderLeft = convertIndividualStroke(props.left);
+    }
+    if (props.right) {
+      styles.borderRight = convertIndividualStroke(props.right);
+    }
+    
+    return styles;
+  }
   
   // Default stroke type to 'solid' if not provided
   const strokeType = props.type ?? 'solid';
