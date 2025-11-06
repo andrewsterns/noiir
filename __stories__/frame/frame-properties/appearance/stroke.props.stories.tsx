@@ -314,3 +314,56 @@ export const Stroke: StrokeStory = {
     );
   }
 };
+
+export const IndividualStrokes: StrokeStory = {
+  name: 'Individual Strokes',
+  render: () => (
+    <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+      {/* Left only, position inside */}
+      <Frame
+        id='frame73364'
+        autoLayout={{ flow: 'freeform', width: 307, height: 164 }}
+        fill={{ type: 'solid', color: '#ffffff' }}
+        stroke={{ left: { type: 'solid', color: '#000000', weight: 4 }, position: 'inside' }}
+        appearance={{ radius: 0 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center' }}>Left Only<br/>position: 'inside'</div>
+      </Frame>
+
+      {/* Top and bottom, different colors */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white2' }}
+        stroke={{
+          top: { type: 'solid', color: 'primary7', weight: 3 },
+          bottom: { type: 'solid', color: 'success7', weight: 3 }
+        }}
+        appearance={{ radius: 8 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center' }}>Top + Bottom</div>
+      </Frame>
+
+      {/* All four sides, different weights */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white2' }}
+        stroke={{
+          top: { type: 'solid', color: 'primary7', weight: 1 },
+          right: { type: 'solid', color: 'success7', weight: 2 },
+          bottom: { type: 'solid', color: 'warning7', weight: 4 },
+          left: { type: 'solid', color: 'error7', weight: 6 }
+        }}
+        appearance={{ radius: 8 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center' }}>All Sides<br/>Different Weights</div>
+      </Frame>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates individual strokes (per-side borders) including left-only, top+bottom, and all sides with different weights. This matches Figma\'s individual stroke feature.'
+      }
+    }
+  }
+};
