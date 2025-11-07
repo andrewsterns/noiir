@@ -1,12 +1,12 @@
 import { Frame } from '../frame/Frame';
 import Button from '../atoms/button/button';
-import { ExtendVariant } from '../frame/frame-properties/variants/variants.props';
+import { ExtendVariant } from '../../../packages/frame-core/src/variants/variants.props';
 
-interface groupProps {
+interface NavbarProps {
   logo?: React.ReactNode;
 }
 
-export const Navbar = (props) => {
+export const Navbar = (props: NavbarProps) => {
   const handleToggle = () => console.log("toggle menu");
 
   return (
