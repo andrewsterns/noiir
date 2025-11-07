@@ -383,3 +383,146 @@ fill={{type: 'none'}}
     }
   }
 };
+
+export const MultipleFills: FillStory = {
+  name: 'Multiple Fills',
+  render: () => (
+    <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', padding: 20 }}>
+      {/* Example from user: Two gradients layered */}
+      <Frame
+        id='frame-multiple-fills-1'
+        autoLayout={{
+          flow: 'grid',
+          grid: { columns: 2, rows: 2, columnGap: 10, rowGap: 10 },
+          width: 222,
+          height: 138,
+          alignment: 'center'
+        }}
+        fill={[
+          {
+            type: 'linear-gradient',
+            opacity: 0.79,
+            angle: 356.1,
+            stops: [
+              { color: '#ca2b2b', position: 0 },
+              { color: '#999999', position: 1 }
+            ]
+          },
+          {
+            type: 'linear-gradient',
+            opacity: 0.2,
+            angle: 270,
+            stops: [
+              { color: '#000000', position: 0 },
+              { color: '#3deb51', position: 1 }
+            ]
+          }
+        ]}
+        stroke={{ left: { type: 'solid', color: '#000000', weight: 1 }, position: 'inside' }}
+        appearance={{ radius: 0 }}
+      >
+        <div style={{ color: '#fff', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Two Gradients<br />Layered
+        </div>
+      </Frame>
+
+      {/* Solid + Gradient overlay */}
+      <Frame
+        autoLayout={{ width: 200, height: 150, alignment: 'center' }}
+        fill={[
+          {
+            type: 'solid',
+            color: 'primary6',
+            opacity: 1
+          },
+          {
+            type: 'linear-gradient',
+            opacity: 0.5,
+            angle: 135,
+            stops: [
+              { color: '#ffffff', position: 0 },
+              { color: 'transparent', position: 1 }
+            ]
+          }
+        ]}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#fff', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Solid + Gradient<br />Overlay
+        </div>
+      </Frame>
+
+      {/* Three gradients */}
+      <Frame
+        autoLayout={{ width: 200, height: 150, alignment: 'center' }}
+        fill={[
+          {
+            type: 'linear-gradient',
+            opacity: 0.8,
+            angle: 0,
+            stops: [
+              { color: 'primary6', position: 0 },
+              { color: 'accent6', position: 1 }
+            ]
+          },
+          {
+            type: 'radial-gradient',
+            opacity: 0.3,
+            stops: [
+              { color: '#ffffff', position: 0 },
+              { color: 'transparent', position: 1 }
+            ]
+          },
+          {
+            type: 'linear-gradient',
+            opacity: 0.2,
+            angle: 90,
+            stops: [
+              { color: 'error6', position: 0 },
+              { color: 'warning6', position: 1 }
+            ]
+          }
+        ]}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#fff', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Three Gradients<br />Mixed Types
+        </div>
+      </Frame>
+
+      {/* Multiple solids for color mixing */}
+      <Frame
+        autoLayout={{ width: 200, height: 150, alignment: 'center' }}
+        fill={[
+          {
+            type: 'solid',
+            color: 'success6',
+            opacity: 1
+          },
+          {
+            type: 'solid',
+            color: '#000000',
+            opacity: 0.3
+          },
+          {
+            type: 'solid',
+            color: '#ffffff',
+            opacity: 0.1
+          }
+        ]}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#fff', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Multiple Solids<br />Color Mixing
+        </div>
+      </Frame>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates multiple fills (gradients, solids) stacked together, similar to Figma\'s multiple fill feature. Fills are layered with the first being on top.'
+      }
+    }
+  }
+};

@@ -2,6 +2,7 @@
 export { Frame } from './frame/Frame';
 export { Button } from './atoms/button/button';
 export { Label } from './atoms/label/label';
+export { Text } from './atoms/text/text';
 export { Toggle } from './atoms/toggle/toggle';
 export { Avatar } from './atoms/avatar/avatar';
 export { Badge } from './atoms/badge/badge';

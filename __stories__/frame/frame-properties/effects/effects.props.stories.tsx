@@ -353,3 +353,131 @@ export const Effects: EffectsStory = {
     }
   }
 };
+
+export const MultipleEffects: EffectsStory = {
+  name: 'Multiple Effects',
+  render: () => (
+    <div style={{ display: 'flex', gap: 48, flexWrap: 'wrap', padding: 40, backgroundColor: '#f5f5f5' }}>
+      {/* Multiple drop shadows for layered depth */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white1' }}
+        effects={[
+          {
+            dropShadow: [
+              { x: 0, y: 2, blur: 4, spread: 0, color: 'rgba(0,0,0,0.1)' },
+              { x: 0, y: 4, blur: 12, spread: 0, color: 'rgba(0,0,0,0.1)' }
+            ]
+          }
+        ]}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Multiple Drop<br/>Shadows
+        </div>
+      </Frame>
+
+      {/* Combined drop shadow and inner shadow */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white1' }}
+        effects={{
+          dropShadow: [
+            { x: 0, y: 4, blur: 8, spread: 0, color: 'rgba(0,0,0,0.15)' }
+          ],
+          innerShadow: [
+            { x: 0, y: 2, blur: 4, spread: 0, color: 'rgba(0,0,0,0.08)' }
+          ]
+        }}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Drop + Inner<br/>Shadow
+        </div>
+      </Frame>
+
+      {/* Layered effect sets */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'primary6' }}
+        effects={[
+          {
+            dropShadow: [
+              { x: 0, y: 8, blur: 16, spread: 0, color: 'rgba(59,130,246,0.4)' }
+            ]
+          },
+          {
+            dropShadow: [
+              { x: 0, y: 2, blur: 4, spread: 0, color: 'rgba(0,0,0,0.1)' }
+            ]
+          }
+        ]}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#fff', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Layered Effect<br/>Sets
+        </div>
+      </Frame>
+
+      {/* Complex multi-shadow setup */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white1' }}
+        effects={{
+          dropShadow: [
+            { x: 0, y: 1, blur: 2, spread: 0, color: 'rgba(0,0,0,0.05)' },
+            { x: 0, y: 2, blur: 4, spread: 0, color: 'rgba(0,0,0,0.05)' },
+            { x: 0, y: 4, blur: 8, spread: 0, color: 'rgba(0,0,0,0.05)' },
+            { x: 0, y: 8, blur: 16, spread: 0, color: 'rgba(0,0,0,0.05)' }
+          ]
+        }}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Stacked Shadows<br/>Deep Depth
+        </div>
+      </Frame>
+
+      {/* Colored shadow layers */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white1' }}
+        effects={{
+          dropShadow: [
+            { x: -4, y: -4, blur: 8, spread: 0, color: 'rgba(59,130,246,0.3)' },
+            { x: 4, y: 4, blur: 8, spread: 0, color: 'rgba(239,68,68,0.3)' }
+          ]
+        }}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Dual Colored<br/>Shadows
+        </div>
+      </Frame>
+
+      {/* Background blur with shadows */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white1', opacity: 0.7 }}
+        effects={{
+          backgroundBlur: { radius: 10 },
+          dropShadow: [
+            { x: 0, y: 4, blur: 12, spread: 0, color: 'rgba(0,0,0,0.2)' }
+          ]
+        }}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center', fontWeight: 600 }}>
+          Blur + Shadow<br/>Glass Effect
+        </div>
+      </Frame>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates multiple effects including layered drop shadows, combined drop and inner shadows, and complex shadow stacks for creating depth and visual interest.'
+      }
+    }
+  }
+};

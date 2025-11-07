@@ -2,8 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import colors from '../../src/theme/colors';
 import { fonts } from '../../src/theme/fonts';
-import { typographyPresets } from '../../src/theme/typography';
-import { applyThemePreset } from '../../dist/src/theme';
+// Typography stories are now in Atoms/Text
 
 // Dummy component for the story
 const ThemeShowcase = () => null;
@@ -199,127 +198,5 @@ export const Fonts: Story = {
   }
 };
 
-// Typography Presets Story
-export const TypographyPresets: Story = {
-  render: () => (
-    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
-      <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>
-        Typography Presets
-      </h1>
-      
-      <div style={{ marginBottom: '3rem' }}>
-        <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '600' }}>
-          Headings
-        </h2>
-        
-        {['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map((heading) => {
-          const p = typographyPresets[heading as keyof typeof typographyPresets] as any;
-          return (
-          <div key={heading} style={{ marginBottom: '2rem' }}>
-            <div style={{
-              ...applyThemePreset(heading as keyof typeof typographyPresets),
-              marginBottom: '0.5rem'
-            }}>
-              {heading.toUpperCase()}: The quick brown fox jumps over the lazy dog
-            </div>
-            <div style={{ 
-              fontSize: '0.75rem', 
-              color: '#9ca3af',
-              fontFamily: 'monospace',
-              backgroundColor: '#f9fafb',
-              padding: '0.5rem',
-              borderRadius: '4px'
-            }}>
-              Font: {p.fontFamily} | 
-              Size: {p.fontSize ? `${p.fontSize}px` : '—'} | 
-              Weight: {p.fontWeight} | 
-              Line Height: {p.lineHeight ?? '—'}
-            </div>
-          </div>
-        )})}
-      </div>
-      
-      <div style={{ marginBottom: '3rem' }}>
-        <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '600' }}>
-          Body Text & UI Elements
-        </h2>
-        
-        {['body1', 'body2', 'label', 'caption', 'button', 'overline'].map((preset) => {
-          const p = typographyPresets[preset as keyof typeof typographyPresets] as any;
-          return (
-          <div key={preset} style={{ marginBottom: '2rem' }}>
-            <div style={{
-              ...applyThemePreset(preset as keyof typeof typographyPresets),
-              marginBottom: '0.5rem'
-            }}>
-              {preset.toUpperCase()}: The quick brown fox jumps over the lazy dog
-            </div>
-            <div style={{ 
-              fontSize: '0.75rem', 
-              color: '#9ca3af',
-              fontFamily: 'monospace',
-              backgroundColor: '#f9fafb',
-              padding: '0.5rem',
-              borderRadius: '4px'
-            }}>
-              Font: {p.fontFamily} | 
-              Size: {p.fontSize ? `${p.fontSize}px` : '—'} | 
-              Weight: {p.fontWeight} | 
-              Line Height: {p.lineHeight ?? '—'}
-            </div>
-          </div>
-        )})}
-      </div>
-      
-      <div style={{ marginBottom: '3rem' }}>
-        <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '600' }}>
-          Special Presets
-        </h2>
-        
-        {['display', 'code'].map((preset) => {
-          const p = typographyPresets[preset as keyof typeof typographyPresets] as any;
-          return (
-          <div key={preset} style={{ marginBottom: '2rem' }}>
-            <div style={{
-              ...applyThemePreset(preset as keyof typeof typographyPresets),
-              marginBottom: '0.5rem'
-            }}>
-              {preset.toUpperCase()}: The quick brown fox jumps over the lazy dog
-            </div>
-            <div style={{ 
-              fontSize: '0.75rem', 
-              color: '#9ca3af',
-              fontFamily: 'monospace',
-              backgroundColor: '#f9fafb',
-              padding: '0.5rem',
-              borderRadius: '4px'
-            }}>
-              Font: {p.fontFamily} | 
-              Size: {p.fontSize ? `${p.fontSize}px` : '—'} | 
-              Weight: {p.fontWeight} | 
-              Line Height: {p.lineHeight ?? '—'}
-            </div>
-          </div>
-        )})}
-      </div>
-      
-      <div style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-        <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: '600' }}>
-          Usage Examples
-        </h3>
-        <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
-          <p><code>applyThemePreset('h1')</code> - Apply H1 heading styles</p>
-          <p><code>applyThemePreset('body1', {`{ color: 'primary6' }`})</code> - Body text with custom color</p>
-          <p><code>convertTypographyProps(typographyPresets.button)</code> - Get CSS styles for button text</p>
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'All typography presets with their font families, sizes, weights, and line heights. Use these presets for consistent typography across your application.'
-      }
-    }
-  }
-};
+
+// Typography presets are now showcased in Atoms/Text stories using the Text, H1, H2, etc. components.

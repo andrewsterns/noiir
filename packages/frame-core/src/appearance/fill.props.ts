@@ -7,8 +7,9 @@ import { colors, colorUtils, resolveColor, type ColorKey, type ColorShade } from
  * - <Frame fill={{type: 'solid', color: 'primary3'}} />
  * - <Frame fill={{type: 'linear-gradient', angle: 45, stops: [{color: 'primary3', position: 0}, {color: 'primary8', position: 1}]}} />
  * - <Frame fill={{type: 'image', image: {src: 'https://example.com/image.jpg', scaleMode: 'fill'}}} />
+ * - <Frame fill={[{type: 'linear-gradient', ...}, {type: 'linear-gradient', ...}]} /> // Multiple fills
  */
-export interface FillProps {
+export interface FillPropsBase {
   type?: 'none' | 'solid' | 'linear-gradient' | 'radial-gradient' | 'conic-gradient' | 'image';
   color?: string; // For solid fills - hex like '#333333' or theme color like 'primary3'
   opacity?: number; // Overall fill opacity (0-1)
@@ -26,10 +27,14 @@ export interface FillProps {
   };
 }
 
+// Support single fill or array of fills (like Figma's multiple fills)
+export type FillProps = FillPropsBase | FillPropsBase[];
+
 
 
 /**
  * Convert fill props to CSS styles
+ * Supports single fill or array of fills (for multiple fills like Figma)
  */
 export const convertFillProps = (
   props: FillProps,
@@ -37,6 +42,22 @@ export const convertFillProps = (
 ): React.CSSProperties => {
   if (!props) return {};
   
+  // Handle array of fills (multiple fills)
+  if (Array.isArray(props)) {
+    return convertMultipleFills(props, isTextElement);
+  }
+  
+  // Handle single fill
+  return convertSingleFill(props, isTextElement);
+};
+
+/**
+ * Convert single fill to CSS styles
+ */
+const convertSingleFill = (
+  props: FillPropsBase,
+  isTextElement: boolean = false
+): React.CSSProperties => {
   const styles: React.CSSProperties = {};
   
   // Determine the fill type
@@ -112,6 +133,69 @@ export const convertFillProps = (
   return styles;
 };
 
+/**
+ * Convert multiple fills to CSS styles
+ * Multiple fills are stacked using CSS background layers (comma-separated)
+ */
+const convertMultipleFills = (
+  fills: FillPropsBase[],
+  isTextElement: boolean = false
+): React.CSSProperties => {
+  if (fills.length === 0) return {};
+  
+  // For multiple fills, we need to combine them into a single background property
+  const gradients: string[] = [];
+  const styles: React.CSSProperties = {};
+  
+  // Process fills in reverse order (first fill is on top in Figma)
+  // CSS backgrounds are rendered in reverse order (first is on top)
+  fills.forEach((fill) => {
+    const fillType = fill.type || (fill.color ? 'solid' : fill.stops ? 'linear-gradient' : fill.image ? 'image' : 'solid');
+    
+    switch (fillType) {
+      case 'solid':
+        if (fill.color) {
+          const resolvedColor = resolveColor(fill.color);
+          const finalColor = fill.opacity !== undefined && fill.opacity < 1 
+            ? colorUtils.hexToRgba(resolvedColor, fill.opacity)
+            : resolvedColor;
+          gradients.push(`linear-gradient(${finalColor}, ${finalColor})`);
+        }
+        break;
+        
+      case 'linear-gradient':
+      case 'radial-gradient':
+      case 'conic-gradient':
+        if (fill.stops && fill.stops.length > 0) {
+          const gradientString = createGradientString(fillType, fill.stops, fill.angle, fill.opacity);
+          if (gradientString) {
+            gradients.push(gradientString);
+          }
+        }
+        break;
+        
+      case 'image':
+        if (fill.image?.src) {
+          gradients.push(`url(${fill.image.src})`);
+        }
+        break;
+    }
+  });
+  
+  if (gradients.length > 0) {
+    styles.background = gradients.join(', ');
+    
+    if (isTextElement) {
+      styles.WebkitBackgroundClip = 'text';
+      styles.backgroundClip = 'text';
+      styles.WebkitTextFillColor = 'transparent';
+      styles.color = 'transparent';
+    }
+  }
+  
+  return styles;
+};
+
 
 
 /**
@@ -159,7 +243,7 @@ const createGradientString = (
 /**
  * Create image fill styles
  */
-const createImageFillStyles = (image: FillProps['image']): React.CSSProperties => {
+const createImageFillStyles = (image: FillPropsBase['image']): React.CSSProperties => {
   if (!image?.src) return {};
   
   const styles: React.CSSProperties = {
@@ -209,14 +293,6 @@ const createImageFillStyles = (image: FillProps['image']): React.CSSProperties =
 // Export utility functions for external use
 export { createGradientString };
 export { createImageFillStyles };
-
-// Create placeholder functions for missing exports
-export const createMultipleFills = (fills: FillProps[]): React.CSSProperties => {
-  // For now, just return the first fill's styles
-  return fills.length > 0 ? convertFillProps(fills[0]) : {};
-};
-
-
 
 // For backward compatibility, export the same function with different name
 export const convertFillPropsUnified = convertFillProps;

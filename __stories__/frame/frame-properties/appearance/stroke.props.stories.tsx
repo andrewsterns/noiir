@@ -367,3 +367,80 @@ export const IndividualStrokes: StrokeStory = {
     }
   }
 };
+
+export const MultipleStrokes: StrokeStory = {
+  name: 'Multiple Strokes',
+  render: () => (
+    <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', padding: 20 }}>
+      {/* Two strokes: primary outer, secondary inner */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white2' }}
+        stroke={[
+          { type: 'solid', color: 'primary7', weight: 4, position: 'inside' },
+          { type: 'solid', color: 'accent7', weight: 2, position: 'inside' }
+        ]}
+        appearance={{ radius: 8 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center' }}>
+          Two Strokes<br/>Different Colors
+        </div>
+      </Frame>
+
+      {/* Three strokes: rainbow effect */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white2' }}
+        stroke={[
+          { type: 'solid', color: 'error7', weight: 2, position: 'inside' },
+          { type: 'solid', color: 'warning7', weight: 2, position: 'inside' },
+          { type: 'solid', color: 'success7', weight: 2, position: 'inside' }
+        ]}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center' }}>
+          Three Strokes<br/>Rainbow Effect
+        </div>
+      </Frame>
+
+      {/* Multiple strokes with opacity */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'neutral2' }}
+        stroke={[
+          { type: 'solid', color: 'primary7', weight: 3, opacity: 1 },
+          { type: 'solid', color: 'primary7', weight: 2, opacity: 0.5 },
+          { type: 'solid', color: 'primary7', weight: 2, opacity: 0.25 }
+        ]}
+        appearance={{ radius: 8 }}
+      >
+        <div style={{ color: '#fff', fontSize: 14, textAlign: 'center' }}>
+          Fading Strokes<br/>with Opacity
+        </div>
+      </Frame>
+
+      {/* Mixed weights for border frame effect */}
+      <Frame
+        autoLayout={{ width: 180, height: 120, alignment: 'center' }}
+        fill={{ type: 'solid', color: 'white1' }}
+        stroke={[
+          { type: 'solid', color: 'neutral8', weight: 1, position: 'inside' },
+          { type: 'solid', color: 'primary5', weight: 3, position: 'inside' },
+          { type: 'solid', color: 'neutral8', weight: 1, position: 'inside' }
+        ]}
+        appearance={{ radius: 0 }}
+      >
+        <div style={{ color: '#222', fontSize: 14, textAlign: 'center' }}>
+          Bordered Frame<br/>Effect
+        </div>
+      </Frame>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates multiple strokes stacked together, similar to Figma\'s multiple stroke feature. Strokes are layered from innermost to outermost using CSS box-shadow technique.'
+      }
+    }
+  }
+};

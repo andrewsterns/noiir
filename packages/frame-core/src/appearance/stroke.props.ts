@@ -11,7 +11,7 @@ export interface IndividualStroke {
   dashPattern?: number[];
 }
 
-export interface StrokeProps {
+export interface StrokePropsBase {
   type?: 'none' | 'solid' | 'gradient';
   color?: string; // Either hex like '#333333' or theme color like 'primary3'
   position?: 'inside' | 'outside' | 'center';
@@ -32,6 +32,9 @@ export interface StrokeProps {
   left?: IndividualStroke;
   right?: IndividualStroke;
 }
+
+// Support single stroke or array of strokes (like Figma's multiple strokes)
+export type StrokeProps = StrokePropsBase | StrokePropsBase[];
 
 /**
  * Convert individual stroke to CSS border string
@@ -54,10 +57,24 @@ const convertIndividualStroke = (stroke: IndividualStroke): string => {
 
 /**
  * Convert stroke props to CSS styles
+ * Supports single stroke or array of strokes (for multiple strokes like Figma)
  */
 export const convertStrokeProps = (props: StrokeProps): React.CSSProperties => {
   if (!props) return {};
   
+  // Handle array of strokes (multiple strokes)
+  if (Array.isArray(props)) {
+    return convertMultipleStrokes(props);
+  }
+  
+  // Handle single stroke
+  return convertSingleStroke(props);
+};
+
+/**
+ * Convert single stroke to CSS styles
+ */
+const convertSingleStroke = (props: StrokePropsBase): React.CSSProperties => {
   const styles: React.CSSProperties = {};
   
   // Check if individual strokes are defined
@@ -146,6 +163,43 @@ export const convertStrokeProps = (props: StrokeProps): React.CSSProperties => {
     }
   }
 
+  return styles;
+};
+
+/**
+ * Convert multiple strokes to CSS styles
+ * Note: CSS has limited support for multiple borders. We use box-shadow to simulate additional borders.
+ */
+const convertMultipleStrokes = (strokes: StrokePropsBase[]): React.CSSProperties => {
+  if (strokes.length === 0) return {};
+  
+  // First stroke uses regular border, additional strokes use box-shadow
+  const styles = convertSingleStroke(strokes[0]);
+  
+  // Add additional strokes as box-shadows
+  if (strokes.length > 1) {
+    const shadows: string[] = [];
+    let offset = strokes[0].weight || 1;
+    
+    for (let i = 1; i < strokes.length; i++) {
+      const stroke = strokes[i];
+      const weight = stroke.weight || 1;
+      let color = stroke.color ? resolveColor(stroke.color) : '#000000';
+      
+      if (stroke.opacity !== undefined && stroke.opacity < 1) {
+        color = colorUtils.hexToRgba(color, stroke.opacity);
+      }
+      
+      // Box-shadow simulates additional borders
+      shadows.push(`0 0 0 ${offset + weight}px ${color}`);
+      offset += weight;
+    }
+    
+    if (shadows.length > 0) {
+      styles.boxShadow = shadows.join(', ');
+    }
+  }
+  
   return styles;
 };
 

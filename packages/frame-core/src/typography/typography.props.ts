@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { resolveColor } from '../../../../src/theme/colors';
-import { typographyPresets } from '../../../../src/theme/typography';
+import { textVariants } from '../../../../__variants__/atoms/text/text.variants';
 
 /**
  * Typography Properties
@@ -53,13 +53,14 @@ export interface RectangleProps extends TypographyProps {
 /**
  * Convert typography props to CSS styles
  */
+
 export function convertTypographyProps(props: TypographyProps): React.CSSProperties {
   // Always merge Frame defaults with provided props, so variant props override but missing values fall back to Frame defaults
-  let merged = { ...typographyPresets?.Frame || {}, ...props } as TypographyProps;
+  let merged = { ...textVariants?.Frame || {}, ...props } as TypographyProps;
 
   // If type is specified, merge the preset
-  if (merged.type && merged.type in typographyPresets) {
-    const preset = typographyPresets[merged.type as keyof typeof typographyPresets];
+  if (merged.type && merged.type in textVariants) {
+    const preset = textVariants[merged.type as keyof typeof textVariants];
     merged = { ...merged, ...preset };
   }
 

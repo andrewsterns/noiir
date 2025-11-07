@@ -3,6 +3,7 @@ export * from './atoms/button/button.variants';
 export * from './atoms/progress-bar/progress-bar.variants';
 export * from './atoms/radio-button/radio-button.variants';
 export * from './atoms/slider/slider.variants';
+export * from './atoms/text/text.variants';
 export * from './atoms/textarea/textarea.variants';
 export * from './atoms/toggle/toggle.variants';
 export * from './atoms/tooltip/tooltip.variants';
