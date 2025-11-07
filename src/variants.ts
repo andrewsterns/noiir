@@ -7,6 +7,7 @@
 
 // Re-export all variant definitions from their actual locations
 export * from '../__variants__/atoms/button/button.variants';
+export * from '../__variants__/atoms/text/text.variants';
 export * from '../__variants__/atoms/textarea/textarea.variants';
 export * from '../__variants__/atoms/toggle/toggle.variants';
 export * from '../__variants__/atoms/slider/slider.variants';

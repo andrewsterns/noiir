@@ -61,7 +61,7 @@ export {
   convertFillProps,
   createGradientString,
   createImageFillStyles,
-  createMultipleFills
+  convertMultipleFills
 } from '../packages/frame-core/src/appearance/fill.props';
 
 export {

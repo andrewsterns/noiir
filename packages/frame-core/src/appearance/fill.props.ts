@@ -294,6 +294,9 @@ const createImageFillStyles = (image: FillPropsBase['image']): React.CSSProperti
 export { createGradientString };
 export { createImageFillStyles };
 
+// Export convertMultipleFills for external use
+export { convertMultipleFills };
+
 // For backward compatibility, export the same function with different name
 export const convertFillPropsUnified = convertFillProps;
 export const convertSimpleFillProps = convertFillProps;

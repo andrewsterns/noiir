@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { textVariants } from '@variants/index';
+import { textVariants } from '../../../variants';
 
 /**
  * Text component - A specialized Frame component for typography
@@ -32,8 +32,6 @@ export const Text = React.forwardRef<HTMLElement, TextProps>(
         as={as}
         ref={ref}
         {...props}
-        variant={props.variant || 'Frame'}
-        variants={textVariants}
       >
         {children}
       </Frame>

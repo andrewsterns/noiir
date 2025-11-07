@@ -185,7 +185,9 @@ export const convertFramePropsToStyles = (
   const effectStyles = convertEffectProps(effects || {});
 
   // Check if we have a gradient stroke that needs special handling
-  const hasGradientStroke = stroke?.type === 'gradient' && stroke.stops && stroke.stops.length > 0;
+  // Handle both single stroke object and array of strokes
+  const strokeObj = Array.isArray(stroke) ? stroke[0] : stroke;
+  const hasGradientStroke = strokeObj?.type === 'gradient' && strokeObj.stops && strokeObj.stops.length > 0;
 
   // Base styles for frames
   const baseStyles: React.CSSProperties = {
@@ -196,15 +198,15 @@ export const convertFramePropsToStyles = (
 
   // For gradient strokes, combine fill and stroke backgrounds using CSS background-clip technique
   if (hasGradientStroke) {
-    const strokeWeight = stroke.weight || 1;
+    const strokeWeight = strokeObj.weight || 1;
     // Create gradient stops
-    const gradientStops = stroke.stops!.map((stop: any) => {
+    const gradientStops = strokeObj.stops!.map((stop: any) => {
       const color = resolveColor(stop.color);
       const opacity = stop.opacity !== undefined ? stop.opacity : 1;
       const rgbaColor = opacity < 1 ? colorUtils.hexToRgba(color, opacity) : color;
       return `${rgbaColor} ${stop.position * 100}%`;
     }).join(', ');
-    const angle = stroke.angle || 0;
+    const angle = strokeObj.angle || 0;
     const gradientValue = `linear-gradient(${angle}deg, ${gradientStops})`;
     // Get the fill background - handle both background and backgroundColor
     let fillBackgroundValue = 'transparent';

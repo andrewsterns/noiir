@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { resolveColor } from '../../../../src/theme/colors';
-import { textVariants } from '../../../../__variants__/atoms/text/text.variants';
+import { textVariants } from '../../../../src/variants';
 
 /**
  * Typography Properties
