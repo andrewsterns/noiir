@@ -80,7 +80,7 @@ export const Popup = React.forwardRef<HTMLDivElement, PopupProps>(({
         variant="overlay"
         variants={variants}
         onClick={handleOverlayClick}
-        zIndex={9999}
+        position={{ zIndex: 9999 }}
         {...popupProps}
       >
         <Frame

@@ -54,7 +54,6 @@ export interface FrameProps extends EventProps {
 
   display?: string;
   type?: string;
-  zIndex?: number;
   [key: `variant-${string}`]: any; // Allow variant-* properties
 }
 
@@ -465,11 +464,6 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     stroke: finalStroke,
     effects: finalEffects,
   }, hasAutoLayout);
-
-  // Add zIndex to styles if provided
-  if (props.zIndex !== undefined) {
-    finalStyles.zIndex = props.zIndex;
-  }
 
   // If this frame has alignment-based positioning for children, ensure it's positioned relatively
   // BUT don't override if position is already fixed or absolute

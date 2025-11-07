@@ -10,6 +10,7 @@ export interface PositionProps {
   left?: number | string;
   right?: number | string;
   bottom?: number | string;
+  zIndex?: number;
 }
 
 export interface ConstraintProps {
@@ -57,6 +58,11 @@ export const convertPositionProps = (
   if (props.rotation !== undefined) {
     const rotateTransform = `rotate(${props.rotation}deg)`;
     styles.transform = styles.transform ? `${styles.transform} ${rotateTransform}` : rotateTransform;
+  }
+  
+  // z-index for layering
+  if (props.zIndex !== undefined) {
+    styles.zIndex = props.zIndex;
   }
   
   // Text alignment - only applies when NOT in autolayout (like Figma)

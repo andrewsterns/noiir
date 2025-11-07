@@ -56,8 +56,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(({
       ref={ref}
       variant={variant}
       variants={variants}
-      position={position ? { type: position } : undefined}
-      zIndex={position === 'fixed' ? 100 : undefined}
+      position={position ? { type: position, zIndex: position === 'fixed' ? 100 : undefined } : undefined}
       animate={[]}
       {...navbarProps}
     >
