@@ -20,7 +20,7 @@ export interface FillPropsBase {
   
   // Image properties (when type is 'image')
   image?: {
-    src: string;
+    src: string | React.ReactElement;
     alt?: string;
     size?: number;
     scaleMode?: 'fill' | 'fit' | 'crop' | 'tile';
@@ -245,6 +245,13 @@ const createGradientString = (
  */
 const createImageFillStyles = (image: FillPropsBase['image']): React.CSSProperties => {
   if (!image?.src) return {};
+  
+  // Handle React elements (like SVG components) - can't use as CSS background
+  if (typeof image.src !== 'string') {
+    // For React elements, we'll need to render them differently
+    // Return empty styles - the Frame component should handle this case
+    return {};
+  }
   
   const styles: React.CSSProperties = {
     backgroundImage: `url(${image.src})`

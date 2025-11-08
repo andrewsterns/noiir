@@ -5,6 +5,8 @@ import { Button } from '../../../src/components/atoms/button/button';
 import { Frame } from '../../../src/components';
 import { ArrowUp } from '../../../src/theme/icons/arrows';
 import { HappyFace } from '../../../src/theme/icons/fun';
+import { NoiirBk, NoiirOutlineBk } from '../../../src/theme/icons/noiir.svg';
+
 import { 
   BUTTON_SOLID_VARIANTS, 
   BUTTON_SOFT_VARIANTS, 

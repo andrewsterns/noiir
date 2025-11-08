@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { Text } from '../../../../src/components/atoms/text/text';
 
 interface TypographyArgs extends Partial<FrameProps> {
   fontFamily: string;
@@ -123,22 +124,22 @@ export const Typography: TypographyStory = {
         padding: 20
       }}
     >
-      <div
-        style={{
+      <Text
+        typography={{
           fontFamily: args.fontFamily,
-          fontSize: `${args.fontSize}px`,
+          fontSize: args.fontSize,
           fontWeight: args.fontWeight,
           lineHeight: args.lineHeight,
-          letterSpacing: `${args.letterSpacing}px`,
+          letterSpacing: args.letterSpacing,
           textAlign: args.textAlign,
           textDecoration: args.textDecoration,
           textTransform: args.textTransform,
-          color: args.textColor,
-          width: '100%'
+          color: args.textColor
         }}
+        autoLayout={{ width: '100%' }}
       >
         {args.sampleText}
-      </div>
+      </Text>
     </Frame>
   ),
   parameters: {

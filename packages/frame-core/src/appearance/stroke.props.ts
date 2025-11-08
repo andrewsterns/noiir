@@ -12,7 +12,7 @@ export interface IndividualStroke {
 }
 
 export interface StrokePropsBase {
-  type?: 'none' | 'solid' | 'gradient';
+  type?: 'none' | 'solid' | 'gradient' | 'image';
   color?: string; // Either hex like '#333333' or theme color like 'primary3'
   position?: 'inside' | 'outside' | 'center';
   weight?: number;
@@ -25,6 +25,13 @@ export interface StrokePropsBase {
   stops?: Array<{ color: string; position: number; opacity?: number }>;
   gradientType?: 'linear' | 'radial' | 'angular';
   angle?: number; // For linear and angular gradients
+  
+  // Image properties (when type is 'image')
+  image?: {
+    src: string | React.ReactElement;
+    alt?: string;
+    scaleMode?: 'fill' | 'fit' | 'crop' | 'tile';
+  };
   
   // Individual strokes (like Figma)
   top?: IndividualStroke;
@@ -118,6 +125,19 @@ const convertSingleStroke = (props: StrokePropsBase): React.CSSProperties => {
     // Gradient strokes are handled specially in the Frame component with a wrapper element
     // Return empty styles here since the Frame component handles the gradient border
     return {};
+  } else if (strokeType === 'image' && props.image) {
+    // Image strokes (border-image in CSS)
+    if (typeof props.image.src === 'string') {
+      styles.borderWidth = `${strokeWeight}px`;
+      styles.borderStyle = 'solid';
+      styles.borderImageSource = `url(${props.image.src})`;
+      styles.borderImageSlice = '1';
+      styles.borderImageRepeat = props.image.scaleMode === 'tile' ? 'repeat' : 'stretch';
+      return styles;
+    } else {
+      // For React elements, return empty - Frame component should handle
+      return {};
+    }
   } else if (strokeType === 'none') {
     return { border: 'none' };
   }

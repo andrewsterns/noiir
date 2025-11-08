@@ -3,3 +3,4 @@ export { VARIANT_STYLES } from './variant';
 export * from './colors';
 export * from './fonts';
 export * from './typography';
+export * from './icons';
