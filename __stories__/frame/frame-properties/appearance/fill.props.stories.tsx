@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { NoiirBk, NoiirOutlineBk } from '../../../../src/theme/icons/noiir.svg';
 
 //ALL FILL RELATED PROPS AND STORIES SHOULD GO IN THIS FILE
 
@@ -522,6 +523,164 @@ export const MultipleFills: FillStory = {
     docs: {
       description: {
         story: 'Demonstrates multiple fills (gradients, solids) stacked together, similar to Figma\'s multiple fill feature. Fills are layered with the first being on top.'
+      }
+    }
+  }
+};
+
+export const ReactElementFill: FillStory = {
+  name: 'React Element as Fill',
+  render: () => (
+    <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', padding: 20, alignItems: 'center' }}>
+      {/* Using NoiirBk logo as fill */}
+      <Frame
+        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
+        fill={{
+          type: 'image',
+          image: {
+            element: <NoiirBk />,
+            scaleMode: 'fit'
+          },
+          color: 'neutral10'
+        }}
+        appearance={{ radius: 12 }}
+        stroke={{ type: 'solid', color: 'neutral4', weight: 2 }}
+      >
+        <div style={{ 
+          position: 'relative',
+          zIndex: 1,
+          bottom: -70,
+          textAlign: 'center',
+          color: '#000', 
+          fontSize: 12, 
+          fontWeight: 600,
+          background: 'rgba(255,255,255,0.8)',
+          padding: '4px 8px',
+          borderRadius: 4
+        }}>
+          NoiirBk Icon
+        </div>
+      </Frame>
+
+      {/* Using NoiirOutlineBk logo as fill with custom color */}
+      <Frame
+        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
+        fill={{
+          type: 'image',
+          image: {
+            element: <NoiirOutlineBk />,
+            scaleMode: 'fit'
+          },
+          color: 'primary6'
+        }}
+        appearance={{ radius: 12 }}
+        stroke={{ type: 'solid', color: 'primary6', weight: 2 }}
+      >
+        <div style={{ 
+          position: 'relative',
+          zIndex: 1,
+          bottom: -70,
+          textAlign: 'center',
+          color: '#000', 
+          fontSize: 12, 
+          fontWeight: 600,
+          background: 'rgba(255,255,255,0.8)',
+          padding: '4px 8px',
+          borderRadius: 4
+        }}>
+          NoiirOutlineBk Icon (primary6)
+        </div>
+      </Frame>
+
+      {/* Using PNG URL as fill */}
+      <Frame
+        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
+        fill={{
+          type: 'image',
+          image: {
+            src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop',
+            scaleMode: 'fill'
+          }
+        }}
+        appearance={{ radius: 12 }}
+        stroke={{ type: 'solid', color: 'neutral4', weight: 2 }}
+      >
+        <div style={{ 
+          position: 'absolute',
+          bottom: 10,
+          left: 0,
+          right: 0,
+          textAlign: 'center',
+          color: '#fff', 
+          fontSize: 12, 
+          fontWeight: 600,
+          background: 'rgba(0,0,0,0.5)',
+          padding: '4px 8px',
+          borderRadius: 4
+        }}>
+          PNG from URL
+        </div>
+      </Frame>
+
+      {/* Colored icon with gradient background */}
+      <Frame
+        autoLayout={{ width: 200, height: 200, alignment: 'center', padding: 20 }}
+        fill={{
+          type: 'linear-gradient',
+          angle: 135,
+          stops: [
+            { color: 'primary6', position: 0 },
+            { color: 'accent6', position: 1 }
+          ]
+        }}
+        appearance={{ radius: 12 }}
+      >
+        <div style={{ color: '#fff', fontSize: 80 }}>
+          <NoiirBk />
+        </div>
+        <div style={{ 
+          marginTop: 10,
+          textAlign: 'center',
+          color: '#fff', 
+          fontSize: 12, 
+          fontWeight: 600
+        }}>
+          Icon on Gradient
+        </div>
+      </Frame>
+
+      {/* Multiple sizes demonstration */}
+      <Frame
+        autoLayout={{ 
+          flow: 'horizontal',
+          gap: 16,
+          padding: 24,
+          alignment: 'center'
+        }}
+        fill={{ type: 'solid', color: 'neutral2' }}
+        appearance={{ radius: 12 }}
+      >
+        <Frame autoLayout={{ flow: 'horizontal', gap: 16, alignment: 'center' }}
+          fill={{ type: 'solid', color: 'error7' }}>
+          <NoiirBk />
+        </Frame>
+
+        <div style={{ color: 'accent6', fontSize: 48 }}>
+          <NoiirBk />
+        </div>
+        <div style={{ color: 'success6', fontSize: 64 }}>
+          <NoiirBk />
+        </div>
+        <div style={{ color: 'error6', fontSize: 80 }}>
+          <NoiirBk />
+        </div>
+      </Frame>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates using React elements (like SVG components) as the image src. In this example, we use the NoiirBk and NoiirOutlineBk logo components. Note: React elements in fill.image.src currently render as children since CSS background-image cannot use React elements directly.'
       }
     }
   }

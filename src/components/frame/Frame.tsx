@@ -8,6 +8,7 @@ import { StrokeProps } from '../../../packages/frame-core/src/appearance/stroke.
 import { CursorProps } from '../../../packages/frame-core/src/appearance/cursor.props';
 import { EffectProps } from '../../../packages/frame-core/src/effects/effects.props';
 import { EventProps } from '../../../packages/frame-core/src/events/event.props';
+import { resolveColor } from '../../theme/colors';
 import { samplePathPoints } from '../../../packages/frame-core/src/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from '../../../packages/frame-core/src/layout/curvedLayout';
 import { mergeSizeProps } from '../../../packages/frame-core/src/variants/size.props';
@@ -425,8 +426,50 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     }
   }
 
+  // Add fill element if it's a React element (SVG, etc.)
+  let childrenWithFillElement = alignedChildren;
+  const fillElement = React.useMemo(() => {
+    if (!finalFill) return null;
+    
+    const fillArray = Array.isArray(finalFill) ? finalFill : [finalFill];
+    
+    // Find first fill with an image element
+    for (const fill of fillArray) {
+      if (fill.type === 'image' && fill.image?.element) {
+        // Clone the element and apply color if provided
+        const element = fill.image.element;
+        const fillColor = fill.color ? resolveColor(fill.color) : undefined;
+        
+        return React.cloneElement(element, {
+          ...element.props,
+          style: {
+            ...element.props.style,
+            ...(fillColor && { color: fillColor }),
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 0
+          }
+        });
+      }
+    }
+    return null;
+  }, [finalFill]);
+
+  if (fillElement) {
+    childrenWithFillElement = [
+      React.createElement('div', { key: 'fill-element-wrapper', style: { position: 'relative', width: '100%', height: '100%' } }, fillElement),
+      ...React.Children.toArray(alignedChildren)
+    ];
+  }
+
   // Add icons as children if defined
-  let childrenWithIcons = alignedChildren;
+  let childrenWithIcons = childrenWithFillElement;
   if (finalIconStart || finalIconEnd) {
     const iconChildren = [];
     if (finalIconStart) {
@@ -435,7 +478,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
         style: { display: 'flex', alignItems: 'center', flexShrink: 0 } 
       }, finalIconStart));
     }
-    iconChildren.push(...React.Children.toArray(alignedChildren));
+    iconChildren.push(...React.Children.toArray(childrenWithFillElement));
     if (finalIconEnd) {
       iconChildren.push(React.createElement('div', { 
         key: 'iconEnd', 

@@ -11,7 +11,7 @@ import { colors, colorUtils, resolveColor, type ColorKey, type ColorShade } from
  */
 export interface FillPropsBase {
   type?: 'none' | 'solid' | 'linear-gradient' | 'radial-gradient' | 'conic-gradient' | 'image';
-  color?: string; // For solid fills - hex like '#333333' or theme color like 'primary3'
+  color?: string; // For solid fills or image/element color (hex like '#333333' or theme color like 'primary3')
   opacity?: number; // Overall fill opacity (0-1)
   
   // Gradient properties (when type is a gradient)
@@ -20,7 +20,8 @@ export interface FillPropsBase {
   
   // Image properties (when type is 'image')
   image?: {
-    src: string | React.ReactElement;
+    src?: string; // URL for images (.png, .jpg, etc.)
+    element?: React.ReactElement; // React element (SVG components, etc.)
     alt?: string;
     size?: number;
     scaleMode?: 'fill' | 'fit' | 'crop' | 'tile';
@@ -244,14 +245,17 @@ const createGradientString = (
  * Create image fill styles
  */
 const createImageFillStyles = (image: FillPropsBase['image']): React.CSSProperties => {
-  if (!image?.src) return {};
+  if (!image) return {};
   
   // Handle React elements (like SVG components) - can't use as CSS background
-  if (typeof image.src !== 'string') {
+  if (image.element) {
     // For React elements, we'll need to render them differently
     // Return empty styles - the Frame component should handle this case
     return {};
   }
+  
+  // Handle URL string for images
+  if (!image.src) return {};
   
   const styles: React.CSSProperties = {
     backgroundImage: `url(${image.src})`

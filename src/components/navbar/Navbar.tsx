@@ -1,12 +1,12 @@
 import { Frame } from '../frame/Frame';
 import Button from '../atoms/button/button';
-import { ExtendVariant } from '../../../packages/frame-core/src/variants/variants.props';
+import { FrameVariantConfig } from '../../../packages/frame-core/src/variants/variants.props';
 
-interface NavbarProps {
+interface groupProps {
   logo?: React.ReactNode;
 }
 
-export const Navbar = (props: NavbarProps) => {
+export const Navbar = (props: groupProps) => {
   const handleToggle = () => console.log("toggle menu");
 
   return (
@@ -17,7 +17,7 @@ export const Navbar = (props: NavbarProps) => {
   )
 }
 
-export const NAVBAR_VARIANTS: ExtendVariant = {
+export const NAVBAR_VARIANTS: Record<string, FrameVariantConfig> = {
   navItem: {
     fill: { type: 'none' as const },
     typography: { fontSize: 14, fontWeight: 500, color: 'gray8' },
