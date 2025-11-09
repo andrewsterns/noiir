@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
 import { NoiirBk, NoiirOutlineBk } from '../../../../src/theme/icons/noiir.svg';
 
-// Import Group 26 PNG as a module
 const Group26 = new URL('../../../../src/theme/icons/Group 26.png', import.meta.url).href;
 
 //ALL FILL RELATED PROPS AND STORIES SHOULD GO IN THIS FILE

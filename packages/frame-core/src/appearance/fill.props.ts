@@ -150,6 +150,9 @@ const convertMultipleFills = (
   
   // For multiple fills, we need to combine them into a single background property
   const gradients: string[] = [];
+  const backgroundSizes: string[] = [];
+  const backgroundPositions: string[] = [];
+  const backgroundRepeats: string[] = [];
   const styles: React.CSSProperties = {};
   
   // Process fills in reverse order (first fill is on top in Figma)
@@ -167,6 +170,10 @@ const convertMultipleFills = (
             ? colorUtils.hexToRgba(resolvedColor, fill.opacity)
             : resolvedColor;
           gradients.push(`linear-gradient(${finalColor}, ${finalColor})`);
+          // Gradients don't need size/position/repeat, but we need to add placeholders for CSS
+          backgroundSizes.push('auto');
+          backgroundPositions.push('0 0');
+          backgroundRepeats.push('repeat');
           console.log(`    Added solid as gradient: ${finalColor}`);
         }
         break;
@@ -178,6 +185,10 @@ const convertMultipleFills = (
           const gradientString = createGradientString(fillType, fill.stops, fill.angle, fill.opacity);
           if (gradientString) {
             gradients.push(gradientString);
+            // Gradients don't need size/position/repeat, but we need to add placeholders for CSS
+            backgroundSizes.push('auto');
+            backgroundPositions.push('0 0');
+            backgroundRepeats.push('repeat');
             console.log(`    Added gradient: ${gradientString.substring(0, 50)}...`);
           }
         }
@@ -188,35 +199,33 @@ const convertMultipleFills = (
           gradients.push(`url(${fill.image.src})`);
           console.log(`    Added image URL: ${fill.image.src.substring(0, 50)}...`);
           
-          // Set background size/position/repeat for the image
-          // These apply to ALL background layers, so we need to be careful
-          if (!styles.backgroundSize) {
-            const scaleMode = fill.image.scaleMode || 'fill';
-            switch (scaleMode) {
-              case 'fill':
-                styles.backgroundSize = 'cover';
-                styles.backgroundPosition = 'center';
-                styles.backgroundRepeat = 'no-repeat';
-                break;
-              case 'fit':
-                styles.backgroundSize = 'contain';
-                styles.backgroundPosition = 'center';
-                styles.backgroundRepeat = 'no-repeat';
-                break;
-              case 'crop':
-                styles.backgroundSize = 'auto';
-                styles.backgroundPosition = 'center';
-                styles.backgroundRepeat = 'no-repeat';
-                break;
-              case 'tile':
-                styles.backgroundSize = 'auto';
-                styles.backgroundRepeat = 'repeat';
-                break;
-              default:
-                styles.backgroundSize = 'cover';
-                styles.backgroundPosition = 'center';
-                styles.backgroundRepeat = 'no-repeat';
-            }
+          // Set background size/position/repeat for THIS specific image layer
+          const scaleMode = fill.image.scaleMode || 'fill';
+          switch (scaleMode) {
+            case 'fill':
+              backgroundSizes.push('cover');
+              backgroundPositions.push('center');
+              backgroundRepeats.push('no-repeat');
+              break;
+            case 'fit':
+              backgroundSizes.push('contain');
+              backgroundPositions.push('center');
+              backgroundRepeats.push('no-repeat');
+              break;
+            case 'crop':
+              backgroundSizes.push('auto');
+              backgroundPositions.push('center');
+              backgroundRepeats.push('no-repeat');
+              break;
+            case 'tile':
+              backgroundSizes.push('auto');
+              backgroundPositions.push('0 0');
+              backgroundRepeats.push('repeat');
+              break;
+            default:
+              backgroundSizes.push('cover');
+              backgroundPositions.push('center');
+              backgroundRepeats.push('no-repeat');
           }
         }
         break;
@@ -224,9 +233,23 @@ const convertMultipleFills = (
   });
   
   console.log('  Total gradients/backgrounds:', gradients.length, gradients);
+  console.log('  Background sizes:', backgroundSizes);
+  console.log('  Background positions:', backgroundPositions);
+  console.log('  Background repeats:', backgroundRepeats);
   
   if (gradients.length > 0) {
     styles.background = gradients.join(', ');
+    
+    // Set size, position, and repeat for each layer
+    if (backgroundSizes.length > 0) {
+      styles.backgroundSize = backgroundSizes.join(', ');
+    }
+    if (backgroundPositions.length > 0) {
+      styles.backgroundPosition = backgroundPositions.join(', ');
+    }
+    if (backgroundRepeats.length > 0) {
+      styles.backgroundRepeat = backgroundRepeats.join(', ');
+    }
     
     if (isTextElement) {
       styles.WebkitBackgroundClip = 'text';

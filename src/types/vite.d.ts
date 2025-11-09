@@ -9,6 +9,22 @@ declare module '*.png' {
   export default src;
 }
 
+declare module '*Group 26.png' {
+  const src: string;
+  export default src;
+}
+
+declare module '*Group 26.png?url' {
+  const src: string;
+  export default src;
+}
+
+// Vite ?url query parameter
+declare module '*?url' {
+  const src: string;
+  export default src;
+}
+
 declare module '*.jpg' {
   const src: string;
   export default src;
