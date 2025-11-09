@@ -598,31 +598,19 @@ export const ReactElementFill: FillStory = {
       {/* Using Group 26 PNG as fill with imported asset */}
       <Frame
         autoLayout={{ width: 200, height: 200, alignment: 'center' }}
-        fill={{
+        fill={[{
           type: 'image',
           image: {
             src: Group26,
             scaleMode: 'fill'
           }
-        }}
+        }, {type: 'solid', color: 'green10'}]}
         appearance={{ radius: 12 }}
         stroke={{ type: 'solid', color: 'neutral4', weight: 2 }}
       >
-        <div style={{ 
-          position: 'absolute',
-          bottom: 10,
-          left: 0,
-          right: 0,
-          textAlign: 'center',
-          color: '#fff', 
-          fontSize: 12, 
-          fontWeight: 600,
-          background: 'rgba(0,0,0,0.5)',
-          padding: '4px 8px',
-          borderRadius: 4
-        }}>
+      
           Group 26 PNG (imported)
-        </div>
+
       </Frame>
 
       {/* Using external PNG URL as fill */}

@@ -43,6 +43,8 @@ export const convertFillProps = (
 ): React.CSSProperties => {
   if (!props) return {};
   
+  console.log('🎨 convertFillProps called:', { props, isArray: Array.isArray(props), isTextElement });
+  
   // Handle array of fills (multiple fills)
   if (Array.isArray(props)) {
     return convertMultipleFills(props, isTextElement);
@@ -144,14 +146,18 @@ const convertMultipleFills = (
 ): React.CSSProperties => {
   if (fills.length === 0) return {};
   
+  console.log('📦 convertMultipleFills:', { fillsCount: fills.length, fills });
+  
   // For multiple fills, we need to combine them into a single background property
   const gradients: string[] = [];
   const styles: React.CSSProperties = {};
   
   // Process fills in reverse order (first fill is on top in Figma)
   // CSS backgrounds are rendered in reverse order (first is on top)
-  fills.forEach((fill) => {
+  fills.forEach((fill, index) => {
     const fillType = fill.type || (fill.color ? 'solid' : fill.stops ? 'linear-gradient' : fill.image ? 'image' : 'solid');
+    
+    console.log(`  Fill ${index}:`, { fillType, hasImage: !!fill.image, imageSrc: fill.image?.src, color: fill.color });
     
     switch (fillType) {
       case 'solid':
@@ -161,6 +167,7 @@ const convertMultipleFills = (
             ? colorUtils.hexToRgba(resolvedColor, fill.opacity)
             : resolvedColor;
           gradients.push(`linear-gradient(${finalColor}, ${finalColor})`);
+          console.log(`    Added solid as gradient: ${finalColor}`);
         }
         break;
         
@@ -171,17 +178,52 @@ const convertMultipleFills = (
           const gradientString = createGradientString(fillType, fill.stops, fill.angle, fill.opacity);
           if (gradientString) {
             gradients.push(gradientString);
+            console.log(`    Added gradient: ${gradientString.substring(0, 50)}...`);
           }
         }
         break;
         
       case 'image':
-        if (fill.image?.src) {
+        if (fill.image?.src && typeof fill.image.src === 'string') {
           gradients.push(`url(${fill.image.src})`);
+          console.log(`    Added image URL: ${fill.image.src.substring(0, 50)}...`);
+          
+          // Set background size/position/repeat for the image
+          // These apply to ALL background layers, so we need to be careful
+          if (!styles.backgroundSize) {
+            const scaleMode = fill.image.scaleMode || 'fill';
+            switch (scaleMode) {
+              case 'fill':
+                styles.backgroundSize = 'cover';
+                styles.backgroundPosition = 'center';
+                styles.backgroundRepeat = 'no-repeat';
+                break;
+              case 'fit':
+                styles.backgroundSize = 'contain';
+                styles.backgroundPosition = 'center';
+                styles.backgroundRepeat = 'no-repeat';
+                break;
+              case 'crop':
+                styles.backgroundSize = 'auto';
+                styles.backgroundPosition = 'center';
+                styles.backgroundRepeat = 'no-repeat';
+                break;
+              case 'tile':
+                styles.backgroundSize = 'auto';
+                styles.backgroundRepeat = 'repeat';
+                break;
+              default:
+                styles.backgroundSize = 'cover';
+                styles.backgroundPosition = 'center';
+                styles.backgroundRepeat = 'no-repeat';
+            }
+          }
         }
         break;
     }
   });
+  
+  console.log('  Total gradients/backgrounds:', gradients.length, gradients);
   
   if (gradients.length > 0) {
     styles.background = gradients.join(', ');

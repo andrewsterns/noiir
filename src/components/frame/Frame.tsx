@@ -432,6 +432,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     if (!finalFill) return null;
     
     const fillArray = Array.isArray(finalFill) ? finalFill : [finalFill];
+    console.log('🎨 Fill Array:', frameId, fillArray);
     
     // Find first fill with an image element (either from element or src as React element)
     for (const fill of fillArray) {
@@ -439,10 +440,19 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
         // Check both element prop and src as React element
         const element = fill.image.element || (fill.image.src && typeof fill.image.src !== 'string' ? fill.image.src : null);
         
+        console.log('🖼️ Fill image element found:', frameId, {
+          hasElement: !!element,
+          isValidElement: element ? React.isValidElement(element) : false,
+          src: fill.image.src,
+          element: element
+        });
+        
         if (element && React.isValidElement(element)) {
           // Clone the element and apply color if provided
           const fillColor = fill.color ? resolveColor(fill.color) : undefined;
           const elementProps = element.props as any;
+          
+          console.log('✅ Returning fill element for:', frameId, { fillColor });
           
           return React.cloneElement(element, {
             ...elementProps,
@@ -463,10 +473,12 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
         }
       }
     }
+    console.log('❌ No fill element found for:', frameId);
     return null;
-  }, [finalFill]);
+  }, [finalFill, frameId]);
 
   if (fillElement) {
+    console.log('🔧 Adding fill element wrapper for:', frameId, 'children count:', React.Children.count(alignedChildren));
     childrenWithFillElement = [
       React.createElement('div', { key: 'fill-element-wrapper', style: { position: 'relative', width: '100%', height: '100%' } }, fillElement),
       ...React.Children.toArray(alignedChildren)
