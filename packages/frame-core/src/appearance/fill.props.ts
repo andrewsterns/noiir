@@ -20,8 +20,8 @@ export interface FillPropsBase {
   
   // Image properties (when type is 'image')
   image?: {
-    src?: string; // URL for images (.png, .jpg, etc.)
-    element?: React.ReactElement; // React element (SVG components, etc.)
+    src?: string | React.ReactElement; // String URL, imported asset, or React element (SVG component)
+    element?: React.ReactElement; // Alternative way to pass React element (deprecated, use src)
     alt?: string;
     size?: number;
     scaleMode?: 'fill' | 'fit' | 'crop' | 'tile';
@@ -248,13 +248,13 @@ const createImageFillStyles = (image: FillPropsBase['image']): React.CSSProperti
   if (!image) return {};
   
   // Handle React elements (like SVG components) - can't use as CSS background
-  if (image.element) {
+  if (image.element || (image.src && typeof image.src !== 'string')) {
     // For React elements, we'll need to render them differently
     // Return empty styles - the Frame component should handle this case
     return {};
   }
   
-  // Handle URL string for images
+  // Handle URL string for images (including imported assets that resolve to strings)
   if (!image.src) return {};
   
   const styles: React.CSSProperties = {

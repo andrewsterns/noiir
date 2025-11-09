@@ -433,29 +433,34 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     
     const fillArray = Array.isArray(finalFill) ? finalFill : [finalFill];
     
-    // Find first fill with an image element
+    // Find first fill with an image element (either from element or src as React element)
     for (const fill of fillArray) {
-      if (fill.type === 'image' && fill.image?.element) {
-        // Clone the element and apply color if provided
-        const element = fill.image.element;
-        const fillColor = fill.color ? resolveColor(fill.color) : undefined;
+      if (fill.type === 'image' && fill.image) {
+        // Check both element prop and src as React element
+        const element = fill.image.element || (fill.image.src && typeof fill.image.src !== 'string' ? fill.image.src : null);
         
-        return React.cloneElement(element, {
-          ...element.props,
-          style: {
-            ...element.props.style,
-            ...(fillColor && { color: fillColor }),
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            zIndex: 0
-          }
-        });
+        if (element && React.isValidElement(element)) {
+          // Clone the element and apply color if provided
+          const fillColor = fill.color ? resolveColor(fill.color) : undefined;
+          const elementProps = element.props as any;
+          
+          return React.cloneElement(element, {
+            ...elementProps,
+            style: {
+              ...(elementProps.style || {}),
+              ...(fillColor && { color: fillColor }),
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              zIndex: 0
+            }
+          });
+        }
       }
     }
     return null;

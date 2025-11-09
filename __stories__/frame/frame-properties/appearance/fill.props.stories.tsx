@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
 import { NoiirBk, NoiirOutlineBk } from '../../../../src/theme/icons/noiir.svg';
 
+// Import Group 26 PNG as a module
+const Group26 = new URL('../../../../src/theme/icons/Group 26.png', import.meta.url).href;
+
 //ALL FILL RELATED PROPS AND STORIES SHOULD GO IN THIS FILE
 
 interface FillArgs extends Partial<FrameProps> {
@@ -532,13 +535,13 @@ export const ReactElementFill: FillStory = {
   name: 'React Element as Fill',
   render: () => (
     <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', padding: 20, alignItems: 'center' }}>
-      {/* Using NoiirBk logo as fill */}
+      {/* Using NoiirBk logo as fill with src prop */}
       <Frame
         autoLayout={{ width: 200, height: 200, alignment: 'center' }}
         fill={{
           type: 'image',
           image: {
-            element: <NoiirBk />,
+            src: <NoiirBk />,
             scaleMode: 'fit'
           },
           color: 'neutral10'
@@ -558,11 +561,11 @@ export const ReactElementFill: FillStory = {
           padding: '4px 8px',
           borderRadius: 4
         }}>
-          NoiirBk Icon
+          src: {'{<NoiirBk />}'}
         </div>
       </Frame>
 
-      {/* Using NoiirOutlineBk logo as fill with custom color */}
+      {/* Using NoiirOutlineBk logo as fill with element prop */}
       <Frame
         autoLayout={{ width: 200, height: 200, alignment: 'center' }}
         fill={{
@@ -588,17 +591,17 @@ export const ReactElementFill: FillStory = {
           padding: '4px 8px',
           borderRadius: 4
         }}>
-          NoiirOutlineBk Icon (primary6)
+          element: {'{<NoiirOutlineBk />}'}
         </div>
       </Frame>
 
-      {/* Using PNG URL as fill */}
+      {/* Using Group 26 PNG as fill with imported asset */}
       <Frame
         autoLayout={{ width: 200, height: 200, alignment: 'center' }}
         fill={{
           type: 'image',
           image: {
-            src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop',
+            src: Group26,
             scaleMode: 'fill'
           }
         }}
@@ -618,7 +621,37 @@ export const ReactElementFill: FillStory = {
           padding: '4px 8px',
           borderRadius: 4
         }}>
-          PNG from URL
+          Group 26 PNG (imported)
+        </div>
+      </Frame>
+
+      {/* Using external PNG URL as fill */}
+      <Frame
+        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
+        fill={{
+          type: 'image',
+          image: {
+            src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop',
+            scaleMode: 'fill'
+          }
+        }}
+        appearance={{ radius: 12 }}
+        stroke={{ type: 'solid', color: 'accent6', weight: 2 }}
+      >
+        <div style={{ 
+          position: 'absolute',
+          bottom: 10,
+          left: 0,
+          right: 0,
+          textAlign: 'center',
+          color: '#fff', 
+          fontSize: 12, 
+          fontWeight: 600,
+          background: 'rgba(0,0,0,0.5)',
+          padding: '4px 8px',
+          borderRadius: 4
+        }}>
+          External PNG
         </div>
       </Frame>
 
