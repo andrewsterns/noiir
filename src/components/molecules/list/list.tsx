@@ -34,6 +34,7 @@ export interface ListProps extends Omit<FrameProps, 'size'> {
   selectedIndices?: number[];
   multiSelect?: boolean;
   onItemClick?: (index: number, item: ListItem) => void;
+  onClick?: () => void;
   itemVariant?: string;
   itemVariants?: Record<string, any>;
   selectedVariant?: string;
@@ -51,6 +52,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   selectedIndices = [],
   multiSelect = false,
   onItemClick,
+  onClick,
   itemVariant = 'primary',
   itemVariants: customItemVariants,
   selectedVariant = 'primary',
@@ -103,7 +105,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
       sizes={sizes}
       variant='default'
       variants={variants}
-
+      onClick={onClick}
       {...frameProps}
     >
       {items.map((item, index) => {

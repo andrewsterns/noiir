@@ -8,6 +8,8 @@ import { StrokeProps } from '../../../packages/frame-core/src/appearance/stroke.
 import { CursorProps } from '../../../packages/frame-core/src/appearance/cursor.props';
 import { EffectProps } from '../../../packages/frame-core/src/effects/effects.props';
 import { EventProps } from '../../../packages/frame-core/src/events/event.props';
+import { MaskPropsInput } from '../../../packages/frame-core/src/mask/mask.props';
+import { BooleanOperationProps } from '../../../packages/frame-core/src/booleanOperation/booleanOperation.props';
 import { resolveColor } from '../../theme/colors';
 import { samplePathPoints } from '../../../packages/frame-core/src/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from '../../../packages/frame-core/src/layout/curvedLayout';
@@ -39,6 +41,8 @@ export interface FrameProps extends EventProps {
   stroke?: StrokeProps;
   effects?: EffectProps;
   cursor?: CursorProps | CursorProps['type'];
+  mask?: MaskPropsInput;
+  booleanOperation?: BooleanOperationProps;
   children?: React.ReactNode;
   className?: string;
   onHover?: string;
@@ -72,6 +76,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     stroke,
     effects,
     cursor,
+    mask,
+    booleanOperation,
     children,
     className,
     onClick,
@@ -146,8 +152,6 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   }, [animateContext]);
 
   const effectiveVariant = frameId && animateContext && animateContext.getVisualVariant(frameId) !== '' ? animateContext.getVisualVariant(frameId) : variant;
-
-  if (frameId) console.log('Frame', frameId, 'effectiveVariant:', effectiveVariant);
 
   // Register frame and animate
   React.useEffect(() => {
@@ -523,6 +527,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     fill: finalFill,
     stroke: finalStroke,
     effects: finalEffects,
+    mask: mask,
+    booleanOperation: booleanOperation,
   }, hasAutoLayout);
 
   // If this frame has alignment-based positioning for children, ensure it's positioned relatively

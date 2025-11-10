@@ -6,6 +6,8 @@ import { TypographyProps, convertTypographyProps } from '../typography/typograph
 import { FillProps, convertFillProps } from '../appearance/fill.props';
 import { StrokeProps, convertStrokeProps } from '../appearance/stroke.props';
 import { EffectProps, convertEffectProps } from '../effects/effects.props';
+import { MaskPropsInput, convertMaskProps } from '../mask/mask.props';
+import { BooleanOperationProps, convertBooleanOperationProps } from '../booleanOperation/booleanOperation.props';
 import { resolveColor, colorUtils } from '../../../../src/theme/colors';
 
 //ALL CORE FRAME PROPS AND UTILITIES SHOULD GO IN THIS FILE
@@ -20,6 +22,8 @@ export interface FramePropsBase {
   fill?: FillProps;
   stroke?: StrokeProps;
   effects?: EffectProps;
+  mask?: MaskPropsInput;
+  booleanOperation?: BooleanOperationProps;
   style?: React.CSSProperties;
 }
 
@@ -172,6 +176,8 @@ export const convertFramePropsToStyles = (
     fill,
     stroke,
     effects,
+    mask,
+    booleanOperation,
     style: overrideStyle
   } = props;
 
@@ -183,6 +189,14 @@ export const convertFramePropsToStyles = (
   const fillStyles = convertFillProps(fill || {}, false);
   const strokeStyles = convertStrokeProps(stroke || {});
   const effectStyles = convertEffectProps(effects || {});
+  const maskStyles = convertMaskProps(mask);
+  const booleanOperationStyles = convertBooleanOperationProps(booleanOperation);
+  
+  console.log('🔧 convertFramePropsToStyles:', {
+    hasMask: !!mask,
+    maskStyles,
+    hasBooleanOp: !!booleanOperation
+  });
 
   // Check if we have a gradient stroke that needs special handling
   // Handle both single stroke object and array of strokes
@@ -245,6 +259,8 @@ export const convertFramePropsToStyles = (
       ...fillStyles,
       ...strokeStyles,
       ...effectStyles,
+      ...maskStyles,
+      ...booleanOperationStyles,
       ...overrideStyle,
       ...typographyStyles // typographyStyles last so fontFamily always wins
     };

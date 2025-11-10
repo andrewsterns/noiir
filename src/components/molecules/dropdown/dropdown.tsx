@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES, DROPDOWN_LIST_VARIANTS } from '../../../../__variants__/molecules/dropdown/dropdown.variants';
 import { BUTTON_SIZES } from '../../../../__variants__/atoms/button/button.variants';
-import { Animate, useAnimateContext } from '../../../../packages/frame-core/src/animate/animate.props';
+import { Animate, useAnimateContext, AnimateProvider } from '../../../../packages/frame-core/src/animate/animate.props';
 import { LIST_SIZES } from '../list/list.variants';
 
 /**
@@ -98,51 +98,59 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
     }
   };
 
-  // Frame will auto-generate unique IDs for button and list if base id not provided
-  const buttonId = id ? `${id}-button` : undefined;
-  const listId = id ? `${id}-list` : undefined;
+  // Generate unique ID for the dropdown if not provided
+  const dropdownId = id || `dropdown-${useId()}`;
 
-  const openCloseTransitions: Animate = [
+  // Get animation context
+  const { emitEvent } = useAnimateContext();
+
+  // Frame will auto-generate unique IDs for button and list if base id not provided
+  const buttonId = `${dropdownId}-button`;
+  const listId = `${dropdownId}-list`;
+
+  const buttonTransitions: Animate = [
     { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s' },
     { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s' },
+    { trigger: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.2s' },
+    { trigger: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
+    { trigger: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
+    { trigger: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.2s' },
     { trigger: 'click', targetId: listId, toggle: true, toggleVariants: ['visible', 'hidden'], duration: '0.3s' },
-    { trigger: 'listen', listenId: listId, listenVariant: 'visible', targetId: buttonId, toVariant: 'primaryActive' },
-    { trigger: 'listen', listenId: listId, listenVariant: 'hidden', targetId: buttonId, toVariant: 'primary' },
+    { trigger: 'listen', listenId: listId, listenVariant: 'hidden', toVariant: 'primary', targetId: buttonId },
+    { trigger: 'listen', listenId: listId, listenVariant: 'visible', toVariant: 'primaryActive', targetId: buttonId },
   ];
 
-  const ItemClickHandler = ({ children }: { children: React.ReactElement }) => {
-    const animateContext = useAnimateContext();
+  const listTransitions: Animate = [
+    { trigger: 'click', toVariant: 'hidden', duration: '0.3s' },
+    { trigger: 'close', toVariant: 'hidden', duration: '0.3s' },
+  ];
 
-    const handleItemClick = (index: number, item: ListItem) => {
-      onChange?.(index, item);
-      // The list toggle will trigger the 'listen' event to reset the button
-    };
-
-    return React.cloneElement(children, { onItemClick: handleItemClick });
+  const handleListClick = () => {
+    // This will trigger the list's click animation to close it
   };
 
   return (
-    <Frame
-      variants={variants}
-      variant={variant}
-      size={size}
-      sizes={sizes}
-      animate={[]}
-      {...frameProps}
-    >
-      <Button
-        id={buttonId}
-        variant='primary'
-        variants={buttonVariants}
-        size={buttonSize}
-        sizes={buttonSizes}
-        autoLayout={{alignment: 'left', gap: 'fill', paddingRight: 18}}
-        animate={openCloseTransitions}
-        {...buttonProps}
+    <AnimateProvider>
+      <Frame
+        variants={variants}
+        variant={variant}
+        size={size}
+        sizes={sizes}
+        animate={[]}
+        {...frameProps}
       >
-        {getSelectedLabel()}
-      </Button>
-      <ItemClickHandler>
+        <Button
+          id={buttonId}
+          variant='primary'
+          variants={buttonVariants}
+          size={buttonSize}
+          sizes={buttonSizes}
+          autoLayout={{ alignment: 'left', gap: 'fill', paddingRight: 18 }}
+          animate={buttonTransitions}
+          {...buttonProps}
+        >
+          {getSelectedLabel()}
+        </Button>
         <List
           id={listId}
           size={listSize}
@@ -150,9 +158,22 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
           items={items}
           variant={listVariant}
           variants={listVariants}
+          animate={listTransitions}
+          onClick={handleListClick}
+          onItemClick={(index, item) => {
+            console.log('[Dropdown] Item clicked:', index, item);
+            if (multiSelect) {
+              onMultiChange?.(selectedIndices, items);
+            } else {
+              onChange?.(index, item);
+            }
+            // Hide the list when an item is selected
+            console.log('[Dropdown] Emitting close event for list:', listId);
+            emitEvent(listId, 'close');
+          }}
         />
-      </ItemClickHandler>
-    </Frame>
+      </Frame>
+    </AnimateProvider>
   );
 });
 

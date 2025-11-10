@@ -225,6 +225,7 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const getVisualVariant = useCallback((id: string) => visualFrames[id] || frames[id] || '', [visualFrames, frames]);
 
   const registerAnimations = useCallback((animate: Animate) => {
+    console.log('[AnimateProvider] registerAnimations called with:', animate);
     // Split 'hover' events into 'mouseEnter' and 'mouseLeave'
     const expandedAnimate = animate.flatMap((t: FrameAnimation) => {
       if (t.trigger === 'hover') {
@@ -258,17 +259,13 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const applyAnimationRef = useRef<(rule: FrameAnimation, sourceId?: string) => boolean | undefined>();
 
   const emitEvent = useCallback((sourceId: string, triggerType: TransitionTrigger, eventData?: any) => {
-    console.log('[emitEvent] Called with:', { sourceId, triggerType, eventData });
-    
+    console.log('[AnimateProvider] emitEvent called:', { sourceId, triggerType, eventData });
     // Handle grab event as mouseDown (initiates drag)
     // The corresponding mouseUp will end the drag state
     let effectiveTrigger = triggerType;
     if (triggerType === 'grab') {
       effectiveTrigger = 'mouseDown';
     }
-
-    console.log('[emitEvent] Effective trigger:', effectiveTrigger);
-    console.log('[emitEvent] All animations count:', allAnimations.length);
 
     // Handle mouseEnter and mouseLeave as distinct events
     if (effectiveTrigger === 'mouseEnter' || effectiveTrigger === 'mouseLeave') {
@@ -354,16 +351,14 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [allAnimations]);
 
   const applyAnimation = useCallback((rule: FrameAnimation, sourceId?: string) => {
-    console.log('[applyAnimation] Called with:', { rule, sourceId });
-    
+    console.log('[AnimateProvider] applyAnimation called:', { rule, sourceId });
     const targetId = rule.targetId || sourceId;
     if (!targetId) {
-      console.log('[applyAnimation] No targetId, returning false');
+      console.log('[AnimateProvider] No targetId, returning false');
       return false;
     }
 
     const isHover = rule.trigger === 'mouseEnter' || rule.trigger === 'mouseLeave';
-    console.log('[applyAnimation] isHover:', isHover, 'trigger:', rule.trigger);
 
     if (isHover) {
       // For hover: check if rule matches BEFORE updating state
@@ -378,7 +373,6 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (!newVariant) return false;
       
       // Execute action if specified
-      console.log('[applyAnimation] Hover - executing action:', rule.action);
       executeAction(rule.action, rule);
       
       // Update visual frames
@@ -391,47 +385,41 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       
       // Check if we should execute action BEFORE setFrames to avoid closure issues
       const shouldExecuteAction = !!(rule.action && rule.action !== 'none');
-      console.log('[applyAnimation] Pre-check shouldExecuteAction:', shouldExecuteAction, 'action:', rule.action);
       
       setFrames(prev => {
         const currentLogical = prev[targetId];
         const fromVariantResolved = resolveVariant(rule.fromVariant);
 
-        console.log('[applyAnimation] setFrames - currentLogical:', currentLogical, 'fromVariant:', rule.fromVariant, 'fromVariantResolved:', fromVariantResolved);
-
         if (rule.fromVariant && currentLogical !== fromVariantResolved) {
-          console.log('[applyAnimation] fromVariant mismatch, returning early');
           return prev;
         }
 
         if (rule.toVariant) {
           newVariant = resolveVariant(rule.toVariant);
-          console.log('[applyAnimation] Has toVariant:', newVariant);
         } else if (rule.toggle && rule.toggleVariants) {
           const index = rule.toggleVariants.indexOf(currentLogical);
           newVariant = index !== -1 
             ? rule.toggleVariants[(index + 1) % rule.toggleVariants.length]
             : rule.toggleVariants[0];
-          console.log('[applyAnimation] Has toggle, newVariant:', newVariant);
         }
 
         // Only update variant if we have a newVariant
         if (newVariant && newVariant !== currentLogical) {
           applied = true;
-          console.log('[applyAnimation] Variant changed, updating state');
+          console.log('[AnimateProvider] Applying variant change:', { targetId, from: currentLogical, to: newVariant });
 
           // Schedule listen event after state update
           setTimeout(() => emitEvent(targetId, 'listen', { listenId: targetId, listenVariant: newVariant }), 0);
 
           return { ...prev, [targetId]: newVariant };
+        } else {
+          console.log('[AnimateProvider] No variant change needed:', { targetId, current: currentLogical, new: newVariant });
         }
 
-        console.log('[applyAnimation] No variant change, returning prev');
         return prev;
       });
 
       // Execute action AFTER state updates (outside of setState callback)
-      console.log('[applyAnimation] Non-hover - shouldExecuteAction:', shouldExecuteAction, 'action:', rule.action);
       if (shouldExecuteAction) {
         executeAction(rule.action, rule);
       }

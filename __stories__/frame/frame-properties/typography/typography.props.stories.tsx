@@ -43,7 +43,7 @@ export const Typography: TypographyStory = {
     textAlign: 'left',
     textDecoration: 'none',
     textTransform: 'none',
-    textColor: '#374151',
+    textColor: '#7a8699ff',
     fill: { type: 'solid', color: 'neutral1' },
     autoLayout: { width: 300, height: 150 }
   },

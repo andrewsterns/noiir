@@ -10,5 +10,7 @@ export * from './events/event.props';
 export * from './variants/variants.props';
 export * from './variants/size.props';
 export * from './animate/animate.props';
+export * from './mask/mask.props';
+export * from './booleanOperation/booleanOperation.props';
 export * from './utils/utils';
 export * from './utils/css-units';

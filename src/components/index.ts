@@ -24,9 +24,7 @@ export { Popup } from './molecules/popup/popup';
 export { SearchDropdown } from './molecules/search-dropdown/search-dropdown';
 
 // Organism
-// export { Navbar } from './navbar/Navbar';
-// Only export Navbar (default export)
-export { Navbar } from './organism/navbar/navbar';
+
 
 // Template
 export { Template } from './template/template';

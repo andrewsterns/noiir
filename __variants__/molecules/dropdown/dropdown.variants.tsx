@@ -142,12 +142,19 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
 export const DROPDOWN_LIST_VARIANTS = {
   // ...LIST_VARIANTS,
   hidden: {
-    display: 'none'
+    appearance: { opacity: 0 },
+    pointerEvents: 'none',
+    autoLayout: { height: 'hug', width: 'fill-container' },
   },
   visible: {
-    // ...LIST_VARIANTS.default,
-    autoLayout: { height: 100, width: 'fill-container' },
-    fill: { type: 'solid', color: 'tomato4' },
+    appearance: { opacity: 1 },
+    pointerEvents: 'auto',
+    autoLayout: { height: 'hug', width: 'fill-container' },
+  },
+  primary: {
+    appearance: { opacity: 1 },
+    pointerEvents: 'auto',
+    autoLayout: { height: 'hug', width: 'fill-container' },
   },
 } satisfies ExtendVariant;
 
