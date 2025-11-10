@@ -41,9 +41,9 @@ export const convertFillProps = (
   props: FillProps,
   isTextElement: boolean = false
 ): React.CSSProperties => {
-  if (!props) return {};
-  
-  console.log('🎨 convertFillProps called:', { props, isArray: Array.isArray(props), isTextElement });
+  if (!props) {
+    return {};
+  }
   
   // Handle array of fills (multiple fills)
   if (Array.isArray(props)) {
@@ -114,6 +114,16 @@ const convertSingleFill = (
     case 'image':
       // Image fill
       if (props.image) {
+        // For images with opacity, let the Frame component handle it with a separate background div
+        // to avoid affecting children
+        const hasOpacity = props.opacity !== undefined && props.opacity < 1;
+        const isReactElement = props.image.element || (props.image.src && typeof props.image.src !== 'string');
+        
+        if (hasOpacity && !isReactElement && props.image.src && typeof props.image.src === 'string') {
+          // Frame component will create a separate background div for this case
+          break;
+        }
+        
         const imageStyles = createImageFillStyles(props.image);
         if (isTextElement) {
           // For text elements, use background-clip: text
@@ -125,10 +135,8 @@ const convertSingleFill = (
         } else {
           Object.assign(styles, imageStyles);
         }
-        // Apply opacity to the image fill (affects the entire element for images)
-        if (props.opacity !== undefined && props.opacity < 1) {
-          styles.opacity = props.opacity;
-        }
+        // Note: opacity for image fills is handled in the Frame component
+        // to avoid affecting children
       }
       break;
   }
@@ -146,8 +154,6 @@ const convertMultipleFills = (
 ): React.CSSProperties => {
   if (fills.length === 0) return {};
   
-  console.log('📦 convertMultipleFills:', { fillsCount: fills.length, fills });
-  
   // For multiple fills, we need to combine them into a single background property
   const gradients: string[] = [];
   const backgroundSizes: string[] = [];
@@ -159,8 +165,6 @@ const convertMultipleFills = (
   // CSS backgrounds are rendered in reverse order (first is on top)
   fills.forEach((fill, index) => {
     const fillType = fill.type || (fill.color ? 'solid' : fill.stops ? 'linear-gradient' : fill.image ? 'image' : 'solid');
-    
-    console.log(`  Fill ${index}:`, { fillType, hasImage: !!fill.image, imageSrc: fill.image?.src, color: fill.color });
     
     switch (fillType) {
       case 'solid':
@@ -174,7 +178,6 @@ const convertMultipleFills = (
           backgroundSizes.push('auto');
           backgroundPositions.push('0 0');
           backgroundRepeats.push('repeat');
-          console.log(`    Added solid as gradient: ${finalColor}`);
         }
         break;
         
@@ -189,15 +192,22 @@ const convertMultipleFills = (
             backgroundSizes.push('auto');
             backgroundPositions.push('0 0');
             backgroundRepeats.push('repeat');
-            console.log(`    Added gradient: ${gradientString.substring(0, 50)}...`);
           }
         }
         break;
         
       case 'image':
         if (fill.image?.src && typeof fill.image.src === 'string') {
+          // For images with opacity, let the Frame component handle it with a separate background div
+          const hasOpacity = fill.opacity !== undefined && fill.opacity < 1;
+          const isReactElement = fill.image.element || (fill.image.src && typeof fill.image.src !== 'string');
+          
+          if (hasOpacity && !isReactElement) {
+            // Frame component will create a separate background div for this case
+            break;
+          }
+          
           gradients.push(`url(${fill.image.src})`);
-          console.log(`    Added image URL: ${fill.image.src.substring(0, 50)}...`);
           
           // Set background size/position/repeat for THIS specific image layer
           const scaleMode = fill.image.scaleMode || 'fill';
@@ -231,11 +241,6 @@ const convertMultipleFills = (
         break;
     }
   });
-  
-  console.log('  Total gradients/backgrounds:', gradients.length, gradients);
-  console.log('  Background sizes:', backgroundSizes);
-  console.log('  Background positions:', backgroundPositions);
-  console.log('  Background repeats:', backgroundRepeats);
   
   if (gradients.length > 0) {
     styles.background = gradients.join(', ');

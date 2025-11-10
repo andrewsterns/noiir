@@ -642,6 +642,53 @@ export const ReactElementFill: FillStory = {
         </div>
       </Frame>
 
+      {/* Image fill with opacity - children should remain fully opaque */}
+      <Frame
+        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
+        fill={{
+          type: 'image',
+          image: {
+            src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop',
+            scaleMode: 'fill'
+          },
+          opacity: 0.4
+        }}
+        appearance={{ radius: 12 }}
+        stroke={{ type: 'solid', color: 'warning6', weight: 2 }}
+      >
+        <Frame
+          autoLayout={{ width: 150, height: 80, alignment: 'center' }}
+          fill={{ type: 'solid', color: 'primary6' }}
+          appearance={{ radius: 8 }}
+        >
+          <div style={{ 
+            color: '#fff', 
+            fontSize: 14, 
+            fontWeight: 600,
+            textAlign: 'center'
+          }}>
+            Child Frame<br />
+            (Fully Opaque)
+          </div>
+        </Frame>
+        <div style={{ 
+          position: 'absolute',
+          bottom: 10,
+          left: 0,
+          right: 0,
+          textAlign: 'center',
+          color: '#000', 
+          fontSize: 12, 
+          fontWeight: 600,
+          background: 'rgba(255,255,255,0.9)',
+          padding: '4px 8px',
+          borderRadius: 4
+        }}>
+          Image opacity: 0.4<br />
+          Children unaffected
+        </div>
+      </Frame>
+
       {/* Colored icon with gradient background */}
       <Frame
         autoLayout={{ width: 200, height: 200, alignment: 'center', padding: 20 }}

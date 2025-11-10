@@ -191,12 +191,6 @@ export const convertFramePropsToStyles = (
   const effectStyles = convertEffectProps(effects || {});
   const maskStyles = convertMaskProps(mask);
   const booleanOperationStyles = convertBooleanOperationProps(booleanOperation);
-  
-  console.log('🔧 convertFramePropsToStyles:', {
-    hasMask: !!mask,
-    maskStyles,
-    hasBooleanOp: !!booleanOperation
-  });
 
   // Check if we have a gradient stroke that needs special handling
   // Handle both single stroke object and array of strokes

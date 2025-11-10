@@ -3,7 +3,7 @@ import { PositionProps } from '../../../packages/frame-core/src/position/positio
 import { AutoLayoutProps } from '../../../packages/frame-core/src/layout/layout.props';
 import { AppearanceProps } from '../../../packages/frame-core/src/appearance/appearance.props';
 import { TypographyProps } from '../../../packages/frame-core/src/typography/typography.props';
-import { FillProps } from '../../../packages/frame-core/src/appearance/fill.props';
+import { FillProps, createImageFillStyles } from '../../../packages/frame-core/src/appearance/fill.props';
 import { StrokeProps } from '../../../packages/frame-core/src/appearance/stroke.props';
 import { CursorProps } from '../../../packages/frame-core/src/appearance/cursor.props';
 import { EffectProps } from '../../../packages/frame-core/src/effects/effects.props';
@@ -430,35 +430,27 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     }
   }
 
-  // Add fill element if it's a React element (SVG, etc.)
+  // Add fill element if it's a React element or image with opacity
   let childrenWithFillElement = alignedChildren;
   const fillElement = React.useMemo(() => {
-    if (!finalFill) return null;
+    if (!finalFill) {
+      return null;
+    }
     
     const fillArray = Array.isArray(finalFill) ? finalFill : [finalFill];
-    console.log('🎨 Fill Array:', frameId, fillArray);
     
-    // Find first fill with an image element (either from element or src as React element)
+    // Find first fill that needs special rendering (React elements or images with opacity)
     for (const fill of fillArray) {
       if (fill.type === 'image' && fill.image) {
-        // Check both element prop and src as React element
-        const element = fill.image.element || (fill.image.src && typeof fill.image.src !== 'string' ? fill.image.src : null);
+        const hasOpacity = fill.opacity !== undefined && fill.opacity < 1;
+        const isReactElement = fill.image.element || (fill.image.src && typeof fill.image.src !== 'string');
         
-        console.log('🖼️ Fill image element found:', frameId, {
-          hasElement: !!element,
-          isValidElement: element ? React.isValidElement(element) : false,
-          src: fill.image.src,
-          element: element
-        });
-        
-        if (element && React.isValidElement(element)) {
-          // Clone the element and apply color if provided
+        if (isReactElement && React.isValidElement(isReactElement)) {
+          // Handle React elements (existing logic)
           const fillColor = fill.color ? resolveColor(fill.color) : undefined;
-          const elementProps = element.props as any;
+          const elementProps = isReactElement.props as any;
           
-          console.log('✅ Returning fill element for:', frameId, { fillColor });
-          
-          return React.cloneElement(element, {
+          return React.cloneElement(isReactElement, {
             ...elementProps,
             style: {
               ...(elementProps.style || {}),
@@ -471,21 +463,54 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
               width: '100%',
               height: '100%',
               pointerEvents: 'none',
-              zIndex: 0
+              zIndex: 0,
+              ...(hasOpacity && { opacity: fill.opacity })
+            }
+          });
+        } else if (hasOpacity && fill.image.src && typeof fill.image.src === 'string') {
+          // Handle string images with opacity - create a background div
+          const imageStyles = createImageFillStyles(fill.image);
+          
+          return React.createElement('div', {
+            style: {
+              ...imageStyles,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              zIndex: 0,  // Same level as children, but appears first in DOM
+              opacity: fill.opacity
             }
           });
         }
       }
     }
-    console.log('❌ No fill element found for:', frameId);
     return null;
   }, [finalFill, frameId]);
 
   if (fillElement) {
-    console.log('🔧 Adding fill element wrapper for:', frameId, 'children count:', React.Children.count(alignedChildren));
+    // Wrap children to ensure they appear above the background fill element
+    const wrappedChildren = React.Children.map(alignedChildren, (child, index) => {
+      if (React.isValidElement(child)) {
+        return React.cloneElement(child, {
+          ...child.props,
+          style: {
+            ...child.props.style,
+            position: child.props.style?.position || 'relative',
+            zIndex: child.props.style?.zIndex !== undefined ? child.props.style.zIndex : 1
+          }
+        });
+      }
+      return child;
+    });
+    
     childrenWithFillElement = [
-      React.createElement('div', { key: 'fill-element-wrapper', style: { position: 'relative', width: '100%', height: '100%' } }, fillElement),
-      ...React.Children.toArray(alignedChildren)
+      fillElement,
+      ...(wrappedChildren ? React.Children.toArray(wrappedChildren) : [])
     ];
   }
 
@@ -534,6 +559,11 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   // If this frame has alignment-based positioning for children, ensure it's positioned relatively
   // BUT don't override if position is already fixed or absolute
   if (mergedAutoLayout?.alignment && mergedAutoLayout?.flow === 'vertical' && !finalStyles.position) {
+    finalStyles.position = 'relative';
+  }
+
+  // If this frame has a fill element (like image with opacity), ensure it's positioned relatively
+  if (fillElement && !finalStyles.position) {
     finalStyles.position = 'relative';
   }
 
