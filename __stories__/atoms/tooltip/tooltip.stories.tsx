@@ -40,8 +40,8 @@ export const Positions: Story = {
 };
 // --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
-import { Tooltip } from '../../../src/components/atoms/tooltip/tooltip';
-import { Frame } from '../../../src/components';
+import { Tooltip } from '../../../__components__/atoms/tooltip/tooltip';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Atoms/Tooltip',

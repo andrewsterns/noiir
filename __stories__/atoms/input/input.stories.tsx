@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from '../../../src/components/atoms/input/input';
-import { Frame } from '../../../src/components';
+import { Input } from '../../../__components__/atoms/input/input';
+import { Frame } from '../../../__components__/frame/Frame';
 import { useState } from 'react';
 
 const meta: Meta<typeof Input> = {

@@ -42,8 +42,8 @@ export const Animated: Story = {
 };
 // --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
-import { ProgressBar } from '../../../src/components/atoms/progress-bar/progress-bar';
-import { Frame } from '../../../src/components';
+import { ProgressBar } from '../../../__components__/atoms/progress-bar/progress-bar';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof ProgressBar> = {
   title: 'Atoms/Progress Bar',

@@ -48,8 +48,8 @@ export const RadioGroup: Story = {
 };
 // --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
-import { RadioButton } from '../../../src/components/atoms/radio-button/radio-button';
-import { Frame } from '../../../src/components';
+import { RadioButton } from '../../../__components__/atoms/radio-button/radio-button';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof RadioButton> = {
   title: 'Atoms/Radio Button',

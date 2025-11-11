@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
-import { Frame } from '../../../../src/components/frame/Frame';
-import { AnimateProvider } from '../../../../packages/frame-core/src/animate/animate.props';
+import { Frame } from '../../../../__components__/frame/Frame';
+import { AnimateProvider } from '../../../../__frame-core__/animate/animate.props';
 
 /**
  * Animation Actions Stories

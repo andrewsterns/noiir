@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
-import { Text } from '../../../../src/components/atoms/text/text';
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
+import Text from '../../../../__components__/atoms/text/text';
 
 interface TypographyArgs extends Partial<FrameProps> {
   fontFamily: string;
@@ -108,10 +108,7 @@ export const Typography: TypographyStory = {
     autoLayout: { control: false },
     fill: { control: false },
     stroke: { control: false },
-    appearance: { control: false },
-    onClick: { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false }
+    appearance: { control: false }
   },
   render: (args: TypographyArgs) => (
     <Frame

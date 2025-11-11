@@ -1,4 +1,4 @@
-import { ExtendVariant } from '../../../packages/frame-core/src/variants/variants.props';
+import { ExtendVariant } from '../../../__frame-core__/variants/variants.props';
 
 /**
  * Menu Variants Library

@@ -26,10 +26,8 @@ export const HorizontalVsFreeform: LayoutStory = {
               fill={{ type: 'solid', color: 'white7' }}
               autoLayout={{ width: 140, height: 40 }}
               appearance={{ radius: 4 }}
-              onMouseEnter={e => e.currentTarget.style.width = '260px'}
-              onMouseLeave={e => e.currentTarget.style.width = '140px'}
             >
-              A (hover me)
+              A
             </Frame>
             <Frame fill={{ type: 'solid', color: 'white4' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }}>B</Frame>
             <Frame fill={{ type: 'solid', color: 'white4' }} autoLayout={{ width: 140, height: 40 }} appearance={{ radius: 4 }}>C</Frame>
@@ -46,14 +44,12 @@ export const HorizontalVsFreeform: LayoutStory = {
               autoLayout={{ width: 140, height: 40 }}
               appearance={{ radius: 4 }}
               position={{ x: 0, y: 0 }}
-              onMouseEnter={e => e.currentTarget.style.width = '260px'}
-              onMouseLeave={e => e.currentTarget.style.width = '140px'}
             >
               <Frame
                 typography={{ type: 'h6', color: 'gray7', wrap: 'nowrap', textAlign: 'center' }}
                 autoLayout={{ padding: 8, alignment: 'center' }}
               >
-                A (hover me)
+                A
               </Frame>
             </Frame>
             <Frame 
@@ -91,11 +87,11 @@ export const HorizontalVsFreeform: LayoutStory = {
         story: 'Demonstrates the difference between horizontal (gap, shifting) and freeform (absolute, no shifting) layout flows.'
       }
     },
-    controls: { exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave'] }
+    controls: { exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style'] }
   }
 };
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 
 // Layout story controls interface
 interface LayoutArgs extends Partial<FrameProps> {
@@ -273,7 +269,7 @@ export const Layout: LayoutStory = {
       }
     },
     controls: {
-      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave']
+      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style']
     }
   }
 };
@@ -379,10 +375,7 @@ export const CurvedLayout: LayoutStory = {
     position: { control: false },
     fill: { control: false },
     appearance: { control: false },
-    stroke: { control: false },
-    onClick: { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false }
+    stroke: { control: false }
   },
   render: (args: LayoutArgs) => (
     <>
@@ -468,7 +461,7 @@ export const CurvedLayout: LayoutStory = {
       }
     },
     controls: {
-      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave']
+      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style']
     }
   }
 };
@@ -555,7 +548,7 @@ export const WrapAndClip: LayoutStory = {
       }
     },
     controls: {
-      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave', 'flow', 'alignment', 'padding', 'gap', 'height', 'childHeight', 'childAlignment', 'path']
+      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'flow', 'alignment', 'padding', 'gap', 'height', 'childHeight', 'childAlignment', 'path']
     }
   }
 };
@@ -607,7 +600,7 @@ export const GridLayoutDemo: LayoutStory = {
       }
     },
     controls: {
-      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave', 'flow', 'alignment', 'padding', 'gap', 'height', 'childHeight', 'childAlignment', 'path']
+      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'flow', 'alignment', 'padding', 'gap', 'height', 'childHeight', 'childAlignment', 'path']
     }
   }
 };

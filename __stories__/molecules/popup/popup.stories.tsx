@@ -34,7 +34,6 @@ export const Basic: Story = {
             <div>This is a basic popup with some content using Frame components.</div>
             <button
               style={{ background: '#2563eb', color: '#fff', padding: '8px 16px', borderRadius: 4, border: 'none', fontSize: 16, cursor: 'pointer' }}
-              onClick={() => setIsOpen(false)}
             >
               Close
             </button>
@@ -46,8 +45,9 @@ export const Basic: Story = {
 };
 // --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
-import { Popup } from '../../../src/components/molecules/popup/popup';
-import { Button, Frame } from '../../../src/components';
+import { Popup } from '../../../__components__/molecules/popup/popup';
+import { Button } from '../../../__components__/atoms/button/button';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof Popup> = {
   title: 'Molecules/Popup',
@@ -128,16 +128,10 @@ export const Medium: Story = {
             <div>This is a medium-sized popup with more content space.</div>
             <div>You can put forms, images, or any content here.</div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-              <Button
-                onClick={() => setIsOpen(false)}
-                
-              >
+              <Button>
                 Cancel
               </Button>
-              <Button
-                onClick={() => setIsOpen(false)}
-               
-              >
+              <Button>
                 Confirm
               </Button>
             </div>
@@ -175,15 +169,10 @@ export const Large: Story = {
               <div>Feature 3: Perfect for forms or detailed content</div>
             </div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-              <Button
-                onClick={() => setIsOpen(false)}
-                
-              >
+              <Button>
                 Cancel
               </Button>
-              <Button
-                onClick={() => setIsOpen(false)}
-                >
+              <Button>
                 Save Changes
               </Button>
             </div>
@@ -215,9 +204,7 @@ export const WithoutTitle: Story = {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
             <div>🎉</div>
             <div>Success! Your action was completed.</div>
-            <Button
-              onClick={() => setIsOpen(false)}
-             >
+            <Button>
               OK
             </Button>
           </div>
@@ -250,15 +237,10 @@ export const Fullscreen: Story = {
             <div>This popup takes up the entire screen.</div>
             <div>Perfect for important dialogs or complex workflows.</div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-              <Button
-                onClick={() => setIsOpen(false)}
-                
-              >
+              <Button>
                 Cancel
               </Button>
-              <Button
-                onClick={() => setIsOpen(false)}
-               >
+              <Button>
                 Complete
               </Button>
             </div>

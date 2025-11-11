@@ -1,5 +1,5 @@
 ﻿import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 
 interface StrokeArgs extends Partial<FrameProps> {
   children?: React.ReactNode;
@@ -231,11 +231,7 @@ export const Stroke: StrokeStory = {
       description: 'Gap length',
       table: { category: 'Dash Pattern' },
       if: { arg: 'useDashPattern', eq: true }
-    },
-    // Hide other controls to focus on strokes
-    onClick: { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false }
+    }
   },
   render: (args: StrokeArgs) => {
     // Helper function to resolve color based on type

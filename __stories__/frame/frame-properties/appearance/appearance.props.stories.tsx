@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 
 interface AppearanceArgs extends Partial<FrameProps> {
   // Parent appearance controls
@@ -158,10 +158,7 @@ export const Appearance: AppearanceStory = {
     autoLayout: { control: false },
     fill: { control: false },
     stroke: { control: false },
-    appearance: { control: false },
-    onClick: { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false }
+    appearance: { control: false }
   },
   render: (args: AppearanceArgs) => (
     
@@ -244,7 +241,7 @@ export const Appearance: AppearanceStory = {
       }
     },
     controls: {
-      exclude: ['position', 'autoLayout', 'size', 'fill', 'stroke', 'appearance', 'className', 'style', 'onClick', 'onMouseEnter', 'onMouseLeave']
+      exclude: ['position', 'autoLayout', 'size', 'fill', 'stroke', 'appearance', 'className', 'style']
     }
   }
 };

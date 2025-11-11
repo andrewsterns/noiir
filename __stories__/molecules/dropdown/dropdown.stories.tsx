@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Dropdown } from '../../../src/components/molecules/dropdown/dropdown';
+import { Dropdown } from '../../../__components__/molecules/dropdown/dropdown';
 import { useState } from 'react';
-import { Frame } from '../../../src/components/frame/Frame';
-import { AnimateProvider } from '../../../packages/frame-core/src/animate/animate.props';
+import { Frame } from '../../../__components__/frame/Frame';
+import { AnimateProvider } from '../../../__frame-core__/animate/animate.props';
 
 const meta: Meta<typeof Dropdown> = {
   title: 'Molecules/Dropdown',

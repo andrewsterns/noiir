@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 
 // Position story controls interface
 interface PositionArgs extends Partial<FrameProps> {
@@ -60,10 +60,7 @@ export const Position: PositionStory = {
     fill: { control: false },
     appearance: { control: false },
     autoLayout: { control: false },
-    stroke: { control: false },
-    onClick: { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false }
+    stroke: { control: false }
   },
   render: (args: PositionArgs) => (
     <Frame

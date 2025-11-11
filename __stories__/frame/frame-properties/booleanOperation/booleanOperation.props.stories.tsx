@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 
 // ALL BOOLEAN OPERATION RELATED PROPS AND STORIES SHOULD GO IN THIS FILE
 

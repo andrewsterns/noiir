@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Label } from '../../../src/components/atoms/label/label';
+import { Label } from '../../../__components__/atoms/label/label';
 import { useState } from 'react';
 
 const meta: Meta<typeof Label> = {
@@ -100,7 +100,7 @@ export const Sizes: Story = {
   },
 };
 
-import { Frame } from '../../../src/components/frame/Frame';
+import { Frame } from '../../../__components__/frame/Frame';
 
 export const InteractiveDemo: Story = {
   render: () => (
@@ -119,42 +119,10 @@ export const InteractiveDemo: Story = {
       </Frame>
 
       <Frame autoLayout={{ flow: 'freeform' }}>
-        <Label
-          variant="primary"
-          fill={{ type: 'solid', color: 'primary3' }}
-          appearance={{ radius: 4 }}
-          typography={{ fontSize: 14, color: 'primary9' }}
-          position={{ x: 0, y: 0 }}
-        >
-          Primary (freeform)
-        </Label>
-        <Label
-          variant="primaryActive"
-          fill={{ type: 'solid', color: 'primary3' }}
-          appearance={{ radius: 4 }}
-          typography={{ fontSize: 14, color: 'primary9' }}
-          position={{ x: 180, y: 0 }}
-        >
-          Active (freeform)
-        </Label>
-        <Label
-          variant="primaryHover"
-          fill={{ type: 'solid', color: 'primary3' }}
-          appearance={{ radius: 4 }}
-          typography={{ fontSize: 14, color: 'primary9' }}
-          position={{ x: 360, y: 0 }}
-        >
-          Hover (freeform)
-        </Label>
-        <Label
-          variant="primaryActiveHover"
-          fill={{ type: 'solid', color: 'primary3' }}
-          appearance={{ radius: 4 }}
-          typography={{ fontSize: 14, color: 'primary9' }}
-          position={{ x: 540, y: 0 }}
-        >
-          Active Hover (freeform)
-        </Label>
+        <Label variant="primary">Primary (freeform)</Label>
+        <Label variant="primaryActive">Active (freeform)</Label>
+        <Label variant="primaryHover">Hover (freeform)</Label>
+        <Label variant="primaryActiveHover">Active Hover (freeform)</Label>
       </Frame>
     </Frame>
   ),

@@ -1,8 +1,8 @@
 // --- Textarea stories ---
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Textarea } from '../../../src/components/atoms/textarea/textarea';
-import { Frame } from '../../../src/components';
+import { Textarea } from '../../../__components__/atoms/textarea/textarea';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof Textarea> = {
   title: 'Atoms/Textarea',

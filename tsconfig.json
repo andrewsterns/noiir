@@ -20,22 +20,22 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@noiir/frame-core": ["./packages/frame-core/src"],
-      "@noiir/frame-core/*": ["./packages/frame-core/src/*"],
-      "@variants/*": ["./__variants__/*"],
-      "@stories/*": ["./__stories__/*"],
-      "@theme/*": ["./src/theme/*"]
+      "@noiir/frame-core": ["__frame-core__"],
+      "@noiir/frame-core/*": ["__frame-core__/*"],
+      "@variants/*": ["__variants__/*"],
+      "@components/*": ["__components__/*"],
+      "@theme/*": ["__variants__/theme/*"]
     },
   },
   "include": [
-    "src/**/*",
-    "packages/**/*",
-    "__variants__/**/*"
-  ],
+    "__components__/**/*",
+    "__variants__/**/*",
+    "__frame-core__/**/*",
+    "__stories__/**/*"
+, "dist/src/theme/icons"  ],
   "exclude": [
     "node_modules",
     "dist",
-    "examples",
-    "__stories__"
+    "examples"
   ]
 }

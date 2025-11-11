@@ -1,6 +1,6 @@
-import { ExtendVariant } from '../../../packages/frame-core/src/variants/variants.props';
-import { VARIANT_STYLES } from '../../../src/theme/variant';
-import { HappyFace, HappyWink } from '../../../src/theme/icons/fun';
+import { ExtendVariant } from '../../../__frame-core__/variants/variants.props';
+import { VARIANT_STYLES } from '../../theme/variant';
+// No icon imports
 
 /**
  * Button Variants Library
@@ -54,19 +54,19 @@ export const BUTTON_VARIANTS: ExtendVariant = {
     primary: {
         ...VARIANT_STYLES.solid as any,
         appearance: { radius: 8 },
-        iconStart: <HappyFace />,
+    // iconStart removed
 
 
     },
     primaryHover: {
         ...VARIANT_STYLES.solidHover as any,
         appearance: { radius: 8 },
-        iconStart: <HappyWink />,
+    // iconStart removed
     },
     primaryActive: {
         ...VARIANT_STYLES.solidActive as any,
         appearance: { radius: 8 },   
-        iconStart: <HappyFace />,
+    // iconStart removed
 
     },
 
@@ -78,7 +78,7 @@ export const BUTTON_VARIANTS: ExtendVariant = {
             color: 'primary3',
             wrap: 'nowrap',
         },
-        iconStart: <HappyWink />,
+    // iconStart removed
     },
 
     disabled: {
@@ -99,19 +99,19 @@ export const BUTTON_SOLID_VARIANTS: ExtendVariant = {
         ...VARIANT_STYLES.solid as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyFace />,
+        // iconStart removed
     },
     solidHover: {
         ...VARIANT_STYLES.solidHover as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyWink />,
+            // iconStart removed
     },
     solidActive: {
         ...VARIANT_STYLES.solidActive as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
-        iconStart: <HappyFace />,
+        // iconStart removed
     },
     solidActiveHover: {
         ...VARIANT_STYLES.solid as any,
@@ -122,7 +122,7 @@ export const BUTTON_SOLID_VARIANTS: ExtendVariant = {
             color: 'white4',
             wrap: 'nowrap',
         },
-        iconStart: <HappyWink />,
+        // iconStart removed
     },
 } satisfies ExtendVariant;
 
@@ -131,20 +131,20 @@ export const BUTTON_SOFT_VARIANTS: ExtendVariant = {
         ...VARIANT_STYLES.soft as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyFace />,
+    // iconStart removed
        
     },
     softHover: {
         ...VARIANT_STYLES.softHover as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyWink />,
+    // iconStart removed
     },
     softActive: {
         ...VARIANT_STYLES.softActive as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
-        iconStart: <HappyFace />,
+    // iconStart removed
     },
     softActiveHover: {
         ...VARIANT_STYLES.soft as any,
@@ -155,7 +155,7 @@ export const BUTTON_SOFT_VARIANTS: ExtendVariant = {
             color: 'white4',
             wrap: 'nowrap',
         },
-        iconStart: <HappyWink />,
+    // iconStart removed
     },
 } satisfies ExtendVariant;
 
@@ -164,20 +164,20 @@ export const BUTTON_SURFACE_VARIANTS: ExtendVariant = {
         ...VARIANT_STYLES.surface as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyFace />,
+    // iconStart removed
      
     },
     surfaceHover: {
         ...VARIANT_STYLES.surfaceHover as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyWink />,
+    // iconStart removed
     },
     surfaceActive: {
         ...VARIANT_STYLES.surfaceActive as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
-        iconStart: <HappyFace />,
+    // iconStart removed
     },
     surfaceActiveHover: {
         ...VARIANT_STYLES.surface as any,
@@ -188,7 +188,7 @@ export const BUTTON_SURFACE_VARIANTS: ExtendVariant = {
             color: 'white4',
             wrap: 'nowrap',
         },
-        iconStart: <HappyWink />,
+    // iconStart removed
     },
 } satisfies ExtendVariant;
 
@@ -197,19 +197,19 @@ export const BUTTON_GHOST_VARIANTS: ExtendVariant = {
         ...VARIANT_STYLES.ghost as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyFace />,
+            // iconStart removed
     },
     ghostHover: {
         ...VARIANT_STYLES.ghostHover as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyWink />,
+            // iconStart removed
     },
     ghostActive: {
         ...VARIANT_STYLES.ghostActive as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
-        iconStart: <HappyFace />,
+            // iconStart removed
     },
     ghostActiveHover: {
         ...VARIANT_STYLES.ghost as any,
@@ -220,7 +220,7 @@ export const BUTTON_GHOST_VARIANTS: ExtendVariant = {
             color: 'white4',
             wrap: 'nowrap',
         },
-        iconStart: <HappyWink />,
+            // iconStart removed
     },
 } satisfies ExtendVariant;
 
@@ -229,19 +229,19 @@ export const BUTTON_OUTLINE_VARIANTS: ExtendVariant = {
         ...VARIANT_STYLES.outline as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyFace />,
+            // iconStart removed
     },
     outlineHover: {
         ...VARIANT_STYLES.outlineHover as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
-        iconStart: <HappyWink />,
+            // iconStart removed
     },
     outlineActive: {
         ...VARIANT_STYLES.outlineActive as any,
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },   
-        iconStart: <HappyFace />,
+            // iconStart removed
     },
     outlineActiveHover: {
         ...VARIANT_STYLES.outline as any,
@@ -252,6 +252,6 @@ export const BUTTON_OUTLINE_VARIANTS: ExtendVariant = {
             color: 'white4',
             wrap: 'nowrap',
         },
-        iconStart: <HappyWink />,
+            // iconStart removed
     },
 } satisfies ExtendVariant;

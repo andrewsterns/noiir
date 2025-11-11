@@ -1,5 +1,5 @@
-import { ExtendVariant, FrameVariantConfig } from '../../../packages/frame-core/src/variants/variants.props';
-import { VARIANT_STYLES } from '../../../src/theme/variant';
+import { ExtendVariant, FrameVariantConfig } from '../../../__frame-core__/variants/variants.props';
+import { VARIANT_STYLES } from '../../theme/variant';
 
 /**
  * Navbar Variants Library

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame } from '../src/components/frame/Frame';
+import { Frame } from '../__components__/frame/Frame';
 
 /**
  * # CSS Units & Grid Layout

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Text, H1, H2, H3, H4, H5, H6, Body, Body1, Body2, Label, Caption, Overline, Display, Code } from '../../../src/components/atoms/text/text';
+import Text, { H1, H2, H3, H4, H5, H6, Body, Body1, Body2, Label, Caption, Overline, Display, Code } from '../../../__components__/atoms/text/text';
 import { textVariants } from '../../../__variants__/atoms/text/text.variants';
-import { Frame } from '../../../src/components/frame/Frame';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof Text> = {
   title: 'Atoms/Text',
@@ -418,5 +418,40 @@ export const CodeText: Story = {
   render: () => <Code>Code - Monospace code snippet.</Code>,
   parameters: {
     docs: { description: { story: 'Specialized Code component for monospace code snippets.' } }
+  }
+};
+
+
+// New story: Showcase multiple font varieties using Text and variants
+export const FontVarieties: Story = {
+  name: 'Font Varieties (Text + Variants)',
+  render: () => (
+    <Frame
+      autoLayout={{ flow: 'vertical', gap: 24, padding: 32 }}
+      fill={{ type: 'solid', color: 'white1' }}
+      appearance={{ radius: 12 }}
+    >
+      <Text variant="h1">H1 - Heading 1</Text>
+      <Text variant="h2">H2 - Heading 2</Text>
+      <Text variant="h3">H3 - Heading 3</Text>
+      <Text variant="h4">H4 - Heading 4</Text>
+      <Text variant="h5">H5 - Heading 5</Text>
+      <Text variant="h6">H6 - Heading 6</Text>
+      <Text variant="display">Display - Hero Headline</Text>
+      <Text variant="body">Body - Regular text</Text>
+      <Text variant="body1">Body1 - Bold body text</Text>
+      <Text variant="body2">Body2 - Alternative body text</Text>
+      <Text variant="label">Label - UI Label</Text>
+      <Text variant="caption">Caption - Small descriptive text</Text>
+      <Text variant="overline">Overline - Small uppercase header</Text>
+      <Text variant="code" as="code">Code - Monospace</Text>
+    </Frame>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Showcase of all font varieties using the Text component and variant presets (h1, h2, display, body, label, etc.).'
+      }
+    }
   }
 };

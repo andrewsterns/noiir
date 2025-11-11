@@ -1,5 +1,5 @@
-import { ExtendVariant } from '../../../packages/frame-core/src/variants/variants.props';
-import { VARIANT_STYLES } from '../../../src/theme/variant';
+import { ExtendVariant } from '../../../__frame-core__/variants/variants.props';
+import { VARIANT_STYLES } from '../../theme/variant';
 
 /**
  * Textarea Variants Library

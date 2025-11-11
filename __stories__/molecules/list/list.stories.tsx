@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { List, ListItem } from '../../../src/components/molecules/list/list';
+import { List, ListItem } from '../../../__components__/molecules/list/list';
 import { useState } from 'react';
-import { Frame } from '../../../src/components/frame/Frame';
-import { Label } from '../../../src/components';
+import { Frame } from '../../../__components__/frame/Frame';
+import { Label } from '../../../__components__/atoms/label/label';
 
 const meta: Meta<typeof List> = {
   title: 'Molecules/List',

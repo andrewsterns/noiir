@@ -33,8 +33,8 @@ export const Horizontal: Story = {
 };
 // --- Basic variant stories ---
 import type { Meta, StoryObj } from '@storybook/react';
-import { Menu } from '../../../src/components/molecules/menu/menu';
-import { Frame } from '../../../src/components';
+import { Menu } from '../../../__components__/molecules/menu/menu';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof Menu> = {
   title: 'Molecules/Menu',

@@ -1,5 +1,5 @@
-import { ExtendVariant} from '../../../packages/frame-core/src/variants/variants.props';
-import { ArrowDown, ArrowUp } from '../../../src/theme/icons/arrows';
+import { ExtendVariant} from '../../../__frame-core__/variants/variants.props';
+// import { ArrowDown, ArrowUp } from '../../../src/theme/icons/arrows'; // TODO: Create icons
 import { BUTTON_VARIANTS } from '../../atoms/button/button.variants';
 // import { LIST_VARIANTS } from '../list/list.variants';  // TODO: Create list.variants.tsx
 // import { LABEL_VARIANTS } from '../../atoms/label/label.variants';  // TODO: Create label.variants.tsx
@@ -57,25 +57,25 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
   primary: {
     ...BUTTON_VARIANTS.primary,
     iconStart: null,
-    iconEnd: <ArrowDown />,
+    // iconEnd: <ArrowDown />, // TODO: Add icon
   },
 
   primaryHover: {
     ...BUTTON_VARIANTS.primaryHover,
     iconStart: null,
-    iconEnd: <ArrowDown />,
+    // iconEnd: <ArrowDown />, // TODO: Add icon
   },
 
   primaryActive: {
     ...BUTTON_VARIANTS.primaryActive,
     iconStart: null,
-    iconEnd: <ArrowUp />,
+    // iconEnd: <ArrowUp />, // TODO: Add icon
   },
 
   primaryActiveHover: {
      ...BUTTON_VARIANTS.primaryActiveHover,
      iconStart: null,
-     iconEnd: <ArrowUp />,
+     // iconEnd: <ArrowUp />, // TODO: Add icon
   },
 
   secondary: {
@@ -89,7 +89,7 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
       textAlign: 'left',
       color: 'gray4',
     },
-    iconEnd: <ArrowDown />,
+    // iconEnd: <ArrowDown />, // TODO: Add icon
   },
 
   secondaryHover: {
@@ -104,7 +104,7 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
       textAlign: 'left',
       color: 'gray7',
     },
-    iconEnd: <ArrowDown />,
+    // iconEnd: <ArrowDown />, // TODO: Add icon
   },
 
   secondaryOpen: {
@@ -118,7 +118,7 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
       textAlign: 'left',
       color: 'gray7',
     },
-    iconEnd: <ArrowUp />,
+    // iconEnd: <ArrowUp />, // TODO: Add icon
   },
 
   disabled: {
@@ -132,7 +132,7 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
       textAlign: 'left',
       color: 'gray7',
     },
-    iconEnd: <ArrowDown />,
+    // iconEnd: <ArrowDown />, // TODO: Add icon
     cursor: { type: 'not-allowed' }
   },
 } satisfies ExtendVariant;

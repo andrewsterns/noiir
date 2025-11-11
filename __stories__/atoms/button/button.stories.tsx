@@ -1,18 +1,15 @@
 // --- Animate + custom event logic demo ---
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../../../src/components/atoms/button/button';
-import { Frame } from '../../../src/components';
-import { ArrowUp } from '../../../src/theme/icons/arrows';
-import { HappyFace } from '../../../src/theme/icons/fun';
-import { NoiirBk, NoiirOutlineBk } from '../../../src/theme/icons/noiir.svg';
+import { Button } from '../../../__components__/atoms/button/button';
+import { Frame } from '../../../__components__/frame/Frame';
 
-import { 
-  BUTTON_SOLID_VARIANTS, 
-  BUTTON_SOFT_VARIANTS, 
-  BUTTON_SURFACE_VARIANTS, 
-  BUTTON_GHOST_VARIANTS, 
-  BUTTON_OUTLINE_VARIANTS 
+import {
+  BUTTON_SOLID_VARIANTS,
+  BUTTON_SOFT_VARIANTS,
+  BUTTON_SURFACE_VARIANTS,
+  BUTTON_GHOST_VARIANTS,
+  BUTTON_OUTLINE_VARIANTS
 } from '../../../__variants__/atoms/button/button.variants';
 
 const meta: Meta<typeof Button> = {
@@ -59,9 +56,9 @@ export const Animate: Story = {
 export const Sizes: Story = {
   render: () => (
     <Frame autoLayout={{ flow: 'horizontal', gap: 20, alignment: 'center' }}>
-      <Button size="1" variant="primary">Small</Button>
-      <Button size="2" variant="primary">Medium</Button>
-      <Button size= '3' variant="primary">Large</Button>
+      <Button size="1" variant="primary" fill={{ type: 'solid', color: 'primary3' }}>Small</Button>
+      <Button size="2" variant="primary" fill={{ type: 'solid', color: 'primary3' }}>Medium</Button>
+      <Button size="3" variant="primary" fill={{ type: 'solid', color: 'primary3' }}>Large</Button>
     </Frame>  
   ),
   parameters: {

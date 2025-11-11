@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
-import { NoiirBk, NoiirOutlineBk } from '../../../../src/theme/icons/noiir.svg';
-
-const Group26 = new URL('../../../../src/theme/icons/Group 26.png', import.meta.url).href;
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 
 //ALL FILL RELATED PROPS AND STORIES SHOULD GO IN THIS FILE
 
 interface FillArgs extends Partial<FrameProps> {
+  children?: React.ReactNode;
+  appearance: any;
   fillType: 'none' | 'solid' | 'linear-gradient' | 'radial-gradient' | 'conic-gradient' | 'image';
   // Overall fill opacity
   fillOpacity: number;
@@ -263,9 +262,7 @@ export const Fill: FillStory = {
     fill: { control: false },
     stroke: { control: false },
     appearance: { control: false },
-    onClick: { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false }
+
   },
   render: (args: FillArgs) => {
     // Helper function to resolve color based on type
@@ -534,83 +531,6 @@ export const ReactElementFill: FillStory = {
   name: 'React Element as Fill',
   render: () => (
     <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', padding: 20, alignItems: 'center' }}>
-      {/* Using NoiirBk logo as fill with src prop */}
-      <Frame
-        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
-        fill={{
-          type: 'image',
-          image: {
-            src: <NoiirBk />,
-            scaleMode: 'fit'
-          },
-          color: 'neutral10'
-        }}
-        appearance={{ radius: 12 }}
-        stroke={{ type: 'solid', color: 'neutral4', weight: 2 }}
-      >
-        <div style={{ 
-          position: 'relative',
-          zIndex: 1,
-          bottom: -70,
-          textAlign: 'center',
-          color: '#000', 
-          fontSize: 12, 
-          fontWeight: 600,
-          background: 'rgba(255,255,255,0.8)',
-          padding: '4px 8px',
-          borderRadius: 4
-        }}>
-          src: {'{<NoiirBk />}'}
-        </div>
-      </Frame>
-
-      {/* Using NoiirOutlineBk logo as fill with element prop */}
-      <Frame
-        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
-        fill={{
-          type: 'image',
-          image: {
-            element: <NoiirOutlineBk />,
-            scaleMode: 'fit'
-          },
-          color: 'primary6'
-        }}
-        appearance={{ radius: 12 }}
-        stroke={{ type: 'solid', color: 'primary6', weight: 2 }}
-      >
-        <div style={{ 
-          position: 'relative',
-          zIndex: 1,
-          bottom: -70,
-          textAlign: 'center',
-          color: '#000', 
-          fontSize: 12, 
-          fontWeight: 600,
-          background: 'rgba(255,255,255,0.8)',
-          padding: '4px 8px',
-          borderRadius: 4
-        }}>
-          element: {'{<NoiirOutlineBk />}'}
-        </div>
-      </Frame>
-
-      {/* Using Group 26 PNG as fill with imported asset */}
-      <Frame
-        autoLayout={{ width: 200, height: 200, alignment: 'center' }}
-        fill={[{
-          type: 'image',
-          image: {
-            src: Group26,
-            scaleMode: 'fill'
-          }
-        }, {type: 'solid', color: 'green10'}]}
-        appearance={{ radius: 12 }}
-        stroke={{ type: 'solid', color: 'neutral4', weight: 2 }}
-      >
-      
-          Group 26 PNG (imported)
-
-      </Frame>
 
       {/* Using external PNG URL as fill */}
       <Frame
@@ -689,59 +609,7 @@ export const ReactElementFill: FillStory = {
         </div>
       </Frame>
 
-      {/* Colored icon with gradient background */}
-      <Frame
-        autoLayout={{ width: 200, height: 200, alignment: 'center', padding: 20 }}
-        fill={{
-          type: 'linear-gradient',
-          angle: 135,
-          stops: [
-            { color: 'primary6', position: 0 },
-            { color: 'accent6', position: 1 }
-          ]
-        }}
-        appearance={{ radius: 12 }}
-      >
-        <div style={{ color: '#fff', fontSize: 80 }}>
-          <NoiirBk />
-        </div>
-        <div style={{ 
-          marginTop: 10,
-          textAlign: 'center',
-          color: '#fff', 
-          fontSize: 12, 
-          fontWeight: 600
-        }}>
-          Icon on Gradient
-        </div>
-      </Frame>
 
-      {/* Multiple sizes demonstration */}
-      <Frame
-        autoLayout={{ 
-          flow: 'horizontal',
-          gap: 16,
-          padding: 24,
-          alignment: 'center'
-        }}
-        fill={{ type: 'solid', color: 'neutral2' }}
-        appearance={{ radius: 12 }}
-      >
-        <Frame autoLayout={{ flow: 'horizontal', gap: 16, alignment: 'center' }}
-          fill={{ type: 'solid', color: 'error7' }}>
-          <NoiirBk />
-        </Frame>
-
-        <div style={{ color: 'accent6', fontSize: 48 }}>
-          <NoiirBk />
-        </div>
-        <div style={{ color: 'success6', fontSize: 64 }}>
-          <NoiirBk />
-        </div>
-        <div style={{ color: 'error6', fontSize: 80 }}>
-          <NoiirBk />
-        </div>
-      </Frame>
     </div>
   ),
   parameters: {

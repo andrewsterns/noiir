@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Dialog } from '../../../src/components/molecules/dialog/dialog';
+import { Dialog } from '../../../__components__/molecules/dialog/dialog';
 
 const meta: Meta<typeof Dialog> = {
   title: 'Molecules/Dialog',

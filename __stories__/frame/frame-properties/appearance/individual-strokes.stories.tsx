@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame } from '../../../../src/components/frame/Frame';
+import { Frame } from '../../../../__components__/frame/Frame';
 
 const meta: Meta<typeof Frame> = {
   title: 'Frame/Properties/Appearance/Individual Strokes',

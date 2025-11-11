@@ -19,10 +19,11 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       resolve: {
         alias: {
-          '@noiir/frame-core': path.resolve(__dirname, '../packages/frame-core/src'),
+          '@noiir/frame-core': path.resolve(__dirname, '../__frame-core__'),
+          '@components': path.resolve(__dirname, '../__components__'),
           '@variants': path.resolve(__dirname, '../__variants__'),
           '@stories': path.resolve(__dirname, '../__stories__'),
-          '@theme': path.resolve(__dirname, '../src/theme'),
+          '@theme': path.resolve(__dirname, '../__variants__/theme'),
         },
       },
     });

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Frame, FrameProps } from '../../../../src/components/frame/Frame';
+import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 
 interface EffectsArgs extends Partial<FrameProps> {
   children?: React.ReactNode;
@@ -235,10 +235,7 @@ export const Effects: EffectsStory = {
     autoLayout: { control: false },
     fill: { control: false },
     stroke: { control: false },
-    appearance: { control: false },
-    onClick: { control: false },
-    onMouseEnter: { control: false },
-    onMouseLeave: { control: false }
+    appearance: { control: false }
   },
   render: (args: EffectsArgs) => {
     const activeEffects = [];

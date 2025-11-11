@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import colors from '../../src/theme/colors';
-import { fonts } from '../../src/theme/fonts';
+import { colors } from '@theme/colors';
+import { fonts } from '@theme/fonts';
 // Typography stories are now in Atoms/Text
 
 // Dummy component for the story
@@ -26,84 +26,100 @@ type Story = StoryObj<typeof ThemeShowcase>;
 
 // Colors Story
 export const Colors: Story = {
-  render: () => (
-    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
-      <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>
-        Design System Colors
-      </h1>
-      
-      {Object.entries(colors).map(([colorName, colorScale]) => (
-        <div key={colorName} style={{ marginBottom: '3rem' }}>
-          <h2 style={{ 
-            marginBottom: '1rem', 
-            fontSize: '1.5rem', 
-            fontWeight: '600',
-            textTransform: 'capitalize'
-          }}>
-            {colorName}
-          </h2>
-          
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', 
-            gap: '1rem',
-            marginBottom: '2rem'
-          }}>
-            {Object.entries(colorScale as Record<string, string>).map(([shade, colorValue]) => {
-              const isLightColor = parseInt(shade) <= 3;
-              const textColor = isLightColor ? '#374151' : '#ffffff';
-              
-              return (
-                <div
-                  key={shade}
-                  style={{
-                    backgroundColor: colorValue as string,
-                    padding: '1rem',
-                    borderRadius: '8px',
-                    textAlign: 'center',
-                    minHeight: '80px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    border: isLightColor ? '1px solid #e5e7eb' : 'none',
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-                  }}
-                >
-                  <div style={{ 
-                    color: textColor, 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    marginBottom: '0.25rem'
-                  }}>
-                    {colorName}{shade}
+  render: () => {
+    // Group colors by their base name (primary, error, success, etc.)
+    const colorGroups: Record<string, Record<string, string>> = {};
+    
+    Object.entries(colors).forEach(([key, value]) => {
+      const match = key.match(/^([a-z]+)(\d+)$/);
+      if (match) {
+        const [, baseName, shade] = match;
+        if (!colorGroups[baseName]) {
+          colorGroups[baseName] = {};
+        }
+        colorGroups[baseName][shade] = value as string;
+      }
+    });
+
+    return (
+      <div style={{ fontFamily: 'system-ui, sans-serif' }}>
+        <h1 style={{ marginBottom: '2rem', fontSize: '2rem', fontWeight: 'bold' }}>
+          Design System Colors
+        </h1>
+        
+        {Object.entries(colorGroups).map(([colorName, colorScale]) => (
+          <div key={colorName} style={{ marginBottom: '3rem' }}>
+            <h2 style={{ 
+              marginBottom: '1rem', 
+              fontSize: '1.5rem', 
+              fontWeight: '600',
+              textTransform: 'capitalize'
+            }}>
+              {colorName}
+            </h2>
+            
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', 
+              gap: '1rem',
+              marginBottom: '2rem'
+            }}>
+              {Object.entries(colorScale).map(([shade, colorValue]) => {
+                const isLightColor = parseInt(shade) <= 3;
+                const textColor = isLightColor ? '#374151' : '#ffffff';
+                
+                return (
+                  <div
+                    key={shade}
+                    style={{
+                      backgroundColor: colorValue,
+                      padding: '1rem',
+                      borderRadius: '8px',
+                      textAlign: 'center',
+                      minHeight: '80px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      border: isLightColor ? '1px solid #e5e7eb' : 'none',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+                    }}
+                  >
+                    <div style={{ 
+                      color: textColor, 
+                      fontWeight: '600', 
+                      fontSize: '0.9rem',
+                      marginBottom: '0.25rem'
+                    }}>
+                      {colorName}{shade}
+                    </div>
+                    <div style={{ 
+                      color: textColor, 
+                      fontSize: '0.75rem', 
+                      opacity: 0.8,
+                      fontFamily: 'monospace'
+                    }}>
+                      {colorValue}
+                    </div>
                   </div>
-                  <div style={{ 
-                    color: textColor, 
-                    fontSize: '0.75rem', 
-                    opacity: 0.8,
-                    fontFamily: 'monospace'
-                  }}>
-                    {colorValue}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        
+        <div style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
+          <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: '600' }}>
+            Usage Examples
+          </h3>
+          <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
+            <p><code>fill={`{ type: 'solid', color: 'primary6' }`}</code> - Uses the primary blue</p>
+            <p><code>fill={`{ type: 'solid', color: 'success3' }`}</code> - Uses light green</p>
+            <p><code>fill={`{ type: 'solid', color: '#3B82F6' }`}</code> - Uses hex color directly</p>
           </div>
         </div>
-      ))}
-      
-      <div style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-        <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: '600' }}>
-          Usage Examples
-        </h3>
-        <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
-          <p><code>fill={`{{ type: 'solid', color: 'primary6' }}`}</code> - Uses the primary blue</p>
-          <p><code>fill={`{{ type: 'solid', color: 'success3' }}`}</code> - Uses light green</p>
-          <p><code>fill={`{{ type: 'solid', color: '#3B82F6' }}`}</code> - Uses hex color directly</p>
-        </div>
       </div>
-    </div>
-  ),
+    );
+  },
   parameters: {
     docs: {
       description: {
@@ -122,7 +138,10 @@ export const Fonts: Story = {
       </h1>
       
       {Object.entries(fonts).map(([fontName, fontConfig]) => {
-        const config = fontConfig as { family: string; weights: number[]; styles: string[]; display: string };
+        const isStringConfig = typeof fontConfig === 'string';
+        const family = isStringConfig ? fontConfig : (fontConfig as any).family;
+        const weights = isStringConfig ? [400] : (fontConfig as any).weights || [400];
+        
         return (
         <div key={fontName} style={{ marginBottom: '3rem' }}>
           <h2 style={{ 
@@ -141,7 +160,7 @@ export const Fonts: Story = {
             backgroundColor: '#ffffff'
           }}>
             <div style={{
-              fontFamily: config.family,
+              fontFamily: family,
               fontSize: '2rem',
               fontWeight: 'normal',
               marginBottom: '1rem',
@@ -151,7 +170,7 @@ export const Fonts: Story = {
             </div>
             
             <div style={{
-              fontFamily: config.family,
+              fontFamily: family,
               fontSize: '1.25rem',
               fontWeight: 'bold',
               marginBottom: '1rem',
@@ -161,7 +180,7 @@ export const Fonts: Story = {
             </div>
             
             <div style={{
-              fontFamily: config.family,
+              fontFamily: family,
               fontSize: '1rem',
               fontWeight: 'normal',
               marginBottom: '1.5rem',
@@ -178,10 +197,8 @@ export const Fonts: Story = {
               padding: '0.75rem',
               borderRadius: '4px'
             }}>
-              <strong>Font Family:</strong> {config.family}<br/>
-              <strong>Available Weights:</strong> {config.weights.join(', ')}<br/>
-              <strong>Styles:</strong> {config.styles.join(', ')}<br/>
-              <strong>Display:</strong> {config.display}
+              <strong>Font Family:</strong> {family}<br/>
+              <strong>Available Weights:</strong> {weights.join(', ')}
             </div>
           </div>
         </div>
@@ -192,7 +209,7 @@ export const Fonts: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'All available fonts in the design system. Atkinson Hyperlegible is used for headings, Inter for body text, Poppins for display text, and JetBrains Mono for code.'
+        story: 'All available fonts in the design system. Geist is used for headings, Inter for body text, Poppins for display text, and Geist Mono for code.'
       }
     }
   }

@@ -1,5 +1,5 @@
-import { FrameVariantConfig } from '../../../packages/frame-core/src/variants/variants.props';
-import { fonts } from '../../../src/theme/fonts';
+import { FrameVariantConfig } from '@noiir/frame-core/variants/variants.props';
+import { fonts } from '../../theme/fonts';
 
 /**
  * Text Component Variants

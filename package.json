@@ -2,39 +2,42 @@
   "name": "@noiir/core",
   "version": "1.2.6",
   "description": "Your description",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/__frame-core__/index.js",
+  "types": "dist/__frame-core__/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/src/index.js",
-      "require": "./dist/src/index.js",
-      "types": "./dist/src/index.d.ts"
+      "import": "./dist/__frame-core__/index.js",
+      "require": "./dist/__frame-core__/index.js",
+      "types": "./dist/__frame-core__/index.d.ts"
     },
     "./frame": {
-      "import": "./dist/src/frame.js",
-      "require": "./dist/src/frame.js",
-      "types": "./dist/src/frame.d.ts"
+      "import": "./dist/__components__/frame/Frame.js",
+      "require": "./dist/__components__/frame/Frame.js",
+      "types": "./dist/__components__/frame/Frame.d.ts"
     },
     "./theme": {
-      "import": "./dist/src/theme.js",
-      "require": "./dist/src/theme.js",
-      "types": "./dist/src/theme.d.ts"
+      "import": "./dist/__components__/theme/index.js",
+      "require": "./dist/__components__/theme/index.js",
+      "types": "./dist/__components__/theme/index.d.ts"
     },
     "./components": {
-      "import": "./dist/src/components.js",
-      "require": "./dist/src/components.js",
-      "types": "./dist/src/components.d.ts"
+      "import": "./dist/__components__/index.js",
+      "require": "./dist/__components__/index.js",
+      "types": "./dist/__components__/index.d.ts"
     },
     "./variants": {
-      "import": "./dist/src/variants.js",
-      "require": "./dist/src/variants.js",
-      "types": "./dist/src/variants.d.ts"
+      "import": "./dist/__variants__/index.js",
+      "require": "./dist/__variants__/index.js",
+      "types": "./dist/__variants__/index.d.ts"
     }
   },
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "__frame-core__",
+    "__variants__",
+    "__components__"
   ],
   "scripts": {
     "build": "npm run build:clean && npm run build:tsc",

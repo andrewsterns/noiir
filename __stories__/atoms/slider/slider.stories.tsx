@@ -1,8 +1,8 @@
 // --- Slider stories ---
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Slider } from '../../../src/components/atoms/slider/slider';
-import { Frame } from '../../../src/components';
+import { Slider } from '../../../__components__/atoms/slider/slider';
+import { Frame } from '../../../__components__/frame/Frame';
 
 const meta: Meta<typeof Slider> = {
   title: 'Atoms/Slider',
