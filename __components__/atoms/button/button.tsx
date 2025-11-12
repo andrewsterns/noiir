@@ -51,12 +51,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   const sizes = customSizes || BUTTON_SIZES;
   // Frame will auto-generate unique ID if not provided
   const defaultAnimate: Animate = (variant === 'primary' && !animate) ? [
-    { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
-    { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
-    { trigger: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
-    { trigger: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
-    { trigger: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
-    { trigger: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
+    {
+      mouseEnter: { toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
+      mouseLeave: { toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
+    },
+    {
+      onClick: { toggleVariant: ['primary', 'primaryActive'], duration: '0.1s', curve: 'ease' },
+    },
+    {
+      mouseEnter: { toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
+      mouseLeave: { toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
+    }
   ] : [];
 
   const finalAnimate = animate ?? defaultAnimate;

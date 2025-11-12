@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
 import { Label } from '../../atoms/label/label';
-import { LABEL_SIZES, LABEL_VARIANTS } from '../../atoms/label/label.variants';
+import { LABEL_SIZES, LABEL_VARIANTS } from '../../../__variants__/atoms/label/label.variants';
 import { LIST_SIZES, LIST_VARIANTS } from './list.variants';
 import { FrameVariantConfig } from '@noiir/frame-core/variants/variants.props';
 

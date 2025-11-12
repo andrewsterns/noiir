@@ -24,8 +24,8 @@ export { default as MenuStories } from './molecules/menu/menu.stories';
 export { default as PopupStories } from './molecules/popup/popup.stories';
 
 // Organisms
-export { default as GuageStories } from './organism/guage.stories';
-export { default as NavbarStories } from './organism/navbar/navbar.stories';
+// export { default as GuageStories } from './organism/guage.stories';
+// export { default as NavbarStories } from './organism/navbar/navbar.stories';
 
 // Template
 export { default as TemplateStories } from './template/template.stories';

@@ -71,8 +71,7 @@ export const BUTTON_VARIANTS: ExtendVariant = {
     },
 
     primaryActiveHover: {
-        ...VARIANT_STYLES.solid as any,
-        fill: { type: 'solid', color: 'primary9', opacity: 1 },
+        ...VARIANT_STYLES.solidActiveHover as any,
         appearance: { radius: 8 },
         typography: {
             color: 'primary3',
@@ -115,7 +114,7 @@ export const BUTTON_SOLID_VARIANTS: ExtendVariant = {
     },
     solidActiveHover: {
         ...VARIANT_STYLES.solid as any,
-        fill: { type: 'solid', color: 'black7', opacity: 1 },
+        fill: { type: 'solid', color: 'warning7', opacity: 1 },
         autoLayout: { flow: 'horizontal', alignment: 'center', gap: 8, wrap: 'nowrap', width: 'fill-container' },
         appearance: { radius: 8 },
         typography: {

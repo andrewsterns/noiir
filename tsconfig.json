@@ -9,8 +9,6 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
     "module": "commonjs",
@@ -32,7 +30,7 @@
     "__variants__/**/*",
     "__frame-core__/**/*",
     "__stories__/**/*"
-, "dist/src/theme/icons"  ],
+  ],
   "exclude": [
     "node_modules",
     "dist",

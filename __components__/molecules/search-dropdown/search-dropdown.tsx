@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { Frame } from '../../frame/Frame';
-import { Input, INPUT_VARIANTS } from '../../atoms/input/input';
+import { Input } from '../../atoms/input/input';
+import { INPUT_VARIANTS } from '@variants/atoms/input/input.variants';
 import { List } from '../../molecules/list/list';
-import { SearchIcon } from '../../../theme/icons/search';
+import { S_DROPDOWN_INPUT_VARIANTS, S_DROPDOWN_VARIANTS } from '@variants/molecules/search-dropdown/search-dropdown.variants';
+
 
 /**
  * SearchDropdown Component
@@ -126,18 +128,24 @@ export const SearchDropdown = React.forwardRef<HTMLDivElement, SearchDropdownPro
     <Frame
       autoLayout={{ flow: 'vertical' }}
       ref={ref}
-      onClick={handleFrameClick}
-      onMouseLeave={handleMouseLeave}
       tabIndex={-1}
       {...frameProps}
     >
-      <Input
-        value={searchQuery}
-        onChange={handleInputChange}
-        placeholder={searchPlaceholder}
+      <Frame
         variant={isActive ? 'primaryActive' : 'primary'}
-        variants={INPUT_VARIANTS}
-      />
+        variants={S_DROPDOWN_VARIANTS}
+        onClick={(e) => e.stopPropagation()} // Prevent triggering parent click
+        {...frameProps}
+      >
+        <Input
+          value={searchQuery}
+          onChange={handleInputChange}
+          placeholder={searchPlaceholder}
+          variant="primary"
+          variants={S_DROPDOWN_INPUT_VARIANTS}
+          size="fill"
+        />
+      </Frame>
       {isSearching && searchQuery.trim() && (
         <List
           items={filteredItems}

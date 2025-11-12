@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Animation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Button Animation Test</h1>
+    <p>Test the button hover animations to ensure visual changes work properly.</p>
+
+    <div class="test-section">
+        <h2>Solid Button</h2>
+        <div id="solid-button-container"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Surface Button</h2>
+        <div id="surface-button-container"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Ghost Button</h2>
+        <div id="ghost-button-container"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Outline Button</h2>
+        <div id="outline-button-container"></div>
+    </div>
+
+    <script type="module">
+        import { Button } from './src/components/atoms/button/button.tsx';
+        import { Frame } from './src/frame.ts';
+
+        // Create test buttons
+        const solidButton = Button({
+            variant: 'solid',
+            children: 'Solid Button - Hover Me!'
+        });
+
+        const surfaceButton = Button({
+            variant: 'surface',
+            children: 'Surface Button - Hover Me!'
+        });
+
+        const ghostButton = Button({
+            variant: 'ghost',
+            children: 'Ghost Button - Hover Me!'
+        });
+
+        const outlineButton = Button({
+            variant: 'outline',
+            children: 'Outline Button - Hover Me!'
+        });
+
+        // Mount buttons to DOM
+        document.getElementById('solid-button-container').appendChild(solidButton);
+        document.getElementById('surface-button-container').appendChild(surfaceButton);
+        document.getElementById('ghost-button-container').appendChild(ghostButton);
+        document.getElementById('outline-button-container').appendChild(outlineButton);
+
+        console.log('Button animation test loaded');
+    </script>
+</body>
+</html>

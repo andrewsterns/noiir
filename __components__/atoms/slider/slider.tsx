@@ -79,16 +79,16 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumb'), 
       toVariant: getVariantSuffix('thumbHover'), 
-      duration: '0.15s', 
-      curve: 'ease' 
+      duration: '0.05s', 
+      curve: 'none' 
     },
     { 
       trigger: 'mouseLeave', 
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumbHover'), 
       toVariant: getVariantSuffix('thumb'), 
-      duration: '0.15s', 
-      curve: 'ease' 
+      duration: '0.05s', 
+      curve: 'none' 
     },
     // Grab: Initiate drag from base or hover state
     { 
@@ -96,8 +96,8 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
       targetId: 'thumbId',
       fromVariant: getVariantSuffix('thumb'), 
       toVariant: getVariantSuffix('thumbGrabbing'), 
-      duration: '0.1s', 
-      curve: 'ease' 
+      duration: '0.05s', 
+      curve: 'none' 
     },
     { 
       trigger: 'grab', 

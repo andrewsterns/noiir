@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame } from '../../frame/Frame';
-import {BADGE_VARIANTS} from './badge.variants';
+import {BADGE_VARIANTS} from '../../../__variants__/atoms/badge/badge.variants';
 
 /**
  * Badge Component

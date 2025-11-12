@@ -1,5 +1,5 @@
 import { ExtendVariant } from '../../../__frame-core__/variants/variants.props';
-import { VARIANT_STYLES } from '../../../__variants__/theme/variant';
+import { VARIANT_STYLES } from '../../theme/variant';
 
 /**
  * Label Variants Library

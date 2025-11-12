@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame, FrameProps } from '@components/frame/Frame';
-import { LABEL_VARIANTS, LABEL_SIZES } from './label.variants';
+import { LABEL_VARIANTS, LABEL_SIZES } from '../../../__variants__/atoms/label/label.variants';
 import { Animate } from '@noiir/frame-core/animate/animate.props';
 
 /**
@@ -50,7 +50,9 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   // Determine effective variant based on disabled state
   const effectiveVariant = disabled ? 'disabled' : variant;
 
-  const defaultTransitions: Animate = [
+  const defaultTransitions: Animate = disabled ? [
+    // No animations for disabled state - remains static
+  ] : [
     { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
     { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
     { trigger: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
@@ -68,7 +70,6 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
       sizes={sizes}
       variant={effectiveVariant}
       variants={variants}
-      cursor={'pointer'}
       onClick={disabled ? undefined : onClick}
       animate={transitions ?? defaultTransitions}
       {...frameProps}

@@ -24,6 +24,17 @@ export const colors = {
   error9: '#c62828',
   error10: '#b71c1c',
 
+  red1: '#ffebee',
+  red2: '#ffcdd2',
+  red3: '#ef9a9a',
+  red4: '#e57373',
+  red5: '#ef5350',
+  red6: '#f44336',
+  red7: '#e53935',
+  red8: '#d32f2f',
+  red9: '#c62828',
+  red10: '#b71c1c',
+
   // Success/Green scale
   success1: '#e8f5e9',
   success2: '#c8e6c9',
@@ -36,6 +47,17 @@ export const colors = {
   success9: '#2e7d32',
   success10: '#1b5e20',
 
+  green1: '#e8f5e9',
+  green2: '#c8e6c9',
+  green3: '#a5d6a7',
+  green4: '#81c784',
+  green5: '#66bb6a',
+  green6: '#4caf50',
+  green7: '#43a047',
+  green8: '#388e3c',
+  green9: '#2e7d32',
+  green10: '#1b5e20',
+
   // Warning/Yellow scale
   warning1: '#fffde7',
   warning2: '#fff9c4',
@@ -47,6 +69,18 @@ export const colors = {
   warning8: '#fbc02d',
   warning9: '#f9a825',
   warning10: '#f57f17',
+
+  // Yellow scale
+  yellow1: '#fffde7',
+  yellow2: '#fff9c4',
+  yellow3: '#fff59d',
+  yellow4: '#fff176',
+  yellow5: '#ffee58',
+  yellow6: '#ffeb3b',
+  yellow7: '#fdd835',
+  yellow8: '#fbc02d',
+  yellow9: '#f9a825',
+  yellow10: '#f57f17',
 
   // Blue scale
   blue1: '#e3f2fd',

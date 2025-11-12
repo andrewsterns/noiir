@@ -146,7 +146,9 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
           size={buttonSize}
           sizes={buttonSizes}
           autoLayout={{ alignment: 'left', gap: 'fill', paddingRight: 18 }}
-          animate={buttonTransitions}
+          animate={disabled ? [] : buttonTransitions}
+          disabled={disabled}
+          cursor={disabled ? 'not-allowed' : 'pointer'}
           {...buttonProps}
         >
           {getSelectedLabel()}

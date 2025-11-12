@@ -1,7 +1,7 @@
 // src/components/frame/frame-properties/animate/animate.tsx
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
-export type TransitionTrigger = 'click' | 'hover' | 'mouseEnter' | 'mouseLeave' | 'mouseDown' | 'mouseUp' | 'grab' | 'key' | 'hotKey' | 'delay' | 'close' | 'listen' | (() => void);
+export type TransitionTrigger = 'click' | 'hover' | 'mouseEnter' | 'mouseLeave' | 'mouseDown' | 'mouseUp' | 'grab' | 'key' | 'hotKey' | 'delay' | 'close' | 'listen' | 'focus' | 'blur' | 'afterDelay' | (() => void);
 
 export type AnimationAction = 
   | 'none'
@@ -38,7 +38,43 @@ export interface FrameAnimation {
   scrollBehavior?: 'auto' | 'smooth'; // For 'scrollTo' action (default: 'smooth')
 }
 
-export type Animate = FrameAnimation[];
+export type Animate = AnimateDSL[];
+
+// New DSL types for cleaner animate prop
+export interface AnimateAction {
+  action?: AnimationAction; // Explicit action (optional; can be inferred from other properties)
+  toVariant?: string; // 'id.variant' shorthand or full object
+  fromVariant?: string; // 'id.variant' shorthand for condition
+  targetId?: string; // Explicit target (optional; parsed from shorthand)
+  duration?: string | number;
+  curve?: string;
+  delay?: string | number; // For afterDelay
+  toggleVariant?: string[]; // Array of 'id.variant' for cycling
+  scrollTo?: string; // Target ID to scroll to
+  scrollBehavior?: 'auto' | 'smooth';
+  key?: string; // For hotKey/onKey
+  url?: string; // For openLink
+  overlayId?: string; // For overlays
+}
+
+export type AnimateDSL = {
+  onHover?: string | AnimateAction;
+  onClick?: string | AnimateAction;
+  mouseEnter?: string | AnimateAction;
+  mouseLeave?: string | AnimateAction;
+  mouseDown?: string | AnimateAction;
+  mouseUp?: string | AnimateAction;
+  onFocus?: string | AnimateAction;
+  onBlur?: string | AnimateAction;
+  afterDelay?: string | AnimateAction;
+  onScroll?: string | AnimateAction;
+  hotKey?: string | AnimateAction;
+  onKey?: string | AnimateAction;
+  listen?: { listenId: string; listenVariant: string } & AnimateAction;
+  whileHovering?: string | AnimateAction;
+  whilePressing?: string | AnimateAction;
+  // Add more triggers as needed
+};
 
 // Legacy type alias for backwards compatibility
 export type AnimateRule = FrameAnimation;
@@ -49,10 +85,11 @@ interface AnimateContextType {
   unregisterFrame: (id: string) => void;
   getVariant: (id: string) => string;
   getVisualVariant: (id: string) => string;
-  registerAnimations: (animations: Animate) => void;
-  unregisterAnimations: (animations: Animate) => void;
+  registerAnimations: (frameId: string, animations: Animate) => void;
+  unregisterAnimations: (frameId: string, animations: Animate) => void;
   emitEvent: (sourceId: string, trigger: TransitionTrigger, eventData?: any) => void;
   getAnimationsForFrame: (frameId: string) => Animate;
+  getAnimationProps: (frameId: string) => { duration?: string; delay?: string; curve?: string } | null;
 }
 
 const AnimateContext = createContext<AnimateContextType | null>(null);
@@ -93,14 +130,326 @@ export const resolveCurve = (curve?: string | ((...args: any[]) => string)): str
 };
 
 // Helper function to resolve variant (can be string or object)
-// For now, if it's an object, we'll need to handle it differently
-// This is a placeholder - you may want to expand this based on your needs
-export const resolveVariant = (variant: string | object | undefined): string => {
-  if (!variant) return '';
-  if (typeof variant === 'string') return variant;
-  // If it's an object, you might want to serialize it or handle it specially
-  // For now, we'll just return a string representation
-  return JSON.stringify(variant);
+// Now handles shorthand 'id.variant' -> { targetId: 'id', variantName: 'variant' }
+export const resolveVariant = (variant: string | object | undefined, defaultTargetId?: string): { targetId?: string; variantName: string | object } => {
+  if (!variant) return { variantName: '' };
+  if (typeof variant === 'string') {
+    const parts = variant.split('.');
+    if (parts.length === 2) {
+      // Shorthand: 'id.variant' -> { targetId: 'id', variantName: 'variant' }
+      return { targetId: parts[0], variantName: parts[1] };
+    }
+    // No '.', use as variant name (with optional default targetId)
+    return { targetId: defaultTargetId, variantName: variant };
+  }
+  // Object: return as-is
+  return { targetId: defaultTargetId, variantName: variant };
+};
+
+// Parser to convert DSL to FrameAnimation[]
+export const parseAnimateDSL = (dsl: AnimateDSL): FrameAnimation[] => {
+  const rules: FrameAnimation[] = [];
+
+  // Helper function to extract targetId and resolve variants from action
+  const processAction = (action: string | AnimateAction) => {
+    const resolvedAction = typeof action === 'string' ? { toVariant: action } : action;
+    
+    // Resolve all variant references
+    const toResolved = resolveVariant(resolvedAction.toVariant);
+    const fromResolved = resolveVariant(resolvedAction.fromVariant);
+    
+    // Resolve toggleVariant array
+    const toggleVariantsResolved = resolvedAction.toggleVariant?.map(v => {
+      const { variantName } = resolveVariant(v);
+      return variantName as string;
+    }) || [];
+    
+    // Extract targetId from any shorthand reference (prioritize toVariant, then fromVariant, then first toggleVariant)
+    const targetId = toResolved.targetId || fromResolved.targetId || 
+                    (resolvedAction.toggleVariant ? resolveVariant(resolvedAction.toggleVariant[0]).targetId : undefined) ||
+                    resolvedAction.targetId;
+    
+    // Infer action if not explicitly set
+    let inferredAction = resolvedAction.action;
+    if (!inferredAction) {
+      if (resolvedAction.url) {
+        inferredAction = 'openLink';
+      } else if (resolvedAction.scrollTo) {
+        inferredAction = 'scrollTo';
+      } else if (resolvedAction.overlayId) {
+        // Could be openOverlay, swapOverlay, or closeOverlay - default to openOverlay
+        inferredAction = 'openOverlay';
+      } else {
+        inferredAction = 'changeTo';
+      }
+    }
+    
+    return {
+      targetId,
+      toVariant: toResolved.variantName,
+      fromVariant: fromResolved.variantName,
+      toggleVariants: toggleVariantsResolved,
+      toggle: !!resolvedAction.toggleVariant,
+      duration: resolvedAction.duration,
+      curve: resolvedAction.curve,
+      delay: resolvedAction.delay,
+      key: resolvedAction.key,
+      scrollTo: resolvedAction.scrollTo,
+      scrollBehavior: resolvedAction.scrollBehavior,
+      url: resolvedAction.url,
+      overlayId: resolvedAction.overlayId,
+      action: inferredAction,
+    };
+  };
+
+  if (dsl.onHover) {
+    const processed = processAction(dsl.onHover);
+    
+    // Create mouseEnter rule
+    rules.push({
+      trigger: 'mouseEnter',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      fromVariant: processed.fromVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+    
+    // Create mouseLeave rule to revert (if fromVariant is specified)
+    if (processed.fromVariant) {
+      rules.push({
+        trigger: 'mouseLeave',
+        targetId: processed.targetId,
+        toVariant: processed.fromVariant,
+        fromVariant: processed.toVariant,
+        toggleVariants: processed.toggleVariants,
+        toggle: processed.toggle,
+        duration: processed.duration,
+        curve: processed.curve,
+        action: processed.action,
+        url: processed.url,
+        overlayId: processed.overlayId,
+        scrollTargetId: processed.scrollTo,
+        scrollBehavior: processed.scrollBehavior,
+      });
+    }
+  }
+
+  if (dsl.onClick) {
+    const processed = processAction(dsl.onClick);
+    rules.push({
+      trigger: 'click',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      fromVariant: processed.fromVariant,
+      duration: processed.duration,
+      curve: processed.curve,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.afterDelay) {
+    const processed = processAction(dsl.afterDelay);
+    rules.push({
+      trigger: 'afterDelay',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      delay: processed.delay || '0s',
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.onFocus) {
+    const processed = processAction(dsl.onFocus);
+    rules.push({
+      trigger: 'focus',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.onBlur) {
+    const processed = processAction(dsl.onBlur);
+    rules.push({
+      trigger: 'blur',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.hotKey) {
+    const processed = processAction(dsl.hotKey);
+    rules.push({
+      trigger: 'hotKey',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      key: processed.key,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.onKey) {
+    const processed = processAction(dsl.onKey);
+    rules.push({
+      trigger: 'key',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      key: processed.key,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.mouseEnter) {
+    const processed = processAction(dsl.mouseEnter);
+    rules.push({
+      trigger: 'mouseEnter',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.mouseLeave) {
+    const processed = processAction(dsl.mouseLeave);
+    rules.push({
+      trigger: 'mouseLeave',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.mouseDown) {
+    const processed = processAction(dsl.mouseDown);
+    rules.push({
+      trigger: 'mouseDown',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      fromVariant: processed.fromVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.mouseUp) {
+    const processed = processAction(dsl.mouseUp);
+    rules.push({
+      trigger: 'mouseUp',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      fromVariant: processed.fromVariant,
+      toggleVariants: processed.toggleVariants,
+      toggle: processed.toggle,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  if (dsl.listen) {
+    const action = dsl.listen;
+    const processed = processAction(action);
+    rules.push({
+      trigger: 'listen',
+      targetId: processed.targetId,
+      toVariant: processed.toVariant,
+      listenId: action.listenId,
+      listenVariant: action.listenVariant,
+      duration: processed.duration,
+      curve: processed.curve,
+      action: processed.action,
+      url: processed.url,
+      overlayId: processed.overlayId,
+      scrollTargetId: processed.scrollTo,
+      scrollBehavior: processed.scrollBehavior,
+    });
+  }
+
+  // Add whileHovering, etc., similarly
+
+  return rules;
 };
 
 // Helper function to execute actions
@@ -204,7 +553,7 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // visualFrames: stores the visual variant (can be hover, etc.)
   const [frames, setFrames] = useState<Record<string, string>>({});
   const [visualFrames, setVisualFrames] = useState<Record<string, string>>({});
-  const [allAnimations, setAllAnimations] = useState<Animate>([]);
+  const [allAnimations, setAllAnimations] = useState<FrameAnimation[]>([]);
   const timeoutsRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   const registerFrame = useCallback((id: string, initialVariant: string) => {
@@ -224,10 +573,16 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // getVisualVariant: returns the visual variant (hover, etc.)
   const getVisualVariant = useCallback((id: string) => visualFrames[id] || frames[id] || '', [visualFrames, frames]);
 
-  const registerAnimations = useCallback((animate: Animate) => {
-    console.log('[AnimateProvider] registerAnimations called with:', animate);
-    // Split 'hover' events into 'mouseEnter' and 'mouseLeave'
-    const expandedAnimate = animate.flatMap((t: FrameAnimation) => {
+  const registerAnimations = useCallback((frameId: string, animate: Animate) => {
+    console.log('[AnimateProvider] registerAnimations called with:', frameId, animate);
+    // Parse DSL to FrameAnimation[]
+    const parsedAnimations = animate.flatMap(dsl => {
+      const rules = parseAnimateDSL(dsl);
+      // Set sourceId on all rules
+      return rules.map(rule => ({ ...rule, sourceId: frameId }));
+    });
+    // Expand 'hover' events into 'mouseEnter' and 'mouseLeave'
+    const expandedAnimate = parsedAnimations.flatMap((t: FrameAnimation) => {
       if (t.trigger === 'hover') {
         // Create two rules: one for mouseEnter, one for mouseLeave
         return [
@@ -241,9 +596,14 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setAllAnimations(prev => [...prev, ...expandedAnimate]);
   }, []);
 
-  const unregisterAnimations = useCallback((animate: Animate) => {
+  const unregisterAnimations = useCallback((frameId: string, animate: Animate) => {
+    // Parse DSL to FrameAnimation[] with sourceId
+    const parsedAnimations = animate.flatMap(dsl => {
+      const rules = parseAnimateDSL(dsl);
+      return rules.map(rule => ({ ...rule, sourceId: frameId }));
+    });
     // Split 'hover' events the same way for matching
-    const expandedAnimate = animate.flatMap((t: FrameAnimation) => {
+    const expandedAnimate = parsedAnimations.flatMap((t: FrameAnimation) => {
       if (t.trigger === 'hover') {
         return [
           { ...t, trigger: 'mouseEnter' as TransitionTrigger },
@@ -253,7 +613,7 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return [t];
     });
     
-    setAllAnimations(prev => prev.filter(t => !expandedAnimate.some(rt => rt === t)));
+    setAllAnimations(prev => prev.filter(t => !expandedAnimate.some(rt => rt.sourceId === t.sourceId && rt.trigger === t.trigger && rt.targetId === t.targetId)));
   }, []);
 
   const applyAnimationRef = useRef<(rule: FrameAnimation, sourceId?: string) => boolean | undefined>();
@@ -363,20 +723,20 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (isHover) {
       // For hover: check if rule matches BEFORE updating state
       const currentVisual = visualFrames[targetId] || frames[targetId];
-      const fromVariantResolved = resolveVariant(rule.fromVariant);
+      const { variantName: fromVariantResolved } = resolveVariant(rule.fromVariant);
 
       if (rule.fromVariant && currentVisual !== fromVariantResolved) {
         return false;
       }
 
-      const newVariant = resolveVariant(rule.toVariant);
+      const { variantName: newVariant } = resolveVariant(rule.toVariant);
       if (!newVariant) return false;
       
       // Execute action if specified
       executeAction(rule.action, rule);
       
       // Update visual frames
-      setVisualFrames(prev => ({ ...prev, [targetId]: newVariant }));
+      setVisualFrames(prev => ({ ...prev, [targetId]: newVariant as string }));
       return true;
     } else {
       // For click/grab/mouseDown/mouseUp: update logical frames and clear visual frames
@@ -388,22 +748,21 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       
       setFrames(prev => {
         const currentLogical = prev[targetId];
-        const fromVariantResolved = resolveVariant(rule.fromVariant);
+        const { variantName: fromVariantResolved } = resolveVariant(rule.fromVariant);
 
         if (rule.fromVariant && currentLogical !== fromVariantResolved) {
           return prev;
         }
 
         if (rule.toVariant) {
-          newVariant = resolveVariant(rule.toVariant);
-        } else if (rule.toggle && rule.toggleVariants) {
-          const index = rule.toggleVariants.indexOf(currentLogical);
-          newVariant = index !== -1 
-            ? rule.toggleVariants[(index + 1) % rule.toggleVariants.length]
-            : rule.toggleVariants[0];
-        }
-
-        // Only update variant if we have a newVariant
+          const { variantName } = resolveVariant(rule.toVariant);
+          newVariant = variantName as string;
+      } else if (rule.toggle && rule.toggleVariants) {
+        const index = rule.toggleVariants.indexOf(currentLogical);
+        newVariant = index !== -1 
+          ? rule.toggleVariants[(index + 1) % rule.toggleVariants.length]
+          : rule.toggleVariants[0];
+      }        // Only update variant if we have a newVariant
         if (newVariant && newVariant !== currentLogical) {
           applied = true;
           console.log('[AnimateProvider] Applying variant change:', { targetId, from: currentLogical, to: newVariant });
@@ -456,8 +815,33 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
   }, [allAnimations, applyAnimation]);
 
+  const getAnimationProps = useCallback((frameId: string) => {
+    // Find animations that target this frame
+    const relevantAnimations = allAnimations.filter(rule => 
+      rule.targetId === frameId || (!rule.targetId && rule.sourceId === frameId)
+    );
+    
+    console.log('[getAnimationProps] Frame:', frameId, 'Relevant animations:', relevantAnimations);
+    
+    // Look for the most recent animation with timing properties
+    for (const animation of relevantAnimations.reverse()) {
+      if (animation.duration || animation.delay || animation.curve) {
+        const result = {
+          duration: animation.duration ? parseTime(animation.duration).toString() + 'ms' : undefined,
+          delay: animation.delay ? parseTime(animation.delay).toString() + 'ms' : undefined,
+          curve: animation.curve ? resolveCurve(animation.curve) : undefined
+        };
+        console.log('[getAnimationProps] Found timing props for', frameId, ':', result);
+        return result;
+      }
+    }
+    
+    console.log('[getAnimationProps] No timing props found for', frameId);
+    return null;
+  }, [allAnimations]);
+
   const getAnimationsForFrame = useCallback((frameId: string) => {
-    return allAnimations.filter(t => t.targetId === frameId);
+    return allAnimations.filter(t => (t.targetId || t.sourceId) === frameId);
   }, [allAnimations]);
 
   const contextValue: AnimateContextType = useMemo(() => ({
@@ -468,9 +852,10 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
     unregisterAnimations,
     emitEvent,
     getAnimationsForFrame,
+    getAnimationProps,
     // Expose getVisualVariant for consumers if needed
     getVisualVariant,
-  }), [registerFrame, unregisterFrame, getVariant, registerAnimations, unregisterAnimations, emitEvent, getAnimationsForFrame, getVisualVariant]);
+  }), [registerFrame, unregisterFrame, getVariant, registerAnimations, unregisterAnimations, emitEvent, getAnimationsForFrame, getAnimationProps, getVisualVariant]);
 
   return (
     <AnimateContext.Provider value={contextValue}>

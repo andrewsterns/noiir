@@ -1,6 +1,6 @@
 import React from 'react';
 import { Frame, FrameProps } from '../../frame/Frame';
-import { MENU_VARIANTS } from '../../../../__variants__/molecules/menu/menu.variants';
+import { MENU_VARIANTS } from '@variants/molecules/menu/menu.variants';
 
 /**
  * Menu Component

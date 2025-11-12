@@ -1,7 +1,8 @@
 import Frame from '@components/frame/Frame';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ExtendVariant } from '@noiir/frame-core/variants/variants.props';
 import { Animate } from '@noiir/frame-core/animate/animate.props';
+import { INPUT_SIZES, INPUT_VARIANTS, CURSOR_VARIANTS } from '@variants/atoms/input/input.variants';
 
 /**
  * Input Component
@@ -27,62 +28,9 @@ interface InputProps {
     disabled?: boolean;
     autoFocus?: boolean;
     transitions?: Animate;
+    cursorVariant?: string;
+    cursorVariants?: Record<string, any>;
 }
-
-const INPUT_SIZES = {
-    '1': {
-        typography: { type: 'h6' },
-        autoLayout: { paddingHorizontal: 12, paddingVertical: 4, width: 100 },
-    },
-    '2': {
-        typography: { type: 'h5' },
-        autoLayout: { paddingHorizontal: 16, paddingVertical: 8, width: 180 },
-    },
-    '3': {
-        typography: { type: 'h3' },
-        autoLayout: { paddingHorizontal: 20, paddingVertical: 12, width: 280 },
-    },
-    'fill': {
-        autoLayout: { width: 'fill-container', height: 'hug' },
-
-    }
-};
-
-const INPUT_VARIANTS = {
-    primary: {
-        autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const },
-        fill: { type: 'solid' as const, color: 'white2' },
-        stroke: { type: 'solid' as const, color: 'gray2', weight: 0.5 },
-    },
-    primaryHover: {
-        autoLayout: { flow: 'horizontal' as const, gap: 1, alignment: 'centerLeft' as const },
-        fill: { type: 'solid' as const, color: 'white3' },
-        stroke: { type: 'solid' as const, color: 'gray3', weight: 0.5 },
-        cursor: 'text' as const,
-    },
-    primaryFocus: {
-        autoLayout: { flow: 'horizontal' as const, gap: 0.15, alignment: 'centerLeft' as const },
-        fill: { type: 'solid' as const, color: 'white3' },
-        stroke: { type: 'solid' as const, color: 'blue5', weight: 2 },
-    },
-} satisfies ExtendVariant;
-
-const CURSOR_VARIANTS = {
-    cursor: {
-        autoLayout: { flow: 'grid', width: 'hug', height: 'hug' },
-        typography: { type: 'h4' },
-        appearance: { opacity: 0 },
-    },
-    blinkOn: {
-        autoLayout: { flow: 'grid', width: 'hug', height: 'hug' },
-        typography: { type: 'h4' },
-        appearance: { opacity: 1 },
-    },
-    blinkOff: {
-        typography: { type: 'h4' },
-        appearance: { opacity: 0 },
-    },
-} satisfies ExtendVariant;
 
 const Input = (props: InputProps) => {
     const {
@@ -96,6 +44,8 @@ const Input = (props: InputProps) => {
         placeholder = '',
         disabled = false,
         autoFocus = false,
+        cursorVariant = 'cursor',
+        cursorVariants = CURSOR_VARIANTS,
         transitions } = props;
 
     // Use custom variants/sizes if provided, otherwise use defaults
@@ -103,6 +53,26 @@ const Input = (props: InputProps) => {
     const sizes = customSizes || INPUT_SIZES;
 
     const [focused, setFocused] = useState(false);
+    const [cursorBlink, setCursorBlink] = useState(false);
+
+    // Cursor blinking effect
+    useEffect(() => {
+        if (!focused) {
+            setCursorBlink(false);
+            return;
+        }
+
+        const interval = setInterval(() => {
+            setCursorBlink(prev => !prev);
+        }, 500); // Blink every 500ms
+
+        return () => clearInterval(interval);
+    }, [focused]);
+
+    // Determine cursor variant based on focus and blink state
+    const currentCursorVariant = focused 
+        ? (cursorBlink ? 'blinkOn' : 'blinkOff')
+        : cursorVariant;
 
     const defaultTransitions: Animate = [
         // Hover on base state
@@ -155,20 +125,21 @@ const Input = (props: InputProps) => {
             tabIndex={0}
             size={size}
             sizes={sizes}
-            variant={focused ? 'primaryFocus' : variant}
+            variant={variant}
             variants={variants}
             animate={transitions ?? defaultTransitions}
         >
             {value}
             <Frame
-                variant={focused ? 'blinkOn' : 'cursor'}
-                variants={CURSOR_VARIANTS}
+                id="cursorId"
+                variant={currentCursorVariant}
+                variants={cursorVariants}
             >|</Frame>
         </Frame>
     );
 };
 
-export { Input, INPUT_VARIANTS }; export type { InputProps };
+export { Input };
 
 
 

@@ -3,6 +3,7 @@ import { Frame } from '../frame/Frame';
 import { Button } from '../atoms/button/button';
 import { Label } from '../atoms/label/label';
 import { SearchDropdown } from '../molecules/search-dropdown/search-dropdown';
+import { AnimateDSL } from '../../__frame-core__/animate/animate.props';
 
 /**
  * Template Component
@@ -57,9 +58,9 @@ export const Template = React.forwardRef<HTMLDivElement, TemplateProps>(({
     'Best Sellers'
   ];
 
-const buttonTransitions = [
-    { trigger: 'mouseEnter' as const, toVariant: 'primary2', fromVariant: 'primary1', duration: '5s', curve: 'ease-in-out', delay: '1s' },
-    { trigger: 'mouseLeave' as const, toVariant: 'primary1', fromVariant: 'primary2', duration: '0.2s', curve: 'ease' },
+const buttonTransitions: AnimateDSL[] = [
+    { mouseEnter: { toVariant: 'primary2', fromVariant: 'primary1', duration: '5s', curve: 'ease-in-out', delay: '1s' } },
+    { mouseLeave: { toVariant: 'primary1', fromVariant: 'primary2', duration: '0.2s', curve: 'ease' } },
   ];
 
   const TEMPLATE_BUTTON_V = {

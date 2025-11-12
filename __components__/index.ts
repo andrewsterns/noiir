@@ -2,7 +2,7 @@
 export { Frame } from './frame/Frame';
 export { Button } from './atoms/button/button';
 export { Label } from './atoms/label/label';
-export { Text, H1, H2, H3, H4, H5, H6, Body, Body1, Body2, Caption, Overline, Display, Code } from './atoms/text/text';
+export { default as Text, H1, H2, H3, H4, H5, H6, Body, Body1, Body2, Caption, Overline, Display, Code } from './atoms/text/text';
 export { Toggle } from './atoms/toggle/toggle';
 export { Avatar } from './atoms/avatar/avatar';
 export { Badge } from './atoms/badge/badge';

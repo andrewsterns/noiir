@@ -1,22 +1,20 @@
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import { Frame } from '../../../../__components__/frame/Frame';
-import { AnimateProvider } from '../../../../__frame-core__/animate/animate.props';
+import { AnimateProvider, AnimateDSL } from '../../../../__frame-core__/animate/animate.props';
 
 /**
  * Animation Actions Stories
  * 
- * Demonstrates the action system for Frame animations.
- * Actions allow you to perform Figma-like interactions:
- * - none: Default, no action
- * - changeTo: Change to a specific variant (default behavior)
- * - back: Navigate back in browser history
- * - scrollTo: Scroll to a specific element
- * - openLink: Open a URL in a new tab
- * - openOverlay: Open an overlay/modal
- * - swapOverlay: Swap one overlay for another
- * - closeOverlay: Close an overlay
- * - function: Custom function action
+ * Demonstrates the action system for Frame animations using the new DSL syntax.
+ * Actions allow you to perform Figma-like interactions from any trigger:
+ * - openLink: Open URLs in new tabs
+ * - scrollTo: Scroll to elements or target Frames
+ * - back: Navigate browser history
+ * - openOverlay/swapOverlay/closeOverlay: Manage overlays
+ * - Custom functions: Execute arbitrary code
+ * 
+ * All actions now support cross-Frame targeting with 'id.variant' shorthand!
  */
 
 const meta: Meta = {
@@ -38,54 +36,57 @@ export default meta;
 type Story = StoryObj;
 
 /**
- * Open Link Action
- * Click to open a URL in a new tab
+ * Open Link Action - DSL Syntax
+ * Click to open a URL in a new tab using any trigger
  */
 export const OpenLink: Story = {
-    render: () => (
-        <Frame
-            id="link-button"
-            cursor="pointer"
-            variant="primary"
-            variants={{
-                primary: {
-                    fill: { type: 'solid', color: 'blue5' },
-                    autoLayout: { paddingHorizontal: 24, paddingVertical: 12, alignment: 'center' },
-                    appearance: { radius: 8 },
-                    typography: { color: 'white1', fontSize: 16, fontWeight: 600 },
+    render: () => {
+        const animations: AnimateDSL[] = [
+            {
+                onClick: { action: 'openLink', url: 'https://github.com' }
+            },
+            {
+                onHover: { action: 'openLink', url: 'https://figma.com' }
+            },
+            {
+                hotKey: { action: 'openLink', url: 'https://react.dev', key: 'r' }
+            }
+        ];
 
-                },
-                primaryHover: {
-                    fill: { type: 'solid', color: 'blue6' },
-                    autoLayout: { paddingHorizontal: 24, paddingVertical: 12, alignment: 'center' },
-                    appearance: { radius: 8 },
-                    typography: { color: 'white1', fontSize: 16, fontWeight: 600 },
+        return (
+            <Frame autoLayout={{ flow: 'vertical', gap: 16, alignment: 'center' }}>
+                <Frame
+                    id="link-button"
+                    cursor="pointer"
+                    variant="primary"
+                    variants={{
+                        primary: {
+                            fill: { type: 'solid', color: 'blue5' },
+                            autoLayout: { paddingHorizontal: 24, paddingVertical: 12, alignment: 'center' },
+                            appearance: { radius: 8 },
+                            typography: { color: 'white1', fontSize: 16, fontWeight: 600 },
 
-                },
-            }}
-            animate={[
-                {
-                    trigger: 'hover',
-                    toVariant: 'primaryHover',
-                    fromVariant: 'primary',
-                    duration: '0.2s',
-                },
-                {
-                    trigger: 'click',
-                    action: 'openLink',
-                    url: 'https://github.com',
-                    duration: '0.1s',
-                },
-            ]}
-        >
-            Open GitHub →
-        </Frame>
-    ),
+                        },
+                        primaryHover: {
+                            fill: { type: 'solid', color: 'blue6' },
+                            autoLayout: { paddingHorizontal: 24, paddingVertical: 12, alignment: 'center' },
+                            appearance: { radius: 8 },
+                            typography: { color: 'white1', fontSize: 16, fontWeight: 600 },
+
+                        },
+                    }}
+                    animate={animations as any}
+                >
+                    Click for GitHub (or hover for Figma, press 'R' for React)
+                </Frame>
+            </Frame>
+        );
+    },
 };
 
 /**
- * Scroll To Action
- * Click to scroll to different sections
+ * Scroll To Action - DSL Syntax
+ * Click to scroll to different sections using any trigger
  */
 export const ScrollTo: Story = {
     render: () => (
@@ -105,14 +106,11 @@ export const ScrollTo: Story = {
                     }}
                     animate={[
                         {
-                            trigger: 'click',
-                            action: 'scrollTo',
-                            scrollTargetId: 'section-1',
-                            scrollBehavior: 'smooth',
+                            onClick: { action: 'scrollTo', scrollTo: 'section-0', scrollBehavior: 'smooth' }
                         },
-                    ]}
+                    ] as any}
                 >
-                    Scroll to Section 1
+                    Scroll to Section 0
                 </Frame>
 
                 <Frame
@@ -129,12 +127,9 @@ export const ScrollTo: Story = {
                     }}
                     animate={[
                         {
-                            trigger: 'click',
-                            action: 'scrollTo',
-                            scrollTargetId: 'section-2',
-                            scrollBehavior: 'smooth',
+                            onClick: { action: 'scrollTo', scrollTo: 'section-2', scrollBehavior: 'smooth' }
                         },
-                    ]}
+                    ] as any}
                 >
                     Scroll to Section 2
                 </Frame>
@@ -142,7 +137,7 @@ export const ScrollTo: Story = {
 
             <Frame autoLayout={{ flow: 'vertical', gap: 32 }}>
                 <Frame
-                    id="section-1"
+                    id="section-0"
                     variant="section"
                     variants={{
                         section: {
@@ -190,8 +185,8 @@ export const ScrollTo: Story = {
 };
 
 /**
- * Custom Function Action
- * Execute a custom function when triggered
+ * Custom Function Action - DSL Syntax
+ * Execute a custom function when triggered from any event
  */
 export const CustomFunction: Story = {
     render: () => {
@@ -233,21 +228,20 @@ export const CustomFunction: Story = {
                     }}
                     animate={[
                         {
-                            trigger: 'click',
-                            action: () => {
-                                setCount((c) => c + 1);
-                                setMessage('Clicked!');
-                                setTimeout(() => setMessage('Click to count!'), 1000);
-                            },
-                            toVariant: 'pressed',
-                            duration: '0.1s',
+                            onClick: {
+                                action: () => {
+                                    setCount((c) => c + 1);
+                                    setMessage('Clicked!');
+                                    setTimeout(() => setMessage('Click to count!'), 1000);
+                                },
+                                toVariant: 'pressed',
+                                duration: '0.1s'
+                            }
                         },
                         {
-                            trigger: 'mouseUp',
-                            toVariant: 'primary',
-                            duration: '0.2s',
+                            mouseUp: { toVariant: 'primary', duration: '0.2s' }
                         },
-                    ]}
+                    ] as any}
                 >
                     {message}
                 </Frame>
@@ -257,8 +251,8 @@ export const CustomFunction: Story = {
 };
 
 /**
- * Browser Back Action
- * Navigate back in browser history
+ * Browser Back Action - DSL Syntax
+ * Navigate back in browser history from any trigger
  */
 export const BrowserBack: Story = {
     render: () => (
@@ -290,10 +284,9 @@ export const BrowserBack: Story = {
                 }}
                 animate={[
                     {
-                        trigger: 'click',
-                        action: 'back',
+                        onClick: { action: 'back' }
                     },
-                ]}
+                ] as any}
             >
                 ← Go Back
             </Frame>
@@ -302,8 +295,8 @@ export const BrowserBack: Story = {
 };
 
 /**
- * Overlay Actions
- * Demonstrates overlay open/swap/close actions
+ * Overlay Actions - DSL Syntax
+ * Demonstrates overlay open/swap/close actions from any trigger
  * Note: These emit custom events that need to be handled by your overlay system
  */
 export const OverlayActions: Story = {
@@ -362,11 +355,9 @@ export const OverlayActions: Story = {
                         }}
                         animate={[
                             {
-                                trigger: 'click',
-                                action: 'openOverlay',
-                                overlayId: 'modal-1',
+                                onClick: { action: 'openOverlay', overlayId: 'modal-1' }
                             },
-                        ]}
+                        ] as any}
                     >
                         Open Overlay
                     </Frame>
@@ -384,11 +375,9 @@ export const OverlayActions: Story = {
                         }}
                         animate={[
                             {
-                                trigger: 'click',
-                                action: 'swapOverlay',
-                                overlayId: 'modal-2',
+                                onClick: { action: 'swapOverlay', overlayId: 'modal-2' }
                             },
-                        ]}
+                        ] as any}
                     >
                         Swap Overlay
                     </Frame>
@@ -406,11 +395,9 @@ export const OverlayActions: Story = {
                         }}
                         animate={[
                             {
-                                trigger: 'click',
-                                action: 'closeOverlay',
-                                overlayId: 'modal-1',
+                                onClick: { action: 'closeOverlay', overlayId: 'modal-1' }
                             },
-                        ]}
+                        ] as any}
                     >
                         Close Overlay
                     </Frame>
@@ -421,8 +408,8 @@ export const OverlayActions: Story = {
 };
 
 /**
- * Combined Actions
- * Multiple actions triggered in sequence
+ * Combined Actions - DSL Syntax
+ * Multiple actions triggered from different events
  */
 export const CombinedActions: Story = {
     render: () => {
@@ -473,18 +460,15 @@ export const CombinedActions: Story = {
                     }}
                     animate={[
                         {
-                            trigger: 'click',
-                            action: () => addLog('Custom function executed'),
+                            onClick: { action: () => addLog('Custom function executed') }
                         },
                         {
-                            trigger: 'mouseEnter',
-                            action: () => addLog('Mouse entered'),
+                            mouseEnter: { action: () => addLog('Mouse entered') }
                         },
                         {
-                            trigger: 'mouseLeave',
-                            action: () => addLog('Mouse left'),
+                            mouseLeave: { action: () => addLog('Mouse left') }
                         },
-                    ]}
+                    ] as any}
                 >
                     Trigger Multiple Actions
                 </Frame>

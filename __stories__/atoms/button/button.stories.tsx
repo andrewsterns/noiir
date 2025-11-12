@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../../../__components__/atoms/button/button';
 import { Frame } from '../../../__components__/frame/Frame';
+import Text from '../../../__components__/atoms/text/text';
 
 import {
   BUTTON_SOLID_VARIANTS,
@@ -47,6 +48,13 @@ export const Animate: Story = {
     children: 'Animate Button',
     variant: 'primary',
   },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Test button animations: hover to see primaryHover, mouseLeave to revert to primary.',
+      },
+    },
+  },
 };
 
 
@@ -56,9 +64,9 @@ export const Animate: Story = {
 export const Sizes: Story = {
   render: () => (
     <Frame autoLayout={{ flow: 'horizontal', gap: 20, alignment: 'center' }}>
-      <Button size="1" variant="primary" fill={{ type: 'solid', color: 'primary3' }}>Small</Button>
-      <Button size="2" variant="primary" fill={{ type: 'solid', color: 'primary3' }}>Medium</Button>
-      <Button size="3" variant="primary" fill={{ type: 'solid', color: 'primary3' }}>Large</Button>
+      <Button size="1" variant="primary" >Small</Button>
+      <Button size="2" variant="primary">Medium</Button>
+      <Button size="3" variant="primary">Large</Button>
     </Frame>  
   ),
   parameters: {

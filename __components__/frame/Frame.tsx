@@ -166,11 +166,9 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
 
   React.useEffect(() => {
     if (registerAnimationsRef.current && unregisterAnimationsRef.current && animate && frameId) {
-      // For component-level animate, set the sourceId to this component's id
-      const componentanimate = animate.map(t => ({ ...t, sourceId: t.sourceId || frameId }));
-      registerAnimationsRef.current(componentanimate);
+      registerAnimationsRef.current(frameId, animate);
       return () => {
-        unregisterAnimationsRef.current!(componentanimate);
+        unregisterAnimationsRef.current!(frameId, animate);
       };
     }
   }, [animate, frameId]);
@@ -323,28 +321,12 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
 
   // Collect animation properties for CSS animate
   const animateProps = React.useMemo(() => {
-    if (!animateContext || !frameId) return null;
-
-    // Find animations that target this component
-    const relevantAnimations = animateContext.getAnimationsForFrame(frameId);
-
-    if (!relevantAnimations || relevantAnimations.length === 0) return null;
-
-    // Use the first animation's properties (could be enhanced to merge multiple)
-    const animation = relevantAnimations[0];
-
-    const duration = animation.duration ? parseTime(animation.duration) + 'ms' : '300ms';
-    const delay = animation.delay ? parseTime(animation.delay) + 'ms' : '0ms';
-    const curve = animation.curve || 'ease';
-
-    console.log(`Frame ${frameId} applying CSS transition:`, {
-      duration,
-      delay,
-      curve,
-      transition: `all ${duration} ${curve} ${delay}`
-    });
-
-    return { duration, delay, curve };
+    if (animateContext && frameId) {
+      const props = animateContext.getAnimationProps(frameId);
+      console.log('[Frame]', frameId, 'animateProps:', props);
+      return props;
+    }
+    return null;
   }, [animateContext, frameId]);
 
   // Apply alignment-based transforms to children for smooth animation
@@ -409,9 +391,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     if (top !== undefined || left !== undefined) {
       alignedChildren = React.Children.map(finalChildren, (child, index) => {
         if (React.isValidElement(child)) {
-          const animatetr = animateProps 
-            ? `${top ? `top ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}, ` : ''}${left ? `left ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}, ` : ''}transform ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}`
-            : undefined;
+          const animatetr = `transform 300ms ease 0ms`;
           
           return React.cloneElement(child, {
             ...child.props,
@@ -591,7 +571,9 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
 
   // Add transition to styles if transition props exist
   if (animateProps) {
-    finalStyles.transition = `all ${animateProps.duration} ${animateProps.curve} ${animateProps.delay}`;
+    const { duration = '0s', delay = '0s', curve = 'ease' } = animateProps;
+    finalStyles.transition = `all ${duration} ${curve} ${delay}`;
+    console.log('[Frame]', frameId, 'applied transition:', finalStyles.transition);
   }
 
   // Compose event handlers: Frame's animation handlers take precedence but call original handlers too
@@ -633,6 +615,18 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     }
     composedHandlers.onMouseUp?.(e);
   };
+  const handleFocus = (e: any) => {
+    if (animateContext && frameId) {
+      animateContext.emitEvent(frameId, 'focus');
+    }
+    finalOnFocus?.(e);
+  };
+  const handleBlur = (e: any) => {
+    if (animateContext && frameId) {
+      animateContext.emitEvent(frameId, 'blur');
+    }
+    finalOnBlur?.(e);
+  };
   const handleKeyDown = (e: any) => {
     if (animateContext && frameId) animateContext.emitEvent(frameId, 'key', e);
     composedHandlers.onKeyDown?.(e);
@@ -661,8 +655,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
         onKeyDown: handleKeyDown,
         onKeyUp: finalOnKeyUp,
         onKeyPress: finalOnKeyPress,
-        onFocus: finalOnFocus,
-        onBlur: finalOnBlur,
+        onFocus: handleFocus,
+        onBlur: handleBlur,
         onInput: finalOnInput,
         onChange: finalOnChange,
         value: finalValue,
@@ -691,8 +685,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
       onKeyDown: handleKeyDown,
       onKeyUp: finalOnKeyUp,
       onKeyPress: finalOnKeyPress,
-      onFocus: finalOnFocus,
-      onBlur: finalOnBlur,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
       onInput: finalOnInput,
       onChange: finalOnChange,
       value: finalValue,
