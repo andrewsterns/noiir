@@ -13,17 +13,24 @@ import { BooleanOperationProps } from '@noiir/frame-core/booleanOperation/boolea
 import { resolveColor } from '@variants/theme/colors';
 import { samplePathPoints } from '@noiir/frame-core/layout/svgPathUtils';
 import { getCurvedLayoutChildren } from '@noiir/frame-core/layout/curvedLayout';
-import { mergeSizeProps } from '@noiir/frame-core/variants/size.props';
-import { mergeVariantAndSize, mergeSizeWithAnimation, FrameVariantConfig } from '@noiir/frame-core/variants/variants.props';
 import {
   applyChildStates,
   injectVariant,
   composeEventHandlers,
   convertFramePropsToStyles,
   calculateHugDimensions,
-  ChildStateMap
+  ChildStateMap,
+  mergeSizeProps,
+  mergeVariantAndSize,
+  mergeSizeWithAnimation,
+  FrameVariantConfig,
+  useAnimateContext,
+  Animate,
+  AnimateProvider,
+  parseTime,
+  useParent,
+  ParentContext
 } from '@noiir/frame-core';
-import { useAnimateContext, Animate, AnimateProvider, parseTime } from '@noiir/frame-core/animate/animate.props';
 
 // FRAME PROPS ARE PULLED IN FROM THEIR RESPECTIVE FILES
 // ROOT 'CORE' PROPS ARE PULLED IN FROM UTILS FILE
@@ -139,6 +146,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     // No animate context
   }
 
+  const parent = useParent();
+
   const registerFrameRef = React.useRef(animateContext?.registerFrame);
   const unregisterFrameRef = React.useRef(animateContext?.unregisterFrame);
   const registerAnimationsRef = React.useRef(animateContext?.registerAnimations);
@@ -151,18 +160,34 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     unregisterAnimationsRef.current = animateContext?.unregisterAnimations;
   }, [animateContext]);
 
-  const effectiveVariant = frameId && animateContext && animateContext.getVisualVariant(frameId) !== '' ? animateContext.getVisualVariant(frameId) : variant;
+  // State to track current variant for re-rendering when animations change it
+  const [currentVariantState, setCurrentVariantState] = React.useState(variant);
+
+  React.useEffect(() => {
+    if (animateContext && frameId) {
+      const visualVariant = animateContext.getVisualVariant(frameId);
+      const logicalVariant = animateContext.getVariant(frameId);
+      const newVariant = visualVariant !== '' ? visualVariant : logicalVariant !== '' ? logicalVariant : variant;
+      if (newVariant !== currentVariantState) {
+        setCurrentVariantState(newVariant);
+      }
+    }
+  }, [animateContext, frameId, variant, currentVariantState]);
+
+  const effectiveVariant = currentVariantState;
 
   // Register frame and animate
   React.useEffect(() => {
     if (registerFrameRef.current && unregisterFrameRef.current && frameId) {
       const initialVariant = typeof variant === 'string' ? variant : '';
-      registerFrameRef.current(frameId, initialVariant);
+      console.log('[Frame] Registering frame:', frameId, 'with parent:', parent, 'initialVariant:', initialVariant);
+      registerFrameRef.current(frameId, parent, initialVariant);
       return () => {
+        console.log('[Frame] Unregistering frame:', frameId);
         unregisterFrameRef.current!(frameId);
       };
     }
-  }, [frameId, variant]);
+  }, [frameId, variant, parent]);
 
   React.useEffect(() => {
     if (registerAnimationsRef.current && unregisterAnimationsRef.current && animate && frameId) {
@@ -184,17 +209,13 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   
   // Use the animation logic hook
   const allVariants = { ...variants, ...sizes };
-  const currentVariant = undefined;
   const eventHandlers = {};
 
-  // Get the current variant props based on currentVariant
-  const currentVariantProps = currentVariant ? allVariants[currentVariant] : {};
+  // Get the current variant props based on childCurrentVariant
+  const currentVariantProps = {};
 
   // Use current variant props if animating, otherwise base variant props
   let finalEffectiveVariantProps = effectiveVariantProps;
-  if (currentVariant) {
-    finalEffectiveVariantProps = mergeSizeWithAnimation(sizeProps, currentVariantProps);
-  }
 
   // Merge variant props with explicit props, explicit props take precedence
   const explicitProps: Record<string, any> = {};
@@ -311,7 +332,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     : finalCursorRaw;
 
   // Use the same animation state for children
-  const childCurrentVariant = currentVariant;
+  const childCurrentVariant = undefined;
 
   // Apply child states to children with matching IDs
   const processedChildren = applyChildStates(children, childStates);
@@ -586,7 +607,9 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
   }, eventHandlers || {});
 
   const handleClick = (e: any) => {
+    console.log('[Frame] handleClick called for frameId:', frameId, 'animateContext exists:', !!animateContext);
     if (animateContext && frameId) {
+      console.log('[Frame] Emitting click event for frameId:', frameId);
       animateContext.emitEvent(frameId, 'click', e);
     }
     finalOnClick?.(e);
@@ -667,7 +690,9 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
         suppressContentEditableWarning: finalSuppressContentEditableWarning,
         type: finalType,
       },
-      childrenWithIcons
+      <ParentContext.Provider value={frameId}>
+        {childrenWithIcons}
+      </ParentContext.Provider>
     );
   }
   return React.createElement(
@@ -697,7 +722,9 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
       suppressContentEditableWarning: finalSuppressContentEditableWarning,
       type: finalType,
     },
-    mergedAutoLayout?.flow === 'curved' ? curvedChildren : childrenWithIcons
+    <ParentContext.Provider value={frameId}>
+      {mergedAutoLayout?.flow === 'curved' ? curvedChildren : childrenWithIcons}
+    </ParentContext.Provider>
   );
 });
 
@@ -709,6 +736,7 @@ export const Frame = React.forwardRef<HTMLElement, FrameProps>(function Frame(pr
   } catch (e) {
     // No context
   }
+  console.log('[Frame] Frame id:', props.id, 'has animate:', !!props.animate, 'hasContext:', hasContext, 'isAnimateRoot:', !!props.animate && !hasContext);
   const isAnimateRoot = !!props.animate && !hasContext;
   if (isAnimateRoot) {
     return <AnimateProvider><FrameInner {...props} ref={ref} /></AnimateProvider>;

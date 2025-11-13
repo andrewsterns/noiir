@@ -81,7 +81,7 @@ export type AnimateRule = FrameAnimation;
 export type EventType = TransitionTrigger;
 
 interface AnimateContextType {
-  registerFrame: (id: string, initialVariant: string) => void;
+  registerFrame: (id: string, parent: string | null, initialVariant: string) => void;
   unregisterFrame: (id: string) => void;
   getVariant: (id: string) => string;
   getVisualVariant: (id: string) => string;
@@ -101,6 +101,11 @@ export const useAnimateContext = () => {
   }
   return context;
 };
+
+const ParentContext = createContext<string | null>(null);
+
+export const useParent = () => useContext(ParentContext);
+export { ParentContext };
 
 // Helper function to parse delay/duration strings
 export const parseTime = (time: string | number | (() => string | number)): number => {
@@ -130,14 +135,18 @@ export const resolveCurve = (curve?: string | ((...args: any[]) => string)): str
 };
 
 // Helper function to resolve variant (can be string or object)
-// Now handles shorthand 'id.variant' -> { targetId: 'id', variantName: 'variant' }
+// Now handles shorthand 'group.frame.variant' or 'frame.variant' -> { targetId: 'frame', variantName: 'variant' }
 export const resolveVariant = (variant: string | object | undefined, defaultTargetId?: string): { targetId?: string; variantName: string | object } => {
   if (!variant) return { variantName: '' };
   if (typeof variant === 'string') {
     const parts = variant.split('.');
-    if (parts.length === 2) {
-      // Shorthand: 'id.variant' -> { targetId: 'id', variantName: 'variant' }
-      return { targetId: parts[0], variantName: parts[1] };
+    if (parts.length >= 2) {
+      // For hierarchical paths like 'grandparent.parent.child.variant'
+      // The last part is always the variant name
+      // Everything before the last dot is the target path
+      const variantName = parts[parts.length - 1];
+      const targetPath = parts.slice(0, -1).join('.');
+      return { targetId: targetPath, variantName };
     }
     // No '.', use as variant name (with optional default targetId)
     return { targetId: defaultTargetId, variantName: variant };
@@ -148,10 +157,12 @@ export const resolveVariant = (variant: string | object | undefined, defaultTarg
 
 // Parser to convert DSL to FrameAnimation[]
 export const parseAnimateDSL = (dsl: AnimateDSL): FrameAnimation[] => {
+  console.log('[parseAnimateDSL] Called with dsl:', dsl);
   const rules: FrameAnimation[] = [];
 
   // Helper function to extract targetId and resolve variants from action
   const processAction = (action: string | AnimateAction) => {
+    console.log('[processAction] Processing action:', action);
     const resolvedAction = typeof action === 'string' ? { toVariant: action } : action;
     
     // Resolve all variant references
@@ -168,6 +179,8 @@ export const parseAnimateDSL = (dsl: AnimateDSL): FrameAnimation[] => {
     const targetId = toResolved.targetId || fromResolved.targetId || 
                     (resolvedAction.toggleVariant ? resolveVariant(resolvedAction.toggleVariant[0]).targetId : undefined) ||
                     resolvedAction.targetId;
+    
+    console.log('[processAction] Resolved targetId:', targetId, 'toVariant:', toResolved.variantName);
     
     // Infer action if not explicitly set
     let inferredAction = resolvedAction.action;
@@ -549,15 +562,19 @@ export const executeAction = (action: AnimationAction | undefined, animation: Fr
 };
 
 export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // frames: stores the logical variant (base state)
-  // visualFrames: stores the visual variant (can be hover, etc.)
-  const [frames, setFrames] = useState<Record<string, string>>({});
+  // frames: stores the logical variant (base state) with parent
+  const [frames, setFrames] = useState<Record<string, { variant: string; parent: string | null }>>({});
   const [visualFrames, setVisualFrames] = useState<Record<string, string>>({});
   const [allAnimations, setAllAnimations] = useState<FrameAnimation[]>([]);
   const timeoutsRef = useRef<Record<string, NodeJS.Timeout>>({});
 
-  const registerFrame = useCallback((id: string, initialVariant: string) => {
-    setFrames(prev => ({ ...prev, [id]: initialVariant }));
+  const registerFrame = useCallback((id: string, parent: string | null, initialVariant: string) => {
+    console.log('[AnimateProvider] registerFrame called:', { id, parent, initialVariant });
+    setFrames(prev => {
+      const newFrames = { ...prev, [id]: { variant: initialVariant, parent } };
+      console.log('[AnimateProvider] Updated frames after registration:', newFrames);
+      return newFrames;
+    });
   }, []);
 
   const unregisterFrame = useCallback((id: string) => {
@@ -569,9 +586,9 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   // getVariant: returns the logical variant (base state)
-  const getVariant = useCallback((id: string) => frames[id] || '', [frames]);
+  const getVariant = useCallback((id: string) => frames[id]?.variant || '', [frames]);
   // getVisualVariant: returns the visual variant (hover, etc.)
-  const getVisualVariant = useCallback((id: string) => visualFrames[id] || frames[id] || '', [visualFrames, frames]);
+  const getVisualVariant = useCallback((id: string) => visualFrames[id] || frames[id]?.variant || '', [visualFrames, frames]);
 
   const registerAnimations = useCallback((frameId: string, animate: Animate) => {
     console.log('[AnimateProvider] registerAnimations called with:', frameId, animate);
@@ -581,6 +598,7 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Set sourceId on all rules
       return rules.map(rule => ({ ...rule, sourceId: frameId }));
     });
+    console.log('[AnimateProvider] Parsed animations:', parsedAnimations);
     // Expand 'hover' events into 'mouseEnter' and 'mouseLeave'
     const expandedAnimate = parsedAnimations.flatMap((t: FrameAnimation) => {
       if (t.trigger === 'hover') {
@@ -592,8 +610,13 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
       return [t];
     });
+    console.log('[AnimateProvider] Expanded animations:', expandedAnimate);
     
-    setAllAnimations(prev => [...prev, ...expandedAnimate]);
+    setAllAnimations(prev => {
+      const newAnimations = [...prev, ...expandedAnimate];
+      console.log('[AnimateProvider] setAllAnimations: added', expandedAnimate.length, 'animations, total now:', newAnimations.length);
+      return newAnimations;
+    });
   }, []);
 
   const unregisterAnimations = useCallback((frameId: string, animate: Animate) => {
@@ -619,7 +642,9 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const applyAnimationRef = useRef<(rule: FrameAnimation, sourceId?: string) => boolean | undefined>();
 
   const emitEvent = useCallback((sourceId: string, triggerType: TransitionTrigger, eventData?: any) => {
-    console.log('[AnimateProvider] emitEvent called:', { sourceId, triggerType, eventData });
+    console.log('[emitEvent] Called with sourceId:', sourceId, 'triggerType:', triggerType, 'eventData:', eventData);
+    console.log('[emitEvent] Current allAnimations:', allAnimations);
+    console.log('[emitEvent] useCallback recreated');
     // Handle grab event as mouseDown (initiates drag)
     // The corresponding mouseUp will end the drag state
     let effectiveTrigger = triggerType;
@@ -710,19 +735,104 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   }, [allAnimations]);
 
-  const applyAnimation = useCallback((rule: FrameAnimation, sourceId?: string) => {
-    console.log('[AnimateProvider] applyAnimation called:', { rule, sourceId });
-    const targetId = rule.targetId || sourceId;
+  const resolveTargetId = useCallback((targetSpec: string, sourceId: string): string | null => {
+    console.log('[resolveTargetId] Called with targetSpec:', targetSpec, 'sourceId:', sourceId);
+    console.log('[resolveTargetId] Current frames:', frames);
+    
+    // Helper function to find a frame by path anywhere in the tree
+    const findFrameByPathInTree = (path: string[]): string | null => {
+      if (path.length === 0) return null;
+      const [targetId, ...remaining] = path;
+      
+      console.log('[findFrameByPathInTree] Looking for frame with id:', targetId, 'in entire tree');
+      
+      // Find the target frame anywhere in the tree
+      const targetFrame = Object.entries(frames).find(([id, data]) => id === targetId);
+      if (!targetFrame) {
+        console.log('[findFrameByPathInTree] Frame', targetId, 'not found in tree');
+        return null;
+      }
+      
+      console.log('[findFrameByPathInTree] Found target frame:', targetFrame[0], 'with data:', targetFrame[1]);
+      
+      if (remaining.length === 0) {
+        console.log('[findFrameByPathInTree] This is the final frame in path');
+        return targetFrame[0];
+      } else {
+        // Continue with remaining path from this frame
+        console.log('[findFrameByPathInTree] Continuing with remaining path:', remaining, 'from parent:', targetFrame[0]);
+        const result = findFrameByPath(remaining, targetFrame[0]);
+        console.log('[findFrameByPathInTree] Recursive result:', result);
+        return result;
+      }
+    };
+
+    const findFrameByPath = (path: string[], currentParent: string | null): string | null => {
+      console.log('[findFrameByPath] Looking for path:', path, 'starting from parent:', currentParent);
+      if (path.length === 0) return null;
+      const [nextId, ...remaining] = path;
+      
+      console.log('[findFrameByPath] Searching for frame with id:', nextId, 'and parent:', currentParent);
+      for (const [id, data] of Object.entries(frames)) {
+        console.log('[findFrameByPath] Checking frame:', id, 'with data:', data);
+        if (id === nextId && data.parent === currentParent) {
+          console.log('[findFrameByPath] Found matching frame:', id);
+          if (remaining.length === 0) {
+            console.log('[findFrameByPath] This is the final frame in path');
+            return id;
+          } else {
+            console.log('[findFrameByPath] Continuing with remaining path:', remaining, 'from parent:', id);
+            return findFrameByPath(remaining, id);
+          }
+        }
+      }
+      console.log('[findFrameByPath] No frame found with id:', nextId, 'and parent:', currentParent);
+      return null;
+    };
+
+    if (targetSpec.includes('.')) {
+      const path = targetSpec.split('.');
+      console.log('[resolveTargetId] Processing hierarchical path:', path);
+      
+      // Use tree-wide search for hierarchical paths
+      const result = findFrameByPathInTree(path);
+      console.log('[resolveTargetId] Tree-wide search result:', result);
+      return result;
+    } else {
+      console.log('[resolveTargetId] Processing simple targetSpec:', targetSpec);
+      // Find any frame with id === targetSpec
+      const targetFrame = Object.entries(frames).find(([id]) => id === targetSpec);
+      console.log('[resolveTargetId] Found simple target frame:', targetFrame ? targetFrame[0] : null);
+      return targetFrame ? targetFrame[0] : null;
+    }
+  }, [frames]);  const applyAnimation = useCallback((rule: FrameAnimation, sourceId?: string) => {
+    console.log('[applyAnimation] Called with rule:', rule, 'sourceId:', sourceId);
+    let targetId = rule.targetId;
+    if (targetId && sourceId) {
+      const resolved = resolveTargetId(targetId, sourceId);
+      console.log('[applyAnimation] resolveTargetId returned:', resolved, 'for targetId:', targetId, 'sourceId:', sourceId);
+      if (resolved) {
+        targetId = resolved;
+      } else {
+        console.log('[applyAnimation] resolveTargetId returned null, returning false');
+        return false;
+      }
+    }
     if (!targetId) {
-      console.log('[AnimateProvider] No targetId, returning false');
+      targetId = sourceId;
+    }
+    if (!targetId) {
+      console.log('[applyAnimation] No targetId after setting to sourceId, returning false');
       return false;
     }
+
+    console.log('[applyAnimation] Final targetId:', targetId, 'exists in frames:', !!frames[targetId]);
 
     const isHover = rule.trigger === 'mouseEnter' || rule.trigger === 'mouseLeave';
 
     if (isHover) {
       // For hover: check if rule matches BEFORE updating state
-      const currentVisual = visualFrames[targetId] || frames[targetId];
+      const currentVisual = visualFrames[targetId] || frames[targetId]?.variant;
       const { variantName: fromVariantResolved } = resolveVariant(rule.fromVariant);
 
       if (rule.fromVariant && currentVisual !== fromVariantResolved) {
@@ -747,34 +857,37 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const shouldExecuteAction = !!(rule.action && rule.action !== 'none');
       
       setFrames(prev => {
-        const currentLogical = prev[targetId];
+        const currentLogical = prev[targetId]?.variant;
         const { variantName: fromVariantResolved } = resolveVariant(rule.fromVariant);
 
+        console.log('[applyAnimation] setFrames callback - currentLogical:', currentLogical, 'fromVariantResolved:', fromVariantResolved, 'rule.fromVariant:', rule.fromVariant);
+
         if (rule.fromVariant && currentLogical !== fromVariantResolved) {
+          console.log('[applyAnimation] fromVariant check failed, not applying animation');
           return prev;
         }
 
         if (rule.toVariant) {
           const { variantName } = resolveVariant(rule.toVariant);
           newVariant = variantName as string;
-      } else if (rule.toggle && rule.toggleVariants) {
-        const index = rule.toggleVariants.indexOf(currentLogical);
-        newVariant = index !== -1 
-          ? rule.toggleVariants[(index + 1) % rule.toggleVariants.length]
-          : rule.toggleVariants[0];
-      }        // Only update variant if we have a newVariant
+          console.log('[applyAnimation] Resolved toVariant:', rule.toVariant, 'to newVariant:', newVariant);
+        } else if (rule.toggle && rule.toggleVariants) {
+          const index = rule.toggleVariants.indexOf(currentLogical);
+          newVariant = index !== -1 
+            ? rule.toggleVariants[(index + 1) % rule.toggleVariants.length]
+            : rule.toggleVariants[0];
+        }        // Only update variant if we have a newVariant
         if (newVariant && newVariant !== currentLogical) {
           applied = true;
-          console.log('[AnimateProvider] Applying variant change:', { targetId, from: currentLogical, to: newVariant });
+          console.log('[applyAnimation] Applying animation - changing variant from', currentLogical, 'to', newVariant);
 
           // Schedule listen event after state update
           setTimeout(() => emitEvent(targetId, 'listen', { listenId: targetId, listenVariant: newVariant }), 0);
 
-          return { ...prev, [targetId]: newVariant };
-        } else {
-          console.log('[AnimateProvider] No variant change needed:', { targetId, current: currentLogical, new: newVariant });
+          return { ...prev, [targetId]: { ...prev[targetId], variant: newVariant } };
         }
 
+        console.log('[applyAnimation] Not applying animation - newVariant:', newVariant, 'currentLogical:', currentLogical);
         return prev;
       });
 
@@ -793,9 +906,10 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return prev;
       });
 
+      console.log('[applyAnimation] Returning applied:', applied);
       return applied;
     }
-  }, [frames, visualFrames, emitEvent]);
+  }, [frames, visualFrames, emitEvent, resolveTargetId]);
 
   applyAnimationRef.current = applyAnimation;
 
@@ -817,14 +931,20 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const getAnimationProps = useCallback((frameId: string) => {
     // Find animations that target this frame
-    const relevantAnimations = allAnimations.filter(rule => 
-      rule.targetId === frameId || (!rule.targetId && rule.sourceId === frameId)
-    );
+    const relevantAnimations = allAnimations.filter(rule => {
+      if (!rule.targetId) {
+        return rule.sourceId === frameId;
+      } else if (rule.sourceId) {
+        const resolved = resolveTargetId(rule.targetId, rule.sourceId);
+        return resolved === frameId;
+      }
+      return false;
+    });
     
     console.log('[getAnimationProps] Frame:', frameId, 'Relevant animations:', relevantAnimations);
     
-    // Look for the most recent animation with timing properties
-    for (const animation of relevantAnimations.reverse()) {
+    // Look for the first animation with timing properties
+    for (const animation of relevantAnimations) {
       if (animation.duration || animation.delay || animation.curve) {
         const result = {
           duration: animation.duration ? parseTime(animation.duration).toString() + 'ms' : undefined,
@@ -838,7 +958,7 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
     
     console.log('[getAnimationProps] No timing props found for', frameId);
     return null;
-  }, [allAnimations]);
+  }, [allAnimations, resolveTargetId]);
 
   const getAnimationsForFrame = useCallback((frameId: string) => {
     return allAnimations.filter(t => (t.targetId || t.sourceId) === frameId);
@@ -859,7 +979,9 @@ export const AnimateProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <AnimateContext.Provider value={contextValue}>
-      {children}
+      <ParentContext.Provider value={null}>
+        {children}
+      </ParentContext.Provider>
     </AnimateContext.Provider>
   );
 };

@@ -116,7 +116,7 @@ export const ClickToggle: Story = {
 export const HoverAnimate: Story = {
   render: () => {
     const animations: AnimateDSL[] = [
-      { onHover: { fromVariant: 'default', toVariant: 'hovered' } },
+      { onHover: { fromVariant: 'default', toVariant: 'hovered', duration: '1.7s' } },
     ];
 
     return (
@@ -274,9 +274,7 @@ export const ClickWithHover: Story = {
     const animations: AnimateDSL[] = [
       { onClick: { toggleVariant: ['off', 'on'], duration: '0.2s', curve: 'ease' } },
       { onHover: { fromVariant: 'off', toVariant: 'offHover', duration: '0.1s', curve: 'ease' } },
-      { onHover: { fromVariant: 'offHover', toVariant: 'off', duration: '0.1s', curve: 'ease' } },
       { onHover: { fromVariant: 'on', toVariant: 'onHover', duration: '0.1s', curve: 'ease' } },
-      { onHover: { fromVariant: 'onHover', toVariant: 'on', duration: '0.1s', curve: 'ease' } },
     ];
 
     return (
@@ -641,6 +639,220 @@ export const ConditionalAnimate: Story = {
       >
         🔒 Locked → 🔓 Unlocked → ✅ Open
       </Frame>
+    );
+  },
+};
+
+/**
+ * Multi-Layered Hierarchical Targeting
+ * Demonstrates targeting deeply nested Frames using dot-separated paths
+ * Shows how to drill down through multiple levels of hierarchy
+ */
+export const MultiLayeredHierarchy: Story = {
+  render: () => {
+    const buttonAnimations: AnimateDSL[] = [
+      { onClick: { toVariant: 'grandparent.parent.child.active', duration: '2.5s', curve: 'ease-in-out' } },
+      { onClick: { toVariant: 'grandparent.parent2.child2.highlighted', duration: '1.3s', curve: 'ease' } },
+    ];
+
+    console.log('[MultiLayeredHierarchy] Button animations:', buttonAnimations);
+
+    return (
+      <AnimateProvider>
+        <Frame autoLayout={{ flow: 'vertical', gap: 20, alignment: 'center' }}>
+          <Frame
+            id="button"
+            as="button"
+            variant="default"
+            variants={{
+              default: {
+                fill: { type: 'solid', color: 'blue5' },
+                autoLayout: { paddingHorizontal: 20, paddingVertical: 12 },
+                appearance: { radius: 6 },
+                typography: { color: 'white1', fontSize: 14, fontWeight: 500 },
+              },
+            }}
+            animate={buttonAnimations as Animate}
+            onClick={() => {
+              console.log('[MultiLayeredHierarchy] Button clicked!');
+              console.log('[MultiLayeredHierarchy] Animations:', buttonAnimations);
+            }}
+          >
+            Click to target nested Frames
+          </Frame>
+
+          {/* Simple test first */}
+          <Frame autoLayout={{ flow: 'horizontal', gap: 20 }}>
+            <Frame
+              id="testButton"
+              as="button"
+              variant="default"
+              variants={{
+                default: {
+                  fill: { type: 'solid', color: 'purple5' },
+                  autoLayout: { paddingHorizontal: 16, paddingVertical: 8 },
+                  appearance: { radius: 4 },
+                  typography: { color: 'white1', fontSize: 12, fontWeight: 500 },
+                },
+                clicked: {
+                  fill: { type: 'solid', color: 'purple7' },
+                  autoLayout: { paddingHorizontal: 16, paddingVertical: 8 },
+                  appearance: { radius: 4 },
+                  typography: { color: 'white1', fontSize: 12, fontWeight: 500 },
+                },
+              }}
+              animate={[
+                { onClick: { toVariant: 'clicked', duration: '0.3s', curve: 'ease' } },
+                { onClick: { toVariant: 'testParent.testChild.active', duration: '0.3s', curve: 'ease' } }
+              ] as Animate}
+              onClick={() => console.log('[Test] Simple hierarchy button clicked')}
+            >
+              Test: testParent.testChild.active
+            </Frame>
+
+            <Frame
+              id="testParent"
+              variant="default"
+              variants={{
+                default: {
+                  fill: { type: 'solid', color: 'gray3' },
+                  autoLayout: { flow: 'vertical', gap: 10, padding: 10 },
+                  appearance: { radius: 8 },
+                  stroke: { width: 2, color: 'gray4' },
+                },
+              }}
+            >
+              <Frame
+                id="testChild"
+                variant="default"
+                variants={{
+                  default: {
+                    fill: { type: 'solid', color: 'green4' },
+                    autoLayout: { width: 80, height: 60, alignment: 'center' },
+                    appearance: { radius: 4 },
+                    typography: { color: 'white1', fontSize: 10, fontWeight: 500 },
+                  },
+                  active: {
+                    fill: { type: 'solid', color: 'green7' },
+                    autoLayout: { width: 80, height: 60, alignment: 'center' },
+                    appearance: { radius: 4 },
+                    typography: { color: 'white1', fontSize: 10, fontWeight: 500 },
+                    effects: { dropShadow: [{ x: 0, y: 2, blur: 4, color: 'rgba(0,255,0,0.3)' }] },
+                  },
+                }}
+              >
+                Test Child
+              </Frame>
+            </Frame>
+          </Frame>
+
+          <Frame autoLayout={{ flow: 'horizontal', gap: 20 }}>
+            {/* Grandparent Level */}
+            <Frame
+              id="grandparent"
+              variant="default"
+              variants={{
+                default: {
+                  fill: { type: 'solid', color: 'gray3' },
+                  autoLayout: { flow: 'vertical', gap: 10, padding: 10 },
+                  appearance: { radius: 8 },
+                  stroke: { width: 2, color: 'gray4' },
+                },
+              }}
+            >
+              <Frame
+                typography={{ fontSize: 12, color: 'gray7', fontWeight: 600 }}
+              >
+                Grandparent
+              </Frame>
+
+              {/* Parent Level 1 */}
+              <Frame
+                id="parent"
+                variant="default"
+                variants={{
+                  default: {
+                    fill: { type: 'solid', color: 'gray4' },
+                    autoLayout: { flow: 'vertical', gap: 8, padding: 8 },
+                    appearance: { radius: 6 },
+                  },
+                }}
+              >
+                <Frame
+                  typography={{ fontSize: 11, color: 'gray6', fontWeight: 500 }}
+                >
+                  Parent
+                </Frame>
+
+                {/* Child Level */}
+                <Frame
+                  id="child"
+                  variant="default"
+                  variants={{
+                    default: {
+                      fill: { type: 'solid', color: 'red4' },
+                      autoLayout: { width: 80, height: 60, alignment: 'center' },
+                      appearance: { radius: 4 },
+                      typography: { color: 'white1', fontSize: 10, fontWeight: 500 },
+                    },
+                    active: {
+                      fill: { type: 'solid', color: 'blue7' },
+                      autoLayout: { width: 80, height: 60, alignment: 'center' },
+                      appearance: { radius: 4 },
+                      typography: { color: 'white1', fontSize: 10, fontWeight: 500 },
+                      effects: { dropShadow: [{ x: 0, y: 2, blur: 4, color: 'rgba(255,0,0,0.3)' }] },
+                    },
+                  }}
+                >
+                  Child
+                </Frame>
+              </Frame>
+
+              {/* Parent Level 2 */}
+              <Frame
+                id="parent2"
+                variant="default"
+                variants={{
+                  default: {
+                    fill: { type: 'solid', color: 'gray4' },
+                    autoLayout: { flow: 'vertical', gap: 8, padding: 8 },
+                    appearance: { radius: 6 },
+                  },
+                }}
+              >
+                <Frame
+                  typography={{ fontSize: 11, color: 'gray6', fontWeight: 500 }}
+                >
+                  Parent2
+                </Frame>
+
+                {/* Child2 Level */}
+                <Frame
+                  id="child2"
+                  variant="default"
+                  variants={{
+                    default: {
+                      fill: { type: 'solid', color: 'blue4' },
+                      autoLayout: { width: 80, height: 60, alignment: 'center' },
+                      appearance: { radius: 4 },
+                      typography: { color: 'white1', fontSize: 10, fontWeight: 500 },
+                    },
+                    highlighted: {
+                      fill: { type: 'solid', color: 'green9' },
+                      autoLayout: { width: 80, height: 60, alignment: 'center' },
+                      appearance: { radius: 4 },
+                      typography: { color: 'white1', fontSize: 10, fontWeight: 500 },
+                      effects: { dropShadow: [{ x: 0, y: 2, blur: 4, color: 'rgba(0,0,255,0.3)' }] },
+                    },
+                  }}
+                >
+                  Child2
+                </Frame>
+              </Frame>
+            </Frame>
+          </Frame>
+        </Frame>
+      </AnimateProvider>
     );
   },
 };
