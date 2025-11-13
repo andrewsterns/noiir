@@ -2,7 +2,7 @@
 
 A React component framework that mirrors Figma design properties with Frame-based components. Build UIs with the same flexibility and control as Figma, directly in React.
 
-[![npm version](https://img.shields.io/npm/v/noiir.svg)](https://www.npmjs.com/package/noiir)
+[![npm version](https://img.shields.io/npm/v/@noiir/core.svg)](https://www.npmjs.com/package/@noiir/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -13,17 +13,19 @@ A React component framework that mirrors Figma design properties with Frame-base
 📦 **Tree-Shakeable** - Multiple entry points for optimal bundle size  
 🎪 **Variant System** - Pre-built and customizable component variants  
 🌈 **Theme Support** - Comprehensive color and typography system  
+🎭 **Animation System** - Built-in state-based animations and transitions  
+🖼️ **Mask & Group** - Advanced clipping and organizational components  
 
 ## Installation
 
 ```bash
-npm install noiir
+npm install @noiir/core
 ```
 
 ## Quick Start
 
 ```tsx
-import { Frame, Button } from 'noiir';
+import { Frame, Button, Group, Mask } from '@noiir/core';
 
 function App() {
   return (
@@ -32,45 +34,152 @@ function App() {
       fill={{ type: 'solid', color: 'primary3' }}
       appearance={{ cornerRadius: 12 }}
     >
-      <Button variant="primary">Click me</Button>
+      <Group animate={{ hover: 'scale-105' }}>
+        <Button variant="primary">Click me</Button>
+      </Group>
+
+      <Mask appearance={{ cornerRadius: 8 }}>
+        <Frame fill={{ type: 'image', image: { src: '/hero.jpg', scaleMode: 'cover' } }} />
+      </Mask>
     </Frame>
   );
 }
 ```
 
+## Project Structure
+
+Noiir follows a modular architecture with clear separation of concerns:
+
+### 📁 `__frame-core__/`
+Core frame properties and utilities that power all components:
+- **animate/** - Animation and transition properties
+- **appearance/** - Fill, stroke, cursor, and visual styling
+- **layout/** - Auto-layout, flex properties, spacing, sizing
+- **position/** - Absolute/relative positioning, z-index
+- **typography/** - Font styles, sizes, weights, text properties
+- **effects/** - Shadows, blur, opacity, filters
+- **events/** - Event handlers and interactions
+- **utils/** - CSS units, utilities, and helpers
+- **variants/** - Size props and variant system
+
+### 📁 `__components__/`
+All React components organized by atomic design principles:
+- **atoms/** - Basic UI elements (Button, Input, Badge, etc.)
+- **molecules/** - Composite components (Card, Dropdown, Dialog, etc.)
+- **organisms/** - Complex components (Navbar, etc.)
+- **frame/** - Core Frame component
+- **group/** - Group component for animation organization
+- **mask/** - Mask component for clipping functionality
+
+### 📁 `__variants__/`
+Variant definitions, theme system, and design tokens:
+- **atoms/** - Component-specific variants
+- **molecules/** - Composite component variants
+- **theme/** - Colors, fonts, icons, and theme utilities
+- **index.ts** - Centralized variant exports
+
+### 📁 `__stories__/`
+Storybook stories for all components (development only, not published)
+
+### 📁 `docs/`
+Comprehensive documentation and guides
+
 ## Package Exports
 
-Noiir provides multiple entry points for flexibility:
+Noiir provides multiple entry points for flexibility and optimal bundle sizes:
 
 ### Main Export (Everything)
 ```tsx
-import { Frame, Button, Input, colors, buttonVariants } from 'noiir';
+import { Frame, Button, Input, Group, Mask, colors, buttonVariants } from '@noiir/core';
 ```
 
-### Frame & Properties
+### Frame & Core Properties
 ```tsx
 import { 
   Frame, 
   PositionProps, 
   AutoLayoutProps, 
-  FillProps 
-} from 'noiir/frame';
-```
-
-### Theme System
-```tsx
-import { colors, typography, resolveColor } from 'noiir/theme';
+  FillProps,
+  AnimateProps,
+  EffectsProps
+} from '@noiir/core/frame-core';
 ```
 
 ### Components Only
 ```tsx
-import { Button, Input, Card, Dropdown } from 'noiir/components';
+import { Button, Input, Card, Dropdown, Group, Mask } from '@noiir/core/components';
 ```
 
-### Variants Only
+### Individual Components
 ```tsx
-import { buttonVariants, inputVariants } from 'noiir/variants';
+import { Button } from '@noiir/core/components/Button';
+import { Group } from '@noiir/core/components/Group';
+import { Mask } from '@noiir/core/components/Mask';
 ```
+
+### Variants & Theme
+```tsx
+import { buttonVariants, inputVariants } from '@noiir/core/variants';
+import { colors, typography, resolveColor } from '@noiir/core/theme';
+```
+
+### Frame-Core Only
+```tsx
+import { 
+  ExtendVariant,
+  LayoutProps,
+  FillProps,
+  TypographyProps 
+} from '@noiir/core/frame-core';
+```
+
+## Development Workflow
+
+### Project Structure Overview
+
+```
+noiir/
+├── __frame-core__/          # Core properties and utilities
+├── __components__/          # React components (atoms/molecules/organisms)
+├── __variants__/           # Variants, themes, and design tokens
+├── __stories__/            # Storybook stories (dev only)
+├── docs/                   # Documentation
+├── dist/                   # Build output (published)
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
+
+### Building from Source
+
+```bash
+# Install dependencies
+npm install
+
+# Development with watch mode
+npm run dev
+
+# Build the package
+npm run build
+
+# Run Storybook
+npm run storybook
+
+# Build Storybook
+npm run build-storybook
+```
+
+### Architecture Principles
+
+Noiir follows atomic design principles with a layered architecture:
+
+1. **Frame Props** → Foundational design properties
+2. **Frame Component** → Core building block
+3. **Components** → Specific UI elements
+4. **Variants** → Style configurations
+
+All components extend the base `Frame` component, ensuring consistency and enabling unlimited customization through Frame properties.
 
 ## Core Concepts
 
@@ -136,40 +245,46 @@ The `Frame` component is the foundation of Noiir. It mirrors Figma's frame prope
 </Frame>
 ```
 
-### Auto Layout
+### Group Component
 
-Noiir supports all Figma auto layout features:
+The `Group` component is a pure container for organizational and animation purposes. It doesn't render any DOM elements but provides hierarchical targeting for animations:
 
 ```tsx
-// Vertical stack
-<Frame autoLayout={{ flow: 'vertical', gap: 8 }}>
-  <Button>First</Button>
-  <Button>Second</Button>
-</Frame>
+import { Group, Button } from '@noiir/core';
 
-// Horizontal with space between
-<Frame autoLayout={{ 
-  flow: 'horizontal', 
-  gap: 16,
-  distribution: 'space-between' 
+// Group multiple elements for coordinated animations
+<Group animate={{ hover: 'scale-105', click: 'scale-95' }}>
+  <Button variant="primary">Button 1</Button>
+  <Button variant="secondary">Button 2</Button>
+</Group>
+
+// Nested groups for complex hierarchies
+<Group animate={{ hover: 'fade-in' }}>
+  <Group animate={{ click: 'bounce' }}>
+    <Button>Animated Button</Button>
+  </Group>
+</Group>
+```
+
+### Mask Component
+
+The `Mask` component provides advanced clipping functionality with rectangular and SVG path support:
+
+```tsx
+import { Mask, Frame } from '@noiir/core';
+
+// Rectangular mask with rounded corners
+<Mask appearance={{ cornerRadius: 16 }}>
+  <Frame fill={{ type: 'image', image: { src: '/photo.jpg', scaleMode: 'cover' } }} />
+</Mask>
+
+// SVG path mask
+<Mask mask={{
+  type: 'path',
+  path: 'M50,0 L100,50 L50,100 L0,50 Z' // Diamond shape
 }}>
-  <Button>Left</Button>
-  <Button>Right</Button>
-</Frame>
-
-// Freeform (absolute positioning)
-<Frame autoLayout={{ flow: 'freeform' }}>
-  <Frame position={{ x: 10, y: 20 }}>Positioned</Frame>
-</Frame>
-
-// Hug/Fill sizing
-<Frame autoLayout={{ 
-  flow: 'vertical',
-  width: 'hug',  // Fits content
-  height: 'fill' // Fills parent
-}}>
-  <Button>Content</Button>
-</Frame>
+  <Frame fill={{ type: 'solid', color: 'primary5' }} />
+</Mask>
 ```
 
 ### Fill Types
@@ -229,7 +344,7 @@ import { colors, typography } from 'noiir/theme';
 All components are built on Frame and support variants:
 
 ```tsx
-import { Button, Input, Card, Dropdown } from 'noiir/components';
+import { Button, Input, Card, Dropdown, Group, Mask } from '@noiir/core';
 
 // Atoms
 <Button variant="primary">Click me</Button>
@@ -249,11 +364,14 @@ import { Button, Input, Card, Dropdown } from 'noiir/components';
 <Dropdown variant="default" options={options} />
 <Dialog variant="centered">Dialog content</Dialog>
 
-// Organisms
-<Navbar variant="default">
-  <NavbarLogo />
-  <NavbarLinks />
-</Navbar>
+// Layout & Effects
+<Group animate={{ hover: 'scale-105' }}>
+  <Button>Grouped Button</Button>
+</Group>
+
+<Mask appearance={{ cornerRadius: 8 }}>
+  <Frame fill={{ type: 'image', image: { src: '/image.jpg' } }} />
+</Mask>
 ```
 
 ### Custom Variants
@@ -310,20 +428,44 @@ npm run build
 
 ## License & Commercial Use
 
-Noiir is open source under the Business Source License (BSL).
-Free for non-commercial use.
-For commercial use, contact andrewsterns@gmail.com for licensing.
-
+Noiir is open source under the MIT License.
 Copyright (c) 2025 Andrew Sterns. All rights reserved.
-
-See LICENSE for full terms.
 
 ## Contributing
 
-Contributions welcome! Please read our contributing guidelines.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/andrewsterns/noiir.git
+cd noiir
+
+# Install dependencies
+npm install
+
+# Start development
+npm run dev
+
+# Run tests
+npm test
+
+# Build and test
+npm run build
+```
 
 ## Support
 
-- Documentation: [Link to docs]
-- Issues: [GitHub Issues](https://github.com/yourusername/noiir/issues)
-- Discord: [Join our community]
+- **Documentation**: See `docs/` folder for detailed guides
+- **Storybook**: `npm run storybook` for interactive component docs
+- **Issues**: [GitHub Issues](https://github.com/andrewsterns/noiir/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/andrewsterns/noiir/discussions)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
+
+---
+
+Built with ❤️ using React, TypeScript, and Figma design principles.
