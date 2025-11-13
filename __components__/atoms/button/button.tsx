@@ -49,22 +49,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   // Use custom variants if provided, otherwise use defaults
   const variants = customVariants || BUTTON_VARIANTS;
   const sizes = customSizes || BUTTON_SIZES;
-  // Frame will auto-generate unique ID if not provided
-  const defaultAnimate: Animate = (variant === 'primary' && !animate) ? [
-    {
-      mouseEnter: { toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
-      mouseLeave: { toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
-    },
-    {
-      onClick: { toggleVariant: ['primary', 'primaryActive'], duration: '0.1s', curve: 'ease' },
-    },
-    {
-      mouseEnter: { toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
-      mouseLeave: { toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
-    }
-  ] : [];
 
-  const finalAnimate = animate ?? defaultAnimate;
+  // Simple animation logic that works for all variants
+  const defaultAnimate: Animate = [
+    // Active hover rules (more specific, checked first)
+    { mouseEnter: { fromVariant: `${variant}Active`, toVariant: `${variant}ActiveHover`, duration: '0.15s', curve: 'ease-out' } },
+    { mouseLeave: { fromVariant: `${variant}ActiveHover`, toVariant: `${variant}Active`, duration: '0.15s', curve: 'ease-out' } },
+    
+    // Basic hover rules
+    { mouseEnter: { fromVariant: variant, toVariant: `${variant}Hover`, duration: '0.15s', curve: 'ease-out' } },
+    { mouseLeave: { fromVariant: `${variant}Hover`, toVariant: variant, duration: '0.15s', curve: 'ease-out' } },
+    
+    // Click toggle
+    { onClick: { toggleVariant: [variant, `${variant}Active`], duration: '0.1s', curve: 'ease-out' } },
+  ];
+
+  const finalAnimate = animate || defaultAnimate;
 
   return (
     <Frame

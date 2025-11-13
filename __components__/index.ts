@@ -23,6 +23,10 @@ export { Menu } from './molecules/menu/menu';
 export { Popup } from './molecules/popup/popup';
 export { SearchDropdown } from './molecules/search-dropdown/search-dropdown';
 
+// Group & Mask
+export { Group } from './group/group';
+export { Mask } from './mask/mask';
+
 // Organism
 
 

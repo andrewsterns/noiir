@@ -23,7 +23,7 @@ export const VARIANT_STYLES = {
     typography: { color: 'primary6', wrap: 'nowrap' },
   },
   solidActiveHover: {
-    fill: { type: 'solid', color: 'primary2', opacity: 1 },
+    fill: { type: 'solid', color: 'primary9', opacity: 1 },
     stroke: { type: 'none' },
     autoLayout: { flow: 'vertical', gap: 8 },
     typography: { color: 'primary3', wrap: 'nowrap' },

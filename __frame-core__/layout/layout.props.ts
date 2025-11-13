@@ -6,7 +6,7 @@ import { CSSUnit, DimensionValue, GridConfig, normalizeCSSUnit, normalizeSpacing
 
 export interface AutoLayoutProps {
   // Flow and alignment
-  flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';
+  flow?: 'freeform' | 'horizontal' | 'vertical' | 'horizontalReverse' | 'verticalReverse' | 'grid' | 'curved';
   alignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'top' | 'center' | 'bottom' | 'left' | 'right';
   path?: { d: string };
   
@@ -136,9 +136,19 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
       styles.flexDirection = 'row';
       if (hasPositionedChildren) styles.position = 'relative';
       break;
+    case 'horizontalReverse':
+      styles.display = 'flex';
+      styles.flexDirection = 'row-reverse';
+      if (hasPositionedChildren) styles.position = 'relative';
+      break;
     case 'vertical':
       styles.display = 'flex';
       styles.flexDirection = 'column';
+      if (hasPositionedChildren) styles.position = 'relative';
+      break;
+    case 'verticalReverse':
+      styles.display = 'flex';
+      styles.flexDirection = 'column-reverse';
       if (hasPositionedChildren) styles.position = 'relative';
       break;
     case 'grid':
@@ -172,8 +182,8 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
     const vertical = camelCaseSplit[0].toLowerCase();
     const horizontal = camelCaseSplit.length > 1 ? camelCaseSplit[1].toLowerCase() : vertical; // If single value, use same for both axes
 
-    if (props.flow === 'horizontal') {
-      // For horizontal flow (flex-direction: row)
+    if (props.flow === 'horizontal' || props.flow === 'horizontalReverse') {
+      // For horizontal flow (flex-direction: row or row-reverse)
       // Map vertical part to align-items (cross axis)
       switch (vertical) {
         case 'top':
@@ -199,8 +209,8 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
           styles.justifyContent = 'flex-end';
           break;
       }
-    } else if (props.flow === 'vertical') {
-      // For vertical flow (flex-direction: column)
+    } else if (props.flow === 'vertical' || props.flow === 'verticalReverse') {
+      // For vertical flow (flex-direction: column or column-reverse)
       // Map vertical part to justify-content (main axis)
       switch (vertical) {
         case 'top':
@@ -338,7 +348,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
   // Only apply gap for non-freeform flows
   if (
     props.gap !== undefined &&
-    (props.flow === 'horizontal' || props.flow === 'vertical' || props.flow === 'grid' || props.flow === 'curved')
+    (props.flow === 'horizontal' || props.flow === 'vertical' || props.flow === 'horizontalReverse' || props.flow === 'verticalReverse' || props.flow === 'grid' || props.flow === 'curved')
   ) {
     switch (props.gap) {
       case 'none':
@@ -350,10 +360,10 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
       case 'fill':
         // For fill, we want to distribute space between items
         // This is tricky with CSS gap alone, but we can use justify-content
-        if (props.flow === 'horizontal') {
+        if (props.flow === 'horizontal' || props.flow === 'horizontalReverse') {
           styles.justifyContent = 'space-between';
           styles.gap = '0'; // Let space-between handle the distribution
-        } else if (props.flow === 'vertical') {
+        } else if (props.flow === 'vertical' || props.flow === 'verticalReverse') {
           styles.justifyContent = 'space-between';
           styles.gap = '0';
         }
@@ -413,7 +423,7 @@ export const convertAutoLayoutProps = (props: AutoLayoutProps, children?: React.
   }
   
   // Wrapping behavior (flex-wrap)
-  if (props.wrap && (props.flow === 'horizontal' || props.flow === 'vertical')) {
+  if (props.wrap && (props.flow === 'horizontal' || props.flow === 'vertical' || props.flow === 'horizontalReverse' || props.flow === 'verticalReverse')) {
     styles.flexWrap = props.wrap;
   }
   

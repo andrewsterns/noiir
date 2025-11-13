@@ -87,47 +87,51 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
 
     const defaultTransitions: Animate = [
         // Hover on unchecked state
-        { 
-            trigger: 'mouseEnter', 
-            targetId: 'checkboxId',
-            fromVariant: 'unchecked', 
-            toVariant: 'uncheckedHover', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseEnter: {
+                targetId: 'checkboxId',
+                fromVariant: 'unchecked',
+                toVariant: 'uncheckedHover',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
-        { 
-            trigger: 'mouseLeave', 
-            targetId: 'checkboxId',
-            fromVariant: 'uncheckedHover', 
-            toVariant: 'unchecked', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseLeave: {
+                targetId: 'checkboxId',
+                fromVariant: 'uncheckedHover',
+                toVariant: 'unchecked',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
         // Click: Toggle between unchecked and checked
-        { 
-            trigger: 'click', 
-            targetId: 'checkboxId',
-            toggle: true, 
-            toggleVariants: ['unchecked', 'checked'], 
-            duration: '0.2s', 
-            curve: 'ease' 
+        {
+            onClick: {
+                targetId: 'checkboxId',
+                toggleVariant: ['unchecked', 'checked'],
+                duration: '0.2s',
+                curve: 'ease'
+            }
         },
         // Hover on checked state
-        { 
-            trigger: 'mouseEnter', 
-            targetId: 'checkboxId',
-            fromVariant: 'checked', 
-            toVariant: 'checkedHover', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseEnter: {
+                targetId: 'checkboxId',
+                fromVariant: 'checked',
+                toVariant: 'checkedHover',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
-        { 
-            trigger: 'mouseLeave', 
-            targetId: 'checkboxId',
-            fromVariant: 'checkedHover', 
-            toVariant: 'checked', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseLeave: {
+                targetId: 'checkboxId',
+                fromVariant: 'checkedHover',
+                toVariant: 'checked',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
     ];
 

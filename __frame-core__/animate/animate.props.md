@@ -41,7 +41,30 @@ The `animate` prop defines interactions for a Frame, similar to Figma's prototyp
 
 ### Shorthand
 - `'id.variant'`: Parses to `targetId: 'id'`, `toVariant: 'variant'` (or `fromVariant: 'variant'`). Variant resolved from target's `variants` library.
+- `'parent.child.variant'`: Parses to `targetId: 'parent.child'`, `toVariant: 'variant'`. Supports deeper hierarchies like `'grandparent.parent.child.variant'`.
 - If no `id`, assumes current Frame (e.g., `'variant'` → `targetId: currentId`).
+
+### Hierarchical Targeting
+The animation system supports targeting deeply nested Frames using dot-separated paths. This allows drilling into multiple layers of components to apply animations.
+
+- `'parent.child.variant'`: Targets the Frame with ID `'child'` that is a child of `'parent'`, changing it to `'variant'`.
+- `'grandparent.parent.child.variant'`: Targets the Frame with ID `'child'` that is a child of `'parent'`, which is a child of `'grandparent'`.
+
+The system traverses the component tree based on registered parent-child relationships to resolve the exact target Frame.
+
+Example:
+```jsx
+<Group id="grandparent">
+  <Group id="parent">
+    <Frame id="child" variants={{ active: { /* styles */ } }} />
+  </Group>
+</Group>
+
+// In another component's animate:
+{ onClick: { toVariant: 'grandparent.parent.child.active' } }
+```
+
+This enables precise targeting across complex component hierarchies, similar to Figma's nested layer selection.
 
 ### Examples
 ```typescript

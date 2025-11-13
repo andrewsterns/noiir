@@ -76,21 +76,23 @@ const Input = (props: InputProps) => {
 
     const defaultTransitions: Animate = [
         // Hover on base state
-        { 
-            trigger: 'mouseEnter', 
-            targetId: 'inputId',
-            fromVariant: 'primary', 
-            toVariant: 'primaryHover', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseEnter: {
+                targetId: 'inputId',
+                fromVariant: 'primary',
+                toVariant: 'primaryHover',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
-        { 
-            trigger: 'mouseLeave', 
-            targetId: 'inputId',
-            fromVariant: 'primaryHover', 
-            toVariant: 'primary', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseLeave: {
+                targetId: 'inputId',
+                fromVariant: 'primaryHover',
+                toVariant: 'primary',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
         // Focus transitions (manual via onClick/onBlur)
     ];

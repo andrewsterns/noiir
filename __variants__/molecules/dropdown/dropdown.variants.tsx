@@ -80,7 +80,7 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
 
   secondary: {
     ...BUTTON_VARIANTS.secondary,
-    fill: { type: 'solid', color: 'white6', opacity: 0.9 },
+    fill: { type: 'solid', color: 'gray6', opacity: 0.9 },
     autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
     stroke: { type: 'none' },
     appearance: { radius: 30 },
@@ -96,7 +96,7 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
 
     fill: { type: 'none' },
     autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
-    stroke: { type: 'solid', color: 'white7', weight: 1 },
+    stroke: { type: 'solid', color: 'gray3', weight: 1 },
     appearance: { radius: 30 },
     typography: {
       fontSize: 14,
@@ -110,7 +110,7 @@ export const DROPDOWN_BUTTON_VARIANTS: ExtendVariant = {
   secondaryOpen: {
     fill: { type: 'none' },
     autoLayout: { flow: 'horizontal', paddingHorizontal: 16, paddingVertical: 8, gap: 8, width: 'hug' },
-    stroke: { type: 'solid', color: 'white7', weight: 1 },
+    stroke: { type: 'solid', color: 'gray3', weight: 1 },
     appearance: { radius: 30 },
     typography: {
       fontSize: 14,

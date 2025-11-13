@@ -1,48 +1,69 @@
 {
   "name": "@noiir/core",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A comprehensive React component library and design system with Figma integration, featuring customizable components, variants, and theming capabilities",
-  "main": "dist/__frame-core__/index.js",
-  "types": "dist/__frame-core__/index.d.ts",
+  "main": "dist/__components__/index.js",
+  "types": "dist/__components__/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/__frame-core__/index.js",
-      "require": "./dist/__frame-core__/index.js",
-      "types": "./dist/__frame-core__/index.d.ts"
+      "import": "./dist/__components__/index.js",
+      "require": "./dist/__components__/index.js",
+      "types": "./dist/__components__/index.d.ts"
     },
     "./frame": {
       "import": "./dist/__components__/frame/Frame.js",
       "require": "./dist/__components__/frame/Frame.js",
       "types": "./dist/__components__/frame/Frame.d.ts"
     },
-    "./theme": {
-      "import": "./dist/__components__/theme/index.js",
-      "require": "./dist/__components__/theme/index.js",
-      "types": "./dist/__components__/theme/index.d.ts"
-    },
     "./components": {
       "import": "./dist/__components__/index.js",
       "require": "./dist/__components__/index.js",
       "types": "./dist/__components__/index.d.ts"
     },
+    "./components/*": {
+      "import": "./dist/__components__/*.js",
+      "require": "./dist/__components__/*.js",
+      "types": "./dist/__components__/*.d.ts"
+    },
     "./variants": {
       "import": "./dist/__variants__/index.js",
       "require": "./dist/__variants__/index.js",
       "types": "./dist/__variants__/index.d.ts"
+    },
+    "./variants/*": {
+      "import": "./dist/__variants__/*.js",
+      "require": "./dist/__variants__/*.js",
+      "types": "./dist/__variants__/*.d.ts"
+    },
+    "./theme": {
+      "import": "./dist/__variants__/theme/index.js",
+      "require": "./dist/__variants__/theme/index.js",
+      "types": "./dist/__variants__/theme/index.d.ts"
+    },
+    "./theme/*": {
+      "import": "./dist/__variants__/theme/*.js",
+      "require": "./dist/__variants__/theme/*.js",
+      "types": "./dist/__variants__/theme/*.d.ts"
+    },
+    "./frame-core": {
+      "import": "./dist/__frame-core__/index.js",
+      "require": "./dist/__frame-core__/index.js",
+      "types": "./dist/__frame-core__/index.d.ts"
+    },
+    "./frame-core/*": {
+      "import": "./dist/__frame-core__/*.js",
+      "require": "./dist/__frame-core__/*.js",
+      "types": "./dist/__frame-core__/*.d.ts"
     }
   },
   "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "__frame-core__",
-    "__variants__",
-    "__components__"
+    "dist"
   ],
   "scripts": {
-    "build": "npm run build:clean && npm run build:tsc",
+    "build": "npm run build:clean && npm run build:tsc && npm run build:alias",
     "build:clean": "rimraf dist",
     "build:tsc": "tsc",
+    "build:alias": "tsc-alias",
     "dev": "tsc --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -75,6 +96,7 @@
     "cross-env": "^10.1.0",
     "glob": "^11.0.0",
     "storybook": "^7.5.3",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.0.0",
     "vite": "^4.4.5"
   },

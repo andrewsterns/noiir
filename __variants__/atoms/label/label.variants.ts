@@ -60,16 +60,10 @@ export const LABEL_VARIANTS: ExtendVariant = {
   },
 
   primaryActiveHover: {
-    fill: { type: 'solid', color: 'blue6', opacity: 1 },
+       ...VARIANT_STYLES.solidActiveHover as any,
     autoLayout: { flow: 'grid', paddingHorizontal: 16, paddingVertical: 8 },
-    stroke: { type: 'solid', color: 'black4', weight: 1, opacity: 0 },
-    appearance: { radius: 0 },
-    typography: {
-      type: 'h6',
-      color: 'blue7',
-      wrap: 'nowrap',
     },
-  },
+
 
   disabled: {
     fill: { type: 'solid', color: 'gray4' },

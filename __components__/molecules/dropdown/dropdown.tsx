@@ -4,7 +4,7 @@ import { Button } from '../../atoms/button/button';
 import { List, ListItem } from '../list/list';
 import { DROPDOWN_BUTTON_VARIANTS, DROPDOWN_VARIANT, DROPDOWN_SIZES, DROPDOWN_LIST_VARIANTS } from '@variants/molecules/dropdown/dropdown.variants';
 import { BUTTON_SIZES } from '@variants/atoms/button/button.variants';
-import { Animate, useAnimateContext, AnimateProvider } from '@noiir/frame-core/animate/animate.props';
+import { Animate } from '@noiir/frame-core/animate/animate.props';
 import { LIST_SIZES } from '../list/list.variants';
 
 /**
@@ -41,6 +41,7 @@ export interface DropdownProps extends Omit<FrameProps, 'onClick' | 'variant' | 
   variants?: Record<string, any>;
   listVariant?: string;
   listVariants?: Record<string, any>;
+  buttonVariant?: string;
   buttonVariants?: Record<string, any>;
   size?: any;
   sizes?: Record<string, any>;
@@ -66,6 +67,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   variants: customVariants,
   listVariant = 'hidden',
   listVariants: customListVariants,
+  buttonVariant = 'primary',
   buttonVariants: customButtonVariants,
   size = '2',
   sizes: customSizes,
@@ -101,81 +103,64 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   // Generate unique ID for the dropdown if not provided
   const dropdownId = id || `dropdown-${useId()}`;
 
-  // Get animation context
-  const { emitEvent } = useAnimateContext();
-
   // Frame will auto-generate unique IDs for button and list if base id not provided
   const buttonId = `${dropdownId}-button`;
   const listId = `${dropdownId}-list`;
 
   const buttonTransitions: Animate = [
-    { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s' },
-    { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s' },
-    { trigger: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.2s' },
-    { trigger: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
-    { trigger: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
-    { trigger: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.2s' },
-    { trigger: 'click', targetId: listId, toggle: true, toggleVariants: ['visible', 'hidden'], duration: '0.3s' },
-    { trigger: 'listen', listenId: listId, listenVariant: 'hidden', toVariant: 'primary', targetId: buttonId },
-    { trigger: 'listen', listenId: listId, listenVariant: 'visible', toVariant: 'primaryActive', targetId: buttonId },
+    { onHover: { toVariant: 'primaryHover', duration: '0.2s' } },
+    { onClick: { toggleVariant: ['primary', 'primaryActive'], duration: '0.1s', curve: 'ease' } },
+    { onClick: { toggleVariant: [`${listId}.hidden`, `${listId}.visible`], duration: '0.3s' } },
   ];
 
   const listTransitions: Animate = [
-    { trigger: 'click', toVariant: 'hidden', duration: '0.3s' },
-    { trigger: 'close', toVariant: 'hidden', duration: '0.3s' },
+    { onClick: { toVariant: 'hidden', duration: '0.3s' } },
   ];
 
-  const handleListClick = () => {
-    // This will trigger the list's click animation to close it
-  };
+
 
   return (
-    <AnimateProvider>
-      <Frame
-        variants={variants}
-        variant={variant}
-        size={size}
-        sizes={sizes}
-        animate={[]}
-        {...frameProps}
+    <Frame
+      variants={variants}
+      variant={variant}
+      size={size}
+      sizes={sizes}
+      animate={[]}
+      {...frameProps}
+    >
+      <Button
+        id={buttonId}
+        variant={buttonVariant}
+        variants={buttonVariants}
+        size={buttonSize}
+        sizes={buttonSizes}
+        autoLayout={{ alignment: 'left', gap: 'fill', paddingRight: 18 }}
+        animate={disabled ? [] : buttonTransitions}
+        disabled={disabled}
+        cursor={disabled ? 'not-allowed' : 'pointer'}
+        {...buttonProps}
       >
-        <Button
-          id={buttonId}
-          variant='primary'
-          variants={buttonVariants}
-          size={buttonSize}
-          sizes={buttonSizes}
-          autoLayout={{ alignment: 'left', gap: 'fill', paddingRight: 18 }}
-          animate={disabled ? [] : buttonTransitions}
-          disabled={disabled}
-          cursor={disabled ? 'not-allowed' : 'pointer'}
-          {...buttonProps}
-        >
-          {getSelectedLabel()}
-        </Button>
-        <List
-          id={listId}
-          size={listSize}
-          sizes={listSizes}
-          items={items}
-          variant={listVariant}
-          variants={listVariants}
-          animate={listTransitions}
-          onClick={handleListClick}
-          onItemClick={(index, item) => {
-            console.log('[Dropdown] Item clicked:', index, item);
-            if (multiSelect) {
-              onMultiChange?.(selectedIndices, items);
-            } else {
-              onChange?.(index, item);
-            }
-            // Hide the list when an item is selected
-            console.log('[Dropdown] Emitting close event for list:', listId);
-            emitEvent(listId, 'close');
-          }}
-        />
-      </Frame>
-    </AnimateProvider>
+        {getSelectedLabel()}
+      </Button>
+      <List
+        id={listId}
+        size={listSize}
+        sizes={listSizes}
+        items={items}
+        variant={listVariant}
+        variants={listVariants}
+        animate={listTransitions}
+        onItemClick={(index, item) => {
+          console.log('[Dropdown] Item clicked:', index, item);
+          if (multiSelect) {
+            onMultiChange?.(selectedIndices, items);
+          } else {
+            onChange?.(index, item);
+          }
+          // List will close automatically when clicked via animation
+        }}
+      />
+    </Frame>
   );
 });
 

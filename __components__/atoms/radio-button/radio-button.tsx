@@ -56,47 +56,51 @@ export const RadioButton = React.forwardRef<HTMLButtonElement, RadioButtonProps>
     // Default transition rules for radio button inner circle
     const defaultTransitions: Animate = [
         // Hover on unchecked state
-        { 
-            trigger: 'mouseEnter', 
-            targetId: 'radioFillId',
-            fromVariant: 'unchecked', 
-            toVariant: 'uncheckedHover', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseEnter: {
+                targetId: 'radioFillId',
+                fromVariant: 'unchecked',
+                toVariant: 'uncheckedHover',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
-        { 
-            trigger: 'mouseLeave', 
-            targetId: 'radioFillId',
-            fromVariant: 'uncheckedHover', 
-            toVariant: 'unchecked', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseLeave: {
+                targetId: 'radioFillId',
+                fromVariant: 'uncheckedHover',
+                toVariant: 'unchecked',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
         // Click: Toggle between unchecked and checked
-        { 
-            trigger: 'click', 
-            targetId: 'radioFillId',
-            toggle: true, 
-            toggleVariants: ['unchecked', 'checked'], 
-            duration: '0.2s', 
-            curve: 'ease' 
+        {
+            onClick: {
+                targetId: 'radioFillId',
+                toggleVariant: ['unchecked', 'checked'],
+                duration: '0.2s',
+                curve: 'ease'
+            }
         },
         // Hover on checked state
-        { 
-            trigger: 'mouseEnter', 
-            targetId: 'radioFillId',
-            fromVariant: 'checked', 
-            toVariant: 'checkedHover', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseEnter: {
+                targetId: 'radioFillId',
+                fromVariant: 'checked',
+                toVariant: 'checkedHover',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
-        { 
-            trigger: 'mouseLeave', 
-            targetId: 'radioFillId',
-            fromVariant: 'checkedHover', 
-            toVariant: 'checked', 
-            duration: '0.15s', 
-            curve: 'ease' 
+        {
+            mouseLeave: {
+                targetId: 'radioFillId',
+                fromVariant: 'checkedHover',
+                toVariant: 'checked',
+                duration: '0.15s',
+                curve: 'ease'
+            }
         },
     ];
 

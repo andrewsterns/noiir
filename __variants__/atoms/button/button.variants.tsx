@@ -74,7 +74,7 @@ export const BUTTON_VARIANTS: ExtendVariant = {
         ...VARIANT_STYLES.solidActiveHover as any,
         appearance: { radius: 8 },
         typography: {
-            color: 'primary3',
+            color: 'primary5',
             wrap: 'nowrap',
         },
     // iconStart removed

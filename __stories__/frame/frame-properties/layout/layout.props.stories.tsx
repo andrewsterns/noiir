@@ -96,7 +96,7 @@ import { Frame, FrameProps } from '../../../../__components__/frame/Frame';
 // Layout story controls interface
 interface LayoutArgs extends Partial<FrameProps> {
   children?: React.ReactNode;
-  flow?: 'freeform' | 'horizontal' | 'vertical' | 'grid' | 'curved';
+  flow?: 'freeform' | 'horizontal' | 'vertical' | 'horizontalReverse' | 'verticalReverse' | 'grid' | 'curved';
   alignment?: 'topLeft' | 'topCenter' | 'topRight' | 'centerLeft' | 'center' | 'centerRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight' | 'top' | 'center' | 'bottom' | 'left' | 'right';
   gap: number | string | 'hug' | 'fill';
   padding: number | string;
@@ -147,7 +147,7 @@ export const Layout: LayoutStory = {
   argTypes: {
     flow: {
       control: { type: 'select' },
-      options: [undefined, 'freeform', 'horizontal', 'vertical', 'grid', 'curved'],
+      options: [undefined, 'freeform', 'horizontal', 'vertical', 'horizontalReverse', 'verticalReverse', 'grid', 'curved'],
       description: 'Layout flow type',
       table: { category: 'Layout' }
     },
@@ -310,7 +310,7 @@ export const CurvedLayout: LayoutStory = {
   argTypes: {
     flow: {
       control: { type: 'select' },
-      options: [undefined, 'freeform', 'horizontal', 'vertical', 'grid', 'curved'],
+      options: [undefined, 'freeform', 'horizontal', 'vertical', 'horizontalReverse', 'verticalReverse', 'grid', 'curved'],
       description: 'Layout flow type',
       table: { category: 'Layout' }
     },
@@ -601,6 +601,187 @@ export const GridLayoutDemo: LayoutStory = {
     },
     controls: {
       exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'flow', 'alignment', 'padding', 'gap', 'height', 'childHeight', 'childAlignment', 'path']
+    }
+  }
+};
+
+export const ReverseLayoutFlows: LayoutStory = {
+  args: {
+    fill: { type: 'solid', color: 'white2', opacity: 0.9 },
+    stroke: { type: 'solid', color: 'white4', weight: 1, opacity: 0 },
+    appearance: { radius: 8 },
+    width: 400,
+    height: 'hug',
+    gap: 16,
+    padding: 16,
+  },
+  render: (args: LayoutArgs) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {/* Horizontal Normal */}
+      <div>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', fontWeight: 'bold' }}>Horizontal (Left to Right)</h3>
+        <Frame
+          autoLayout={{
+            flow: 'horizontal',
+            gap: args.gap,
+            padding: args.padding,
+            width: args.width,
+            height: args.height
+          }}
+          fill={args.fill}
+          stroke={args.stroke}
+          appearance={args.appearance}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <Frame
+              key={i}
+              stroke={{ type: 'none' }}
+              fill={{ type: 'solid', color: `blue${6 + i}` }}
+              autoLayout={{
+                width: 80,
+                height: 60,
+                alignment: 'center'
+              }}
+              appearance={{ radius: 4 }}
+            >
+              <Frame
+                stroke={{ type: 'none' }}
+                typography={{ type: 'h6', color: 'white2', wrap: 'nowrap', textAlign: 'center' }}
+                autoLayout={{ padding: 8 }}
+              >
+                {i}
+              </Frame>
+            </Frame>
+          ))}
+        </Frame>
+      </div>
+
+      {/* Horizontal Reverse */}
+      <div>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', fontWeight: 'bold' }}>Horizontal Reverse (Right to Left)</h3>
+        <Frame
+          autoLayout={{
+            flow: 'horizontalReverse',
+            gap: args.gap,
+            padding: args.padding,
+            width: args.width,
+            height: args.height
+          }}
+          fill={args.fill}
+          stroke={args.stroke}
+          appearance={args.appearance}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <Frame
+              key={i}
+              stroke={{ type: 'none' }}
+              fill={{ type: 'solid', color: `red${6 + i}` }}
+              autoLayout={{
+                width: 80,
+                height: 60,
+                alignment: 'center'
+              }}
+              appearance={{ radius: 4 }}
+            >
+              <Frame
+                stroke={{ type: 'none' }}
+                typography={{ type: 'h6', color: 'white2', wrap: 'nowrap', textAlign: 'center' }}
+                autoLayout={{ padding: 8 }}
+              >
+                {i}
+              </Frame>
+            </Frame>
+          ))}
+        </Frame>
+      </div>
+
+      {/* Vertical Normal */}
+      <div>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', fontWeight: 'bold' }}>Vertical (Top to Bottom)</h3>
+        <Frame
+          autoLayout={{
+            flow: 'vertical',
+            gap: args.gap,
+            padding: args.padding,
+            width: args.width,
+            height: 'hug'
+          }}
+          fill={args.fill}
+          stroke={args.stroke}
+          appearance={args.appearance}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <Frame
+              key={i}
+              stroke={{ type: 'none' }}
+              fill={{ type: 'solid', color: `green${6 + i}` }}
+              autoLayout={{
+                width: 'hug',
+                height: 60,
+                alignment: 'center'
+              }}
+              appearance={{ radius: 4 }}
+            >
+              <Frame
+                stroke={{ type: 'none' }}
+                typography={{ type: 'h6', color: 'white2', wrap: 'nowrap', textAlign: 'center' }}
+                autoLayout={{ padding: 8 }}
+              >
+                {i}
+              </Frame>
+            </Frame>
+          ))}
+        </Frame>
+      </div>
+
+      {/* Vertical Reverse */}
+      <div>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', fontWeight: 'bold' }}>Vertical Reverse (Bottom to Top)</h3>
+        <Frame
+          autoLayout={{
+            flow: 'verticalReverse',
+            gap: args.gap,
+            padding: args.padding,
+            width: args.width,
+            height: 'hug'
+          }}
+          fill={args.fill}
+          stroke={args.stroke}
+          appearance={args.appearance}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <Frame
+              key={i}
+              stroke={{ type: 'none' }}
+              fill={{ type: 'solid', color: `warning${6 + i}` }}
+              autoLayout={{
+                width: 'hug',
+                height: 60,
+                alignment: 'center'
+              }}
+              appearance={{ radius: 4 }}
+            >
+              <Frame
+                stroke={{ type: 'none' }}
+                typography={{ type: 'h6', color: 'white2', wrap: 'nowrap', textAlign: 'center' }}
+                autoLayout={{ padding: 8 }}
+              >
+                {i}
+              </Frame>
+            </Frame>
+          ))}
+        </Frame>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates the difference between normal and reverse directional layout flows. Horizontal reverse flows right-to-left, vertical reverse flows bottom-to-top.'
+      }
+    },
+    controls: {
+      exclude: ['autoLayout', 'position', 'size', 'fill', 'appearance', 'stroke', 'className', 'style', 'flow', 'alignment', 'wrap', 'clipContent', 'childWidth', 'childHeight', 'childAlignment', 'path']
     }
   }
 };

@@ -8,7 +8,6 @@ import { StrokeProps } from '@noiir/frame-core/appearance/stroke.props';
 import { CursorProps } from '@noiir/frame-core/appearance/cursor.props';
 import { EffectProps } from '@noiir/frame-core/effects/effects.props';
 import { EventProps } from '@noiir/frame-core/events/event.props';
-import { MaskPropsInput } from '@noiir/frame-core/mask/mask.props';
 import { BooleanOperationProps } from '@noiir/frame-core/booleanOperation/booleanOperation.props';
 import { resolveColor } from '@variants/theme/colors';
 import { samplePathPoints } from '@noiir/frame-core/layout/svgPathUtils';
@@ -48,7 +47,6 @@ export interface FrameProps extends EventProps {
   stroke?: StrokeProps;
   effects?: EffectProps;
   cursor?: CursorProps | CursorProps['type'];
-  mask?: MaskPropsInput;
   booleanOperation?: BooleanOperationProps;
   children?: React.ReactNode;
   className?: string;
@@ -83,7 +81,6 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     stroke,
     effects,
     cursor,
-    mask,
     booleanOperation,
     children,
     className,
@@ -553,7 +550,6 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     fill: finalFill,
     stroke: finalStroke,
     effects: finalEffects,
-    mask: mask,
     booleanOperation: booleanOperation,
   }, hasAutoLayout);
 

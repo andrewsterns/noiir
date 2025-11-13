@@ -1,7 +1,7 @@
 import React from 'react';
 import { Frame, FrameProps } from '@components/frame/Frame';
 import { LABEL_VARIANTS, LABEL_SIZES } from '../../../__variants__/atoms/label/label.variants';
-import { Animate } from '@noiir/frame-core/animate/animate.props';
+import { Animate, AnimateDSL } from '@noiir/frame-core/animate/animate.props';
 
 /**
  * Label Component
@@ -48,18 +48,13 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
   const sizes = customSizes || LABEL_SIZES;
   
   // Determine effective variant based on disabled state
-  const effectiveVariant = disabled ? 'disabled' : variant;
 
-  const defaultTransitions: Animate = disabled ? [
-    // No animations for disabled state - remains static
-  ] : [
-    { trigger: 'mouseEnter', toVariant: 'primaryHover', fromVariant: 'primary', duration: '0.2s', curve: 'ease' },
-    { trigger: 'mouseLeave', toVariant: 'primary', fromVariant: 'primaryHover', duration: '0.2s', curve: 'ease' },
-    { trigger: 'click', toggleVariants: ['primary', 'primaryActive'], toggle: true, duration: '0.1s', curve: 'ease' },
-    { trigger: 'click', toVariant: 'primaryActive', fromVariant: 'primaryHover', duration: '0.1s', curve: 'ease' },
-    { trigger: 'mouseEnter', toVariant: 'primaryActiveHover', fromVariant: 'primaryActive', duration: '0.1s', curve: 'ease' },
-    { trigger: 'mouseLeave', toVariant: 'primaryActive', fromVariant: 'primaryActiveHover', duration: '0.1s', curve: 'ease' },
-  ];
+
+ const animate: AnimateDSL[] = [
+  { onClick: { toggleVariant: ['primary', 'primaryActive'], duration: '0.2s', curve: 'ease' } },
+  { onHover: { fromVariant: 'primary', toVariant: 'primaryHover' } },
+  { onHover: { fromVariant: 'primaryActive', toVariant: 'primaryActiveHover' } },
+];
 
   return (
     <Frame
@@ -68,10 +63,10 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(({
       id='label'
       size={size}
       sizes={sizes}
-      variant={effectiveVariant}
+      variant={variant}
       variants={variants}
       onClick={disabled ? undefined : onClick}
-      animate={transitions ?? defaultTransitions}
+      animate={animate}
       {...frameProps}
     >
       {children}

@@ -74,72 +74,80 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(({
   // Build transition rules for hover and grab/drag states
   const defaultTransitions: Animate = [
     // Hover on base thumb state
-    { 
-      trigger: 'mouseEnter', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumb'), 
-      toVariant: getVariantSuffix('thumbHover'), 
-      duration: '0.05s', 
-      curve: 'none' 
+    {
+      mouseEnter: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumb'),
+        toVariant: getVariantSuffix('thumbHover'),
+        duration: '0.05s',
+        curve: 'none'
+      }
     },
-    { 
-      trigger: 'mouseLeave', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumbHover'), 
-      toVariant: getVariantSuffix('thumb'), 
-      duration: '0.05s', 
-      curve: 'none' 
+    {
+      mouseLeave: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumbHover'),
+        toVariant: getVariantSuffix('thumb'),
+        duration: '0.05s',
+        curve: 'none'
+      }
     },
-    // Grab: Initiate drag from base or hover state
-    { 
-      trigger: 'grab', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumb'), 
-      toVariant: getVariantSuffix('thumbGrabbing'), 
-      duration: '0.05s', 
-      curve: 'none' 
+    // Grab: Initiate drag from base or hover state (using mouseDown)
+    {
+      mouseDown: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumb'),
+        toVariant: getVariantSuffix('thumbGrabbing'),
+        duration: '0.05s',
+        curve: 'none'
+      }
     },
-    { 
-      trigger: 'grab', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumbHover'), 
-      toVariant: getVariantSuffix('thumbGrabbing'), 
-      duration: '0.1s', 
-      curve: 'ease' 
+    {
+      mouseDown: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumbHover'),
+        toVariant: getVariantSuffix('thumbGrabbing'),
+        duration: '0.1s',
+        curve: 'ease'
+      }
     },
     // Release: Return to base state
-    { 
-      trigger: 'mouseUp', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumbGrabbing'), 
-      toVariant: getVariantSuffix('thumb'), 
-      duration: '0.15s', 
-      curve: 'ease' 
+    {
+      mouseUp: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumbGrabbing'),
+        toVariant: getVariantSuffix('thumb'),
+        duration: '0.15s',
+        curve: 'ease'
+      }
     },
-    { 
-      trigger: 'mouseUp', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumbGrabbingHover'), 
-      toVariant: getVariantSuffix('thumb'), 
-      duration: '0.15s', 
-      curve: 'ease' 
+    {
+      mouseUp: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumbGrabbingHover'),
+        toVariant: getVariantSuffix('thumb'),
+        duration: '0.15s',
+        curve: 'ease'
+      }
     },
     // Hover while grabbing
-    { 
-      trigger: 'mouseEnter', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumbGrabbing'), 
-      toVariant: getVariantSuffix('thumbGrabbingHover'), 
-      duration: '0.15s', 
-      curve: 'ease' 
+    {
+      mouseEnter: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumbGrabbing'),
+        toVariant: getVariantSuffix('thumbGrabbingHover'),
+        duration: '0.15s',
+        curve: 'ease'
+      }
     },
-    { 
-      trigger: 'mouseLeave', 
-      targetId: 'thumbId',
-      fromVariant: getVariantSuffix('thumbGrabbingHover'), 
-      toVariant: getVariantSuffix('thumbGrabbing'), 
-      duration: '0.15s', 
-      curve: 'ease' 
+    {
+      mouseLeave: {
+        targetId: 'thumbId',
+        fromVariant: getVariantSuffix('thumbGrabbingHover'),
+        toVariant: getVariantSuffix('thumbGrabbing'),
+        duration: '0.15s',
+        curve: 'ease'
+      }
     },
   ];
 
