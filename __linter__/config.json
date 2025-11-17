@@ -1,0 +1,64 @@
+{
+  "rules": {
+    "disallowed-props": {
+      "severity": "error"
+    },
+    "frame-props-only": {
+      "severity": "warning"
+    }
+  },
+  "allowedProps": [
+    "key",
+    "ref",
+    "children",
+    "onClick",
+    "onChange",
+    "onSubmit",
+    "onMouseEnter",
+    "onMouseLeave",
+    "onFocus",
+    "onBlur",
+    "disabled",
+    "type",
+    "value",
+    "placeholder",
+    "name",
+    "id",
+    "aria-label",
+    "aria-describedby",
+    "role",
+    "tabIndex"
+  ],
+  "frameComponents": [
+    "Frame",
+    "Button",
+    "Input",
+    "Card",
+    "Dialog",
+    "Dropdown",
+    "List",
+    "Menu",
+    "Popup",
+    "SearchDropdown",
+    "Template",
+    "Group",
+    "Mask",
+    "Avatar",
+    "Badge",
+    "Checkbox",
+    "Label",
+    "ProgressBar",
+    "RadioButton",
+    "Slider",
+    "Text",
+    "Textarea",
+    "Toggle",
+    "Tooltip"
+  ],
+  "validVariants": {
+    "button": ["primary", "secondary", "outline", "ghost", "destructive"],
+    "input": ["default", "outlined", "filled"],
+    "card": ["default", "elevated", "outlined"],
+    "badge": ["default", "primary", "secondary", "destructive"]
+  }
+}

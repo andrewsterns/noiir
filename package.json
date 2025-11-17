@@ -69,6 +69,7 @@
     "build-storybook": "storybook build",
     "build:noiir": "node scripts/compile-noiir.js",
     "watch:noiir": "cross-env chokidar \"src/**/*.noiir\" -c \"npm run build:noiir\"",
+    "lint:noiir": "npx tsx __linter__/cli.ts",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -97,10 +98,14 @@
     "glob": "^11.0.0",
     "storybook": "^7.5.3",
     "tsc-alias": "^1.8.16",
+    "tsx": "^4.0.0",
     "typescript": "^5.0.0",
     "vite": "^4.4.5"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@noiir/core": "^2.1.1"
   }
 }
