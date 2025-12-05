@@ -66,6 +66,13 @@ export interface FrameProps extends EventProps {
   colorPalette?: Record<string, string>;
   /** User-defined font palette for font resolution */
   fontPalette?: Record<string, string | { family: string; weights?: number[] }>;
+  /** User-defined typography scales for fontSize, fontWeight, lineHeight, letterSpacing */
+  typographyScale?: {
+    fontSize?: Record<string, number>;
+    fontWeight?: Record<string, number>;
+    lineHeight?: Record<string, number>;
+    letterSpacing?: Record<string, number>;
+  };
 
   display?: string;
   type?: string;
@@ -118,6 +125,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     animate,
     colorPalette,
     fontPalette,
+    typographyScale,
 
     display,
     type,
@@ -558,7 +566,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     stroke: finalStroke,
     effects: finalEffects,
     booleanOperation: booleanOperation,
-  }, hasAutoLayout);
+  }, hasAutoLayout, typographyScale);
 
   // If this frame has alignment-based positioning for children, ensure it's positioned relatively
   // BUT don't override if position is already fixed or absolute

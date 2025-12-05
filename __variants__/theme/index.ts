@@ -10,3 +10,17 @@ export type { ColorVariantName } from './colors.variants';
 
 export { fontVariants, fontDefinitions } from './fonts.variants';
 export type { FontVariantName } from './fonts.variants';
+
+export { 
+  fontSizeScale, 
+  fontWeightScale, 
+  lineHeightScale, 
+  letterSpacingScale,
+  typographyScales 
+} from './typography.variants';
+export type { 
+  FontSizeName, 
+  FontWeightName, 
+  LineHeightName, 
+  LetterSpacingName 
+} from './typography.variants';

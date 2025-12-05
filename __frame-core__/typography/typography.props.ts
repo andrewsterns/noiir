@@ -2,13 +2,139 @@ import * as React from 'react';
 import { resolveColor } from '@variants/theme/colors';
 // import { textVariants } from '../../../../src/variants';
 
+// Example scales for backward compatibility
+const exampleFontSizes = {
+  xs: 12,
+  sm: 14,
+  base: 16,
+  lg: 18,
+  xl: 20,
+  '2xl': 24,
+  '3xl': 30,
+  '4xl': 36,
+};
+
+const exampleFontWeights = {
+  light: 300,
+  normal: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800,
+};
+
+const exampleLineHeights = {
+  tight: 1.25,
+  normal: 1.5,
+  relaxed: 1.75,
+};
+
+const exampleLetterSpacings = {
+  tight: -0.5,
+  normal: 0,
+  wide: 0.5,
+};
+
+/**
+ * Resolve fontSize from a key or return the value as-is
+ * @param value - fontSize value (number, string key, or pixel string like "16px")
+ * @param scale - Optional user-defined font size scale
+ */
+export function resolveFontSize(
+  value: number | string | undefined,
+  scale?: Record<string, number>
+): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value === 'number') return value;
+  
+  // Check user scale first
+  if (scale && value in scale) return scale[value];
+  
+  // Check example scale
+  if (value in exampleFontSizes) return exampleFontSizes[value as keyof typeof exampleFontSizes];
+  
+  // If it's a string like "16px", parse it
+  if (typeof value === 'string' && value.endsWith('px')) {
+    return parseInt(value);
+  }
+  
+  // Return as-is if it's a CSS value
+  return value as any;
+}
+
+/**
+ * Resolve fontWeight from a key or return the value as-is
+ * @param value - fontWeight value (number, string key like "bold", or CSS value)
+ * @param scale - Optional user-defined font weight scale
+ */
+export function resolveFontWeight(
+  value: number | string | undefined,
+  scale?: Record<string, number>
+): number | string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value === 'number') return value;
+  
+  // Check user scale first
+  if (scale && value in scale) return scale[value];
+  
+  // Check example scale
+  if (value in exampleFontWeights) return exampleFontWeights[value as keyof typeof exampleFontWeights];
+  
+  // Return as-is (could be CSS keyword like "bold", "normal", etc.)
+  return value;
+}
+
+/**
+ * Resolve lineHeight from a key or return the value as-is
+ * @param value - lineHeight value (number, string key, or CSS value)
+ * @param scale - Optional user-defined line height scale
+ */
+export function resolveLineHeight(
+  value: number | string | undefined,
+  scale?: Record<string, number>
+): number | string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value === 'number') return value;
+  
+  // Check user scale first
+  if (scale && value in scale) return scale[value];
+  
+  // Check example scale
+  if (value in exampleLineHeights) return exampleLineHeights[value as keyof typeof exampleLineHeights];
+  
+  // Return as-is
+  return value;
+}
+
+/**
+ * Resolve letterSpacing from a key or return the value as-is
+ * @param value - letterSpacing value (number, string key, or CSS value)
+ * @param scale - Optional user-defined letter spacing scale
+ */
+export function resolveLetterSpacing(
+  value: number | string | undefined,
+  scale?: Record<string, number>
+): number | string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value === 'number') return value;
+  
+  // Check user scale first
+  if (scale && value in scale) return scale[value];
+  
+  // Check example scale
+  if (value in exampleLetterSpacings) return exampleLetterSpacings[value as keyof typeof exampleLetterSpacings];
+  
+  // Return as-is
+  return value;
+}
+
 /**
  * Typography Properties
  */
 export interface TypographyProps {
   type?: string;
   fontFamily?: string;
-  fontSize?: number;
+  fontSize?: number | string;
   fontWeight?: number | string;
   lineHeight?: number | string;
   letterSpacing?: number | string;
@@ -52,9 +178,18 @@ export interface RectangleProps extends TypographyProps {
 
 /**
  * Convert typography props to CSS styles
+ * @param props - Typography properties
+ * @param scales - Optional user-defined scales for resolution
  */
-
-export function convertTypographyProps(props: TypographyProps): React.CSSProperties {
+export function convertTypographyProps(
+  props: TypographyProps,
+  scales?: {
+    fontSize?: Record<string, number>;
+    fontWeight?: Record<string, number>;
+    lineHeight?: Record<string, number>;
+    letterSpacing?: Record<string, number>;
+  }
+): React.CSSProperties {
   // Always merge Frame defaults with provided props, so variant props override but missing values fall back to Frame defaults
   let merged = { ...props } as TypographyProps;
 
@@ -69,10 +204,26 @@ export function convertTypographyProps(props: TypographyProps): React.CSSPropert
 
   const styles: React.CSSProperties = {};
   if (styleProps.fontFamily !== undefined) styles.fontFamily = styleProps.fontFamily;
-  if (styleProps.fontSize !== undefined) styles.fontSize = typeof styleProps.fontSize === 'number' ? `${styleProps.fontSize}px` : styleProps.fontSize;
-  if (styleProps.fontWeight !== undefined) styles.fontWeight = styleProps.fontWeight;
-  if (styleProps.lineHeight !== undefined) styles.lineHeight = styleProps.lineHeight;
-  if (styleProps.letterSpacing !== undefined) styles.letterSpacing = typeof styleProps.letterSpacing === 'number' ? `${styleProps.letterSpacing}px` : styleProps.letterSpacing;
+  
+  // Resolve fontSize from scale
+  const resolvedFontSize = resolveFontSize(styleProps.fontSize, scales?.fontSize);
+  if (resolvedFontSize !== undefined) {
+    styles.fontSize = typeof resolvedFontSize === 'number' ? `${resolvedFontSize}px` : resolvedFontSize;
+  }
+  
+  // Resolve fontWeight from scale
+  const resolvedFontWeight = resolveFontWeight(styleProps.fontWeight, scales?.fontWeight);
+  if (resolvedFontWeight !== undefined) styles.fontWeight = resolvedFontWeight;
+  
+  // Resolve lineHeight from scale
+  const resolvedLineHeight = resolveLineHeight(styleProps.lineHeight, scales?.lineHeight);
+  if (resolvedLineHeight !== undefined) styles.lineHeight = resolvedLineHeight;
+  
+  // Resolve letterSpacing from scale
+  const resolvedLetterSpacing = resolveLetterSpacing(styleProps.letterSpacing, scales?.letterSpacing);
+  if (resolvedLetterSpacing !== undefined) {
+    styles.letterSpacing = typeof resolvedLetterSpacing === 'number' ? `${resolvedLetterSpacing}px` : resolvedLetterSpacing;
+  }
   if (styleProps.textAlign !== undefined) styles.textAlign = styleProps.textAlign;
   if (styleProps.textDecoration !== undefined) styles.textDecoration = styleProps.textDecoration;
   if (styleProps.textTransform !== undefined) styles.textTransform = styleProps.textTransform;

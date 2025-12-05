@@ -167,7 +167,13 @@ export const composeEventHandlers = (
  */
 export const convertFramePropsToStyles = (
   props: FramePropsBase,
-  hasAutoLayout: boolean
+  hasAutoLayout: boolean,
+  scales?: {
+    fontSize?: Record<string, number>;
+    fontWeight?: Record<string, number>;
+    lineHeight?: Record<string, number>;
+    letterSpacing?: Record<string, number>;
+  }
 ): React.CSSProperties => {
   const {
     position,
@@ -186,7 +192,7 @@ export const convertFramePropsToStyles = (
   const positionStyles = convertPositionProps(position || {}, hasAutoLayout);
   const autoLayoutStyles = convertAutoLayoutProps(autoLayout || {});
   const appearanceStyles = convertAppearanceProps(appearance || {});
-  const typographyStyles = convertTypographyProps(typography || {});
+  const typographyStyles = convertTypographyProps(typography || {}, scales);
   const fillStyles = convertFillProps(fill || {}, false);
   const strokeStyles = convertStrokeProps(stroke || {});
   const effectStyles = convertEffectProps(effects || {});
