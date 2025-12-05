@@ -1,134 +1,64 @@
-// Theme color definitions for variants
-export const colors = {
-  // Primary scale
-  primary1: '#e3f2fd',
-  primary2: '#bbdefb',
-  primary3: '#90caf9',
-  primary4: '#64b5f6',
-  primary5: '#42a5f5',
-  primary6: '#2196f3',
-  primary7: '#1e88e5',
-  primary8: '#1976d2',
-  primary9: '#1565c0',
-  primary10: '#0d47a1',
+/**
+ * Color Resolution Utility
+ * 
+ * Users should define their own color variants in their project.
+ * This function accepts an optional color palette and resolves color names to hex values.
+ * 
+ * @example
+ * // In your project: my-app/variants/colors.ts
+ * export const myColors = {
+ *   brand1: '#ff0000',
+ *   brand2: '#00ff00',
+ *   darkText: '#1a1a1a'
+ * };
+ * 
+ * // Then use directly:
+ * <Frame fill={{ type: 'solid', color: '#ff0000' }} />
+ * // Or with color name (if you pass myColors to resolveColor)
+ * <Frame fill={{ type: 'solid', color: 'brand1' }} />
+ */
 
-  // Error/Red scale
-  error1: '#ffebee',
-  error2: '#ffcdd2',
-  error3: '#ef9a9a',
-  error4: '#e57373',
-  error5: '#ef5350',
-  error6: '#f44336',
-  error7: '#e53935',
-  error8: '#d32f2f',
-  error9: '#c62828',
-  error10: '#b71c1c',
-
-  red1: '#ffebee',
-  red2: '#ffcdd2',
-  red3: '#ef9a9a',
-  red4: '#e57373',
-  red5: '#ef5350',
-  red6: '#f44336',
-  red7: '#e53935',
-  red8: '#d32f2f',
-  red9: '#c62828',
-  red10: '#b71c1c',
-
-  // Success/Green scale
-  success1: '#e8f5e9',
-  success2: '#c8e6c9',
-  success3: '#a5d6a7',
-  success4: '#81c784',
-  success5: '#66bb6a',
-  success6: '#4caf50',
-  success7: '#43a047',
-  success8: '#388e3c',
-  success9: '#2e7d32',
-  success10: '#1b5e20',
-
-  green1: '#e8f5e9',
-  green2: '#c8e6c9',
-  green3: '#a5d6a7',
-  green4: '#81c784',
-  green5: '#66bb6a',
-  green6: '#4caf50',
-  green7: '#43a047',
-  green8: '#388e3c',
-  green9: '#2e7d32',
-  green10: '#1b5e20',
-
-  // Warning/Yellow scale
-  warning1: '#fffde7',
-  warning2: '#fff9c4',
-  warning3: '#fff59d',
-  warning4: '#fff176',
-  warning5: '#ffee58',
-  warning6: '#ffeb3b',
-  warning7: '#fdd835',
-  warning8: '#fbc02d',
-  warning9: '#f9a825',
-  warning10: '#f57f17',
-
-  // Yellow scale
-  yellow1: '#fffde7',
-  yellow2: '#fff9c4',
-  yellow3: '#fff59d',
-  yellow4: '#fff176',
-  yellow5: '#ffee58',
-  yellow6: '#ffeb3b',
-  yellow7: '#fdd835',
-  yellow8: '#fbc02d',
-  yellow9: '#f9a825',
-  yellow10: '#f57f17',
-
-  // Blue scale
-  blue1: '#e3f2fd',
-  blue2: '#bbdefb',
-  blue3: '#90caf9',
-  blue4: '#64b5f6',
-  blue5: '#42a5f5',
-  blue6: '#2196f3',
-  blue7: '#1e88e5',
-  blue8: '#1976d2',
-  blue9: '#1565c0',
-  blue10: '#0d47a1',
-
-  // Gray scale
-  gray1: '#fafafa',
-  gray2: '#f5f5f5',
-  gray3: '#eeeeee',
-  gray4: '#e0e0e0',
-  gray5: '#bdbdbd',
-  gray6: '#9e9e9e',
-  gray7: '#757575',
-  gray8: '#616161',
-  gray9: '#424242',
-  gray10: '#212121',
-
-  // Accent scale
-  accent1: '#f3e5f5',
-  accent2: '#e1bee7',
-  accent3: '#ce93d8',
-  accent4: '#ba68c8',
-  accent5: '#ab47bc',
-  accent6: '#9c27b0',
-  accent7: '#8e24aa',
-  accent8: '#7b1fa2',
-  accent9: '#6a1b9a',
-  accent10: '#4a148c',
-
-  // Black/White
+// Optional: Example color palette (users should define their own)
+// This is provided for backward compatibility and as a reference.
+// See __examples__/user-defined-variants/my-colors.ts for a complete example.
+export const exampleColors = {
+  // Basic colors - use as reference or define your own
+  primary: '#2196f3',
+  secondary: '#9c27b0',
+  error: '#f44336',
+  success: '#4caf50',
+  warning: '#ffeb3b',
   black: '#000',
   white: '#fff',
 };
 
-// Utility to resolve color by key
-export function resolveColor(key: string): string {
-  if (key in colors) {
-    return colors[key as keyof typeof colors];
+// Legacy export for backward compatibility
+// Deprecated: Define your own colors in your project instead
+export const colors = exampleColors;
+
+/**
+ * Resolve color name to hex value
+ * @param key - Color name or hex/rgb/rgba value
+ * @param colorPalette - Optional user-defined color palette
+ * @returns Resolved color value (hex, rgb, rgba, or original value)
+ */
+export function resolveColor(key: string, colorPalette?: Record<string, string>): string {
+  // If it starts with #, rgb, rgba, hsl, etc. - return as is
+  if (key.startsWith('#') || key.startsWith('rgb') || key.startsWith('hsl') || key.startsWith('var(')) {
+    return key;
   }
-  // If it's already a hex color or other string, return as is
+  
+  // Check user-provided color palette first
+  if (colorPalette && key in colorPalette) {
+    return colorPalette[key];
+  }
+  
+  // Check example colors (for backward compatibility)
+  if (key in exampleColors) {
+    return exampleColors[key as keyof typeof exampleColors];
+  }
+  
+  // Return as-is (might be CSS color name like 'red', 'blue', 'transparent', etc.)
   return key;
 }
 

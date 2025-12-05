@@ -61,6 +61,11 @@ export interface FrameProps extends EventProps {
   sizes?: Record<string, any>;
   pointerEvents?: string;
   animate?: Animate;
+  
+  /** User-defined color palette for color resolution */
+  colorPalette?: Record<string, string>;
+  /** User-defined font palette for font resolution */
+  fontPalette?: Record<string, string | { family: string; weights?: number[] }>;
 
   display?: string;
   type?: string;
@@ -111,6 +116,8 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
     sizes: sizesProp,
     pointerEvents,
     animate,
+    colorPalette,
+    fontPalette,
 
     display,
     type,
@@ -445,7 +452,7 @@ const FrameInner = React.forwardRef<HTMLElement, FrameProps>(function Frame(prop
         
         if (isReactElement && React.isValidElement(isReactElement)) {
           // Handle React elements (existing logic)
-          const fillColor = fill.color ? resolveColor(fill.color) : undefined;
+          const fillColor = fill.color ? resolveColor(fill.color, colorPalette) : undefined;
           const elementProps = isReactElement.props as any;
           
           return React.cloneElement(isReactElement, {

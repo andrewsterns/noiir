@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, colorUtils, resolveColor } from '@variants/theme/colors';
+import { colorUtils, resolveColor } from '@variants/theme/colors';
 
 /**
  * Simplified Fill Props with flattened gradient API
