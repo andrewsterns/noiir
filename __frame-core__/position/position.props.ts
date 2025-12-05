@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface PositionProps {
-  type?: 'fixed' | 'absolute' | 'relative';
+  type?: 'fixed' | 'absolute' | 'relative' | 'sticky';
   alignment?: 'left' | 'center' | 'right' | 'justify';
   rotation?: number;
   x?: number;
@@ -37,7 +37,7 @@ export const convertPositionProps = (
     return value;
   };
 
-  // Position type (fixed, absolute, relative)
+  // Position type (fixed, absolute, relative, sticky)
   if (props.type) {
     styles.position = props.type;
   } else if (props.x !== undefined || props.y !== undefined) {
