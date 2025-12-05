@@ -1,5 +1,5 @@
 import { FrameVariantConfig } from '@noiir/frame-core/variants/variants.props';
-import { fonts } from '../../theme/fonts';
+import { exampleFonts } from '../../theme/fonts';
 
 /**
  * Text Component Variants
@@ -16,7 +16,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   // Default Frame typography
   Frame: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 300,
       lineHeight: 1.3,
       letterSpacing: 0.75,
@@ -26,7 +26,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   // Headings
   h1: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 700,
       fontSize: 32,
       lineHeight: 1.2,
@@ -35,7 +35,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   h2: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 600,
       fontSize: 24,
       lineHeight: 1.3,
@@ -44,7 +44,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   h3: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 500,
       fontSize: 20,
       lineHeight: 1.4,
@@ -53,7 +53,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   h4: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 500,
       fontSize: 18,
       lineHeight: 1.4,
@@ -62,7 +62,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   h5: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 500,
       fontSize: 16,
       lineHeight: 1.5,
@@ -71,7 +71,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   h6: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 500,
       fontSize: 14,
       lineHeight: 1.5,
@@ -82,7 +82,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   // Body text
   body: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 200,
       fontSize: 14,
       lineHeight: 1.5,
@@ -91,7 +91,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   body1: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 700,
       fontSize: 14,
       lineHeight: 1.5,
@@ -100,7 +100,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   body2: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 400,
       fontSize: 14,
       lineHeight: 1.5,
@@ -111,7 +111,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   // Labels and UI text
   label: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 500,
       fontSize: 12,
       lineHeight: 1.4,
@@ -121,7 +121,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   caption: {
     typography: {
-      fontFamily: fonts.geist.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 400,
       fontSize: 12,
       lineHeight: 1.4,
@@ -130,7 +130,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   overline: {
     typography: {
-      fontFamily: fonts.inter.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 500,
       fontSize: 10,
       lineHeight: 1.6,
@@ -142,7 +142,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   // Special presets with different fonts
   display: {
     typography: {
-      fontFamily: fonts.poppins.family,
+      fontFamily: exampleFonts.sans,
       fontWeight: 600,
       fontSize: 48,
       lineHeight: 1.1,
@@ -151,7 +151,7 @@ export const textVariants: Record<string, FrameVariantConfig> = {
   },
   code: {
     typography: {
-      fontFamily: fonts.geistMono.family,
+      fontFamily: exampleFonts.mono,
       fontWeight: 400,
       fontSize: 14,
       lineHeight: 1.4,
