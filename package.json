@@ -1,6 +1,6 @@
 {
   "name": "@noiir/core",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "A comprehensive React component library and design system with Figma integration, featuring customizable components, variants, and theming capabilities",
   "main": "dist/__components__/index.js",
   "types": "dist/__components__/index.d.ts",
