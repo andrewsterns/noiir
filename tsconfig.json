@@ -1,39 +1,23 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "lib": ["dom", "dom.iterable", "es6"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "noEmit": false,
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "module": "commonjs",
-    "declaration": true,
-    "declarationMap": false,
-    "sourceMap": false,
-    "outDir": "./dist",
-    "baseUrl": ".",
-    "paths": {
-      "@noiir/frame-core": ["__frame-core__"],
-      "@noiir/frame-core/*": ["__frame-core__/*"],
-      "@variants/*": ["__variants__/*"],
-      "@components/*": ["__components__/*"],
-      "@theme/*": ["__variants__/theme/*"]
-    },
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "paths": { "noiir": ["./src/index.ts"] }
   },
-  "include": [
-    "__components__/**/*",
-    "__variants__/**/*",
-    "__frame-core__/**/*",
-    "__stories__/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "examples"
-  ]
+  "include": ["src", "lint", "playground", "scripts", "vite.config.ts"]
 }

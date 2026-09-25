@@ -1,33 +1,18 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { noiirPlugin } from './vite.config.noiir';
-import path from 'path';
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
 
+// Library build + unit tests. The playground has its own config in playground/.
 export default defineConfig({
-  plugins: [react(), noiirPlugin()],
-  resolve: {
-    alias: {
-      '@noiir/frame-core': path.resolve(__dirname, './__frame-core__'),
-      '@components': path.resolve(__dirname, './__components__'),
-      '@variants': path.resolve(__dirname, './__variants__'),
-      '@stories': path.resolve(__dirname, './__stories__'),
-      '@theme': path.resolve(__dirname, './__variants__/theme'),
-    },
-  },
+  plugins: [react()],
   build: {
-    lib: {
-      entry: 'src/index.ts',
-      name: 'FigmaComponents',
-      fileName: (format) => `figma-components.${format}.js`,
-    },
-    rollupOptions: {
-      external: ['react', 'react-dom'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
-      },
-    },
+    lib: { entry: 'src/index.ts', formats: ['es'], fileName: 'noiir' },
+    rollupOptions: { external: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'] },
+    outDir: 'dist',
+    emptyOutDir: true,
   },
-});
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['src/**/*.test.{ts,tsx}', 'lint/**/*.test.ts', 'scripts/**/*.test.ts'],
+  },
+})
